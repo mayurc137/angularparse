@@ -352,6 +352,296 @@ phonecatServices.factory('Phone', [ '$q', function($q){
         });
     }
     
+    //Error handling not done, also function may be incomplete
+    factory.createStore = function() {
+        var Store = Parse.Object.extend("Stores");
+        var store = new Store();
+        store.save();
+    }
+    
+    //Pass the store id and an object with all the store details
+    factory.addDetailsToStore() {
+
+        var deferred = $q.defer();
+        var storeId = "Ik3uYT99O4";
+        var Store = Parse.Object.extend("Stores");
+        var query = new Parse.Query(Store);
+
+        var storeDetails = {
+            name: "Store1",
+            primary_category_id: "abcd",
+            categories: [
+                "defg",
+                "hijk"
+            ],
+            description: "A new store",
+            logo: $("#logo")[0],
+            address: "b1-17 refocusTech",
+            locality: "bhosale paradise",
+            phone: "7507118432",
+            website_link: "www.refocusTech.com",
+            latitude: "18.03",
+            longitude: "73.10",
+            upvote_count: 10,
+            store_joined_number: 2,
+            followers_count: 12,
+            email: "refocusTech@gmail.com",
+            twitter_handler: "haha"
+        };
+
+        if (storeDetails.logo.files.length > 0) {
+
+            var logo = storeDetails.logo.files[0];
+            var parseFile = new Parse.File(logo.name, logo);
+            parseFile.save().then(function () {
+                query.get(storeId, {
+                    success: function (store) {
+                        store.set("name", storeDetails.name);
+                        store.set("primary_category_id", storeDetails.primary_category_id);
+                        store.set("categories", storeDetails.categories);
+                        store.set("description", storeDetails.description);
+                        store.set("logo", parseFile);
+                        store.set("address", storeDetails.address);
+                        store.set("locality", storeDetails.locality);
+                        store.set("phone", storeDetails.phone);
+                        store.set("website_link", storeDetails.website_link);
+                        store.set("latitude", storeDetails.latitude);
+                        store.set("longitude", storeDetails.longitude);
+                        store.set("email", storeDetails.email);
+                        store.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                deferred.resolve(true);
+                            },
+                            error: function (error, message) {
+                                console.log(error);
+                                deferred.reject(message);
+                            }
+                        });
+                    },
+                    error: function (error, message) {
+                        console.log(error);
+                        deferred.reject(message);
+                    }
+                });
+            });
+        } else {
+            console.log("No logo uploaded");
+            deferred.reject("No logo Image");
+        }
+    }
+    
+    //pass a notification object to this function
+    //No need of picture at the moment
+    factory.addNotification = function() {
+
+        var deferred = $q.defer();
+        var notificationDetails = {
+            userId: "OHjLjnyS4K",
+            type: "Coupon",
+            description: "Wah naya coupon mil gaya tujhya",
+            picture: $("#notificationpicture")[0],
+            seen: false,
+            global: false
+        }
+
+        if (notificationDetails.picture.files.length > 0) {
+
+            var query = new Parse.Query(Parse.User);
+            query.get(notificationDetails.userId, {
+                success: function (user) {
+
+                    var picture = notificationDetails.picture.files[0];
+                    var parseFile = new Parse.File(picture.name, picture);
+                    parseFile.save().then(function () {
+                        var Notification = Parse.Object.extend("Notifications");
+                        var notification = new Notification();
+
+                        notification.set("user_id", user);
+                        notification.set("type", notificationDetails.type);
+                        notification.set("description", notificationDetails.description);
+                        notification.set("picture", parseFile);
+                        notification.set("seen", notificationDetails.seen);
+                        notification.set("global", notificationDetails.global);
+                        notification.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                deferred.resolve(true);
+                            },
+                            error: function (error, message) {
+                                console.log(error);
+                                deferred.reject(message);
+                            }
+                        });
+
+                    });
+                },
+                error: function (error, message) {
+                    deferred.reject(message);
+                }
+            });
+        } else {
+            console.log("No picture selected");
+            deferred.reject("No picture selected");
+        }
+    }
+    
+    //pass the product object with the product details
+    factory.addProduct = function() {
+
+        var deferrred = $q.defer();
+        
+        var productDetails = {
+            name: "Test Product",
+            store_id: "r13wY0LqKW",
+            image: $("#productpic")[0],
+            stock: 10,
+            cprice: 102.50,
+            sprice: 99.99,
+            is_sale: true,
+            is_visible: false,
+            description: "Wow much swag"
+        };
+
+        if (productDetails.image.files.length > 0) {
+
+            var query = new Parse.Query("Stores");
+            query.get(productDetails.store_id, {
+                success: function (store) {
+                    var picture = productDetails.image.files[0];
+                    var parseFile = new Parse.File(picture.name, picture);
+                    parseFile.save().then(function () {
+                        var Product = Parse.Object.extend("Products");
+                        var product = new Product();
+                        product.set("name", productDetails.name);
+                        product.set("store_id", store);
+                        product.set("image", parseFile);
+                        product.set("stock", productDetails.stock);
+                        product.set("cprice", productDetails.cprice);
+                        product.set("sprice", productDetails.sprice);
+                        product.set("is_sale", productDetails.is_sale);
+                        product.set("is_visible", productDetails.is_visible);
+                        product.set("description", productDetails.description);
+
+                        product.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                store.addUnique("products", object);
+                                store.save(null, {
+                                    success: function (object) {
+                                        console.log("Added to Store");
+                                        deferrred.resolve(true);
+                                    },
+                                    error: function (error, message) {
+                                        console.log(message);
+                                        deferrred.reject(message);
+                                    }
+                                });
+
+                            },
+                            error: function (error, message) {
+                                console.log(error);
+                                deferrred.reject(message);
+                            }
+                        });
+                    });
+                },
+                error: function (error, message) {
+                    console.log(error);
+                    deferrred.reject(message);
+                }
+
+            });
+        } else {
+            console.log("No product picture selected");
+            deferrred.reject("No picture selected");
+        }
+    }
+    
+    //Pass the product details as an object which should include the product id
+    factory.editProduct = function() {
+        
+        var deferred = $q.defer();
+        
+        var productDetails = {
+            objectId: "QVYgvi4nxJ",
+            name: "New Product",
+            image: $("#productpic")[0],
+            stock: 10,
+            cprice: 102.50,
+            sprice: 99.99,
+            is_sale: true,
+            is_visible: false,
+            description: "Wow much swag"
+        };
+
+        if (productDetails.image.files.length > 0) {
+            var query = new Parse.Query("Products");
+            query.get(productDetails.objectId, {
+                success: function (product) {
+                    var picture = productDetails.image.files[0];
+                    var parseFile = new Parse.File(picture.name, picture);
+                    parseFile.save().then(function () {
+                        product.set("name", productDetails.name);
+                        product.set("image", parseFile);
+                        product.set("stock", productDetails.stock);
+                        product.set("cprice", productDetails.cprice);
+                        product.set("sprice", productDetails.sprice);
+                        product.set("is_sale", productDetails.is_sale);
+                        product.set("is_visible", productDetails.is_visible);
+                        product.set("description", productDetails.description);
+
+                        product.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                deferred.resolve(true);
+                            },
+                            error: function (error, message) {
+                                console.log(message);
+                                deferred.reject(message);
+                            }
+                        });
+                    });
+                },
+                error: function (error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+        } else {
+            var query = new Parse.Query("Products");
+            query.get(productDetails.objectId, {
+                success: function (product) {
+
+                    product.set("name", productDetails.name);
+                    product.set("stock", productDetails.stock);
+                    product.set("cprice", productDetails.cprice);
+                    product.set("sprice", productDetails.sprice);
+                    product.set("is_sale", productDetails.is_sale);
+                    product.set("is_visible", productDetails.is_visible);
+                    product.set("description", productDetails.description);
+
+                    product.save(null, {
+                        success: function (object) {
+                            console.log(object);
+                            deferred.resolve(true);
+                        },
+                        error: function (error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+
+                },
+                error: function (error, message) {
+                    console.log(message);
+                    deferred.reject(message);s
+                }
+            });
+        }
+    }
+
+    
     return factory;
     
 }]);

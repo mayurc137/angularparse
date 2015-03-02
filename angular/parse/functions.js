@@ -385,6 +385,7 @@ function addNotification() {
 	}
 }
 
+//Not added
 function cloudFunction() {
 	Parse.Cloud.run('hello', {}, {
 		success: function (result) {
