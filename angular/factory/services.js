@@ -641,6 +641,281 @@ phonecatServices.factory('Phone', [ '$q', function($q){
         }
     }
 
+    //Pass the storeId to get store products
+    factory.fetchProducts = function(storeId) {
+
+        var deferred = $q.defer();
+        
+        var storequery = new Parse.Query("Stores");
+        storequery.equalTo("objectId", storeId);
+
+        var query = new Parse.Query("Products");
+        query.matchesQuery("store_id", storequery);
+        query.find({
+            success: function (product) {
+
+                console.log("Fetched Products");
+                console.log(product);
+                deferred.resolve(product);
+            },
+            error: function (error, message) {
+                console.log(error);
+                deferred.reject(message);
+            }
+        });
+    }
+    
+    //Pass the product id of the product to be deleted
+    //Check if destroy function has success and error
+    factory.deleteProduct = function(productId) {
+        
+        var deferred = $q.defer();
+        var Product = Parse.Object.extend("Products");
+        var query = new Parse.Query(Product);
+        query.get(productId, {
+            success: function (myObj) {
+                // The object was retrieved successfully.
+                myObj.destroy({});
+                deferred.resolve(true);
+            },
+            error: function (object, error) {
+                // The object was not retrieved successfully.
+                // error is a Parse.Error with an error code and description.
+                deferred.reject(error);
+            }
+        });
+    }
+    
+    //Pass a collection object with relevant details
+    //Remove the upvote count attribute from an object
+    //Check retrieval Based on the views count from analytics
+    factory.createCollection = function() {
+
+        var deferred = $q.defer();
+        
+        var collectionDetails = {
+            type: "Product",
+            upvote_count: 0,
+            created_by: "OHjLjnyS4K",
+            no_comments: 0
+        };
+
+        var query = new Parse.Query(Parse.User);
+        query.get(collectionDetails.created_by, {
+            success: function (user) {
+                var Collection = Parse.Object.extend("Collections");
+                var collection = new Collection();
+                collection.set("type", collectionDetails.type);
+                collection.set("upvote_count", collectionDetails.upvote_count);
+                collection.set("created_by", user);
+                collection.set("no_comments", collectionDetails.no_comments);
+
+                collection.save(null, {
+                    success: function (object) {
+                        console.log(user);
+                        user.addUnique("collections", object);
+                        user.save(null, {
+                            success: function (object) {
+                                console.log("Added to user");
+                                deferred.resolve(true);
+                            },
+                            error: function (object, error) {
+                                console.log(error);
+                                deferred.reject(error);
+                            }
+                        });
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        deferred.reject(error);
+                    }
+                });
+
+
+            },
+            error: function (error) {
+                console.log(error);
+                deferred.reject(error);
+            }
+        });
+    }
+    
+    //pass productId and CollectionID
+    factory.addProductToCollection = function() {
+        
+        var deferred = $q.defer();
+
+        var productId = 'NxjRdXlSVy';
+        var collectionId = 'qVlpiQgFC6';
+        var productquery = new Parse.Query("Products");
+        productquery.equalTo("objectId", productId);
+        productquery.find({
+            success: function (product) {
+                var Collection = Parse.Object.extend("Collections");
+                var query = new Parse.Query(Collection);
+                query.get(collectionId, {
+                    success: function (collection) {
+                        // The object was retrieved successfully.
+                        collection.addUnique("product_ids", product[0]);
+                        collection.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                deferred.resolve(true);
+                            },
+                            error: function (error) {
+                                console.log(error);
+                                deferred.reject(error);
+                            }
+                        });
+                    },
+                    error: function (object, error) {
+                        // The object was not retrieved successfully.
+                        // error is a Parse.Error with an error code and message.
+                        console.log(error);
+                        deferred.reject(error);
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                deferred.reject(error);
+            }
+        });
+    }
+    
+    //pass the store Id and the collection ID
+    factory.addStoreToCollection = function() {
+        var deferred = $q.defer();
+        var storeId = 'Ik3uYT99O4';
+        var collectionId = 'jk7briy5lx';
+        var storequery = new Parse.Query("Stores");
+        storequery.equalTo("objectId", storeId);
+        storequery.find({
+            success: function (store) {
+                var Collection = Parse.Object.extend("Collections");
+                var query = new Parse.Query(Collection);
+                query.get(collectionId, {
+                    success: function (collection) {
+                        // The object was retrieved successfully.
+                        collection.addUnique("store_ids", store[0]);
+                        collection.save(null, {
+                            success: function (object) {
+                                console.log(object);
+                                deferred.resolve(true);
+                            },
+                            error: function (error) {
+                                console.log(error);
+                                deferred.reject(error);
+                            }
+                        });
+                    },
+                    error: function (object, error) {
+                        // The object was not retrieved successfully.
+                        // error is a Parse.Error with an error code and message.
+                        console.log(error);
+                        deferred.reject(error);
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    
+    //Pass the collection ID
+    factory.getAllProductsOfCollection = function() {
+
+        var deferred = $q.defer();
+        var collectionId = "wLE4KuCz1G";
+
+        var query = new Parse.Query("Collections");
+        query.equalTo("objectId", collectionId);
+        query.include("product_ids");
+
+        query.find({
+            success: function (collection) {
+                console.log(collection[0].get("product_ids"));
+                deferred.resolve(collection[0].get("product_ids"));
+            },
+            error: function (error, message) {
+                console.log(error);
+                deferred.reject(message);
+            }
+        });
+    }
+    
+    factory.getAllStoresOfCollection = function() {
+
+        var deferred = $q.defer();
+        
+        var collectionId = "jk7briy5lx";
+
+        var query = new Parse.Query("Collections");
+        query.equalTo("objectId", collectionId);
+        query.include("store_ids");
+
+        query.find({
+            success: function (collection) {
+                console.log(collection[0].get("store_ids"));
+                deferred.resolve(collection[0].get("store_ids"));
+            },
+            error: function (error, message) {
+                console.log(error);
+                deferred.reject(message);
+            }
+        });
+    }
+
+    //Pass the user Id to fetch collections 
+    //Integrate function to get collection of stores and products
+    factory.getAllStoreCollectionOfUser = function(userId) {
+
+        var deferred = $q.defer();
+        
+        var userquery = new Parse.Query(Parse.User);
+        userquery.equalTo("objectId", userId);
+
+        var query = new Parse.Query("Collections");
+        query.matchesQuery("created_by", userquery);
+        query.equalTo("type", "Store");
+        query.include("store_ids");
+
+        query.find({
+            success: function (store) {
+                console.log(store);
+                deferred.resolve(store);
+            },
+            error: function (error, message) {
+                deferred.reject(message);
+            }
+        });
+    }
+    
+    //Integrate with above function
+    factory.getAllProductCollectionOfUser = function(userId) {
+
+        var deferrred = $q.defer();
+        
+        var userquery = new Parse.Query(Parse.User);
+        userquery.equalTo("objectId", userId);
+
+        var query = new Parse.Query("Collections");
+        query.matchesQuery("created_by", userquery);
+        query.equalTo("type", "Product");
+        query.include("product_ids");
+
+        query.find({
+            success: function (product) {
+                console.log(product);
+                deferred.resolve(product);
+            },
+            error: function (error, message) {
+                deferred.reject(message);
+            }
+        });
+    }
     
     return factory;
     
