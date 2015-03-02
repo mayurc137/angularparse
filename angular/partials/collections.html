@@ -1,0 +1,17 @@
+<div class='storeList'>
+	<div ng-repeat="collection in collections" >
+	<h3>Collection {{collection.name}}</h3>
+	<ul>
+		<li ng-repeat="store in collection.stores">
+			<div class='upvotes' ng-click="increaseUpvote(store.id)">
+				<div class='upvote-link' ></div>
+				<p class='upvoteCount'>{{store.upvote}}</p>
+			</div>
+			<div class='storeDesc'>
+				<a href="/stores/{{store.id}}"><h2 class='storeName'>{{store.name}}</h2></a>
+				<p class='address'>{{store.address}}</p>
+			</div>	
+		</li>
+	</ul>
+	</div>
+</div>

@@ -1,0 +1,19 @@
+<div class='storeList'>
+	<div ng-click="getParseData()">Click Here</div>
+	<div ng-click="getUserInfo()">Click Here</div>
+	<img ng-src="{{userPhoto}}">
+	<p>{{userName}}</p>
+	<p>{{userEmail}}</p>
+	<ul>
+		<li ng-repeat="store in stores">
+			<div class='upvotes' ng-click="increaseUpvote(store.id)">
+				<div class='upvote-link' ></div>
+				<p class='upvoteCount'>{{store.upvote}}</p>
+			</div>
+			<div class='storeDesc'>
+				<a href="#/stores/{{store.id}}"><h2 class='storeName'>{{store.name}}</h2></a>
+				<p class='address'>{{store.address}}</p>
+			</div>	
+		</li>
+	</ul>
+</div>
