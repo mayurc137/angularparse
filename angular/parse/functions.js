@@ -27,8 +27,8 @@ function getUserData(userId) {
 			// Syntax = user[0].get('name of column')
 			console.log(user);
 		},
-		error: function (error) {
-			console.log("Error in retrieving User Data");
+		error: function (error, message) {
+			console.log(message);
 		}
 	});
 
@@ -663,7 +663,7 @@ function addStoreToCollection() {
 			query.get(collectionId, {
 				success: function (collection) {
 					// The object was retrieved successfully.
-					collection.put("store_ids", store[0]);
+					collection.addUnique("store_ids", store[0]);
 					collection.save(null, {
 						success: function (object) {
 							console.log(object);
