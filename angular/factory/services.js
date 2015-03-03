@@ -9,7 +9,7 @@ phonecatServices.factory('Phone', ['$q',
 			Parse.initialize("1ZeyYfTJAhabLrrRpu9AwT8bWlpU9W3Fj0hesIzN", "wl2trYAjBeN1X7BVroZJjEtTuuFdnb3gmKDGC0D0");
 			window.fbAsyncInit = function () {
 				Parse.FacebookUtils.init({ // this line replaces FB.init({
-					appId: '369037209950062', // Facebook App ID
+					appId: '778139162267115', // Facebook App ID
 					status: true, // check Facebook Login status
 					cookie: true, // enable cookies to allow Parse to access the session
 					xfbml: true, // initialize Facebook social plugins on the page
@@ -26,7 +26,7 @@ phonecatServices.factory('Phone', ['$q',
 				}
 				js = d.createElement(s);
 				js.id = id;
-				js.src = "//connect.facebook.net/en_US/sdk.js";
+				js.src = "http://connect.facebook.net/en_US/sdk.js";
 				fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));
 		}
@@ -406,7 +406,7 @@ phonecatServices.factory('Phone', ['$q',
 		}
 
 		//Pass the store id and an object with all the store details
-		factory.addDetailsToStore() {
+		factory.addDetailsToStore = function() {
 
 			var deferred = $q.defer();
 			var storeId = "Ik3uYT99O4";
