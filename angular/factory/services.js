@@ -886,6 +886,7 @@ phonecatServices.factory('Phone', ['$q',
 			});
 		}
 
+		//Pass the collection ID
 		factory.getAllStoresOfCollection = function () {
 
 			var deferred = $q.defer();
@@ -957,7 +958,34 @@ phonecatServices.factory('Phone', ['$q',
 			});
 		}
 
+		//Integrated function
+		factory.getAllCollectionOfUser = function (userId) {
+
+			var deferrred = $q.defer();
+
+			var userquery = new Parse.Query(Parse.User);
+			userquery.equalTo("objectId", userId);
+
+			var query = new Parse.Query("Collections");
+			query.matchesQuery("created_by", userquery);
+			query.include("product_ids");
+			query.include("store_ids")
+
+			query.find({
+				success: function (collections) {
+					console.log(collection);
+					deferred.resolve(collection);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+		}
+
+
 		return factory;
 
 	}
+
+
 ]);
