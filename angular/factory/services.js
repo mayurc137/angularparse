@@ -486,50 +486,41 @@ phonecatServices.factory('Phone', ['$q',
 				userId: "OHjLjnyS4K",
 				type: "Coupon",
 				description: "Wah naya coupon mil gaya tujhya",
-				picture: $("#notificationpicture")[0],
 				seen: false,
 				global: false
 			}
 
-			if (notificationDetails.picture.files.length > 0) {
 
-				var query = new Parse.Query(Parse.User);
-				query.get(notificationDetails.userId, {
-					success: function (user) {
+			var query = new Parse.Query(Parse.User);
+			query.get(notificationDetails.userId, {
+				success: function (user) {
 
-						var picture = notificationDetails.picture.files[0];
-						var parseFile = new Parse.File(picture.name, picture);
-						parseFile.save().then(function () {
-							var Notification = Parse.Object.extend("Notifications");
-							var notification = new Notification();
+					var Notification = Parse.Object.extend("Notifications");
+					var notification = new Notification();
 
-							notification.set("user_id", user);
-							notification.set("type", notificationDetails.type);
-							notification.set("description", notificationDetails.description);
-							notification.set("picture", parseFile);
-							notification.set("seen", notificationDetails.seen);
-							notification.set("global", notificationDetails.global);
-							notification.save(null, {
-								success: function (object) {
-									console.log(object);
-									deferred.resolve(true);
-								},
-								error: function (error, message) {
-									console.log(error);
-									deferred.reject(message);
-								}
-							});
+					notification.set("user_id", user);
+					notification.set("type", notificationDetails.type);
+					notification.set("description", notificationDetails.description);
+					notification.set("seen", notificationDetails.seen);
+					notification.set("global", notificationDetails.global);
+					notification.save(null, {
+						success: function (object) {
+							console.log(object);
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(error);
+							deferred.reject(message);
+						}
+					});
 
-						});
-					},
-					error: function (error, message) {
-						deferred.reject(message);
-					}
-				});
-			} else {
-				console.log("No picture selected");
-				deferred.reject("No picture selected");
-			}
+
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
 		}
 
 		//pass the product object with the product details
@@ -746,7 +737,6 @@ phonecatServices.factory('Phone', ['$q',
 
 			var collectionDetails = {
 				type: "Product",
-				upvote_count: 0,
 				created_by: "OHjLjnyS4K",
 				no_comments: 0
 			};
@@ -757,7 +747,6 @@ phonecatServices.factory('Phone', ['$q',
 					var Collection = Parse.Object.extend("Collections");
 					var collection = new Collection();
 					collection.set("type", collectionDetails.type);
-					collection.set("upvote_count", collectionDetails.upvote_count);
 					collection.set("created_by", user);
 					collection.set("no_comments", collectionDetails.no_comments);
 
