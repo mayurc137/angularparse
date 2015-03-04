@@ -33,18 +33,33 @@ phonecatServices.factory('Phone', ['$q',
 
 		factory.fbLogin = function () {
 
+			var deferred = $q.defer();
+
 			Parse.FacebookUtils.logIn("email", {
 				success: function (user) {
 					if (!user.existed()) {
 						alert("User signed up and logged in through Facebook!");
+						console.log(user);
+						user.infoSet = false;
+						deferred.resolve(user);
+
 					} else {
 						alert("User logged in through Facebook!");
+						console.log(user);
+						user.infoSet = true;
+						deferred.resolve(user);
+
 					}
 				},
 				error: function (user, error) {
 					alert("User cancelled the Facebook login or did not fully authorize.");
+					deferred.reject(message);
+
 				}
 			});
+
+			return deferred.promise;
+
 		}
 
 		factory.getUserData = function () {
@@ -53,12 +68,10 @@ phonecatServices.factory('Phone', ['$q',
 			var currentUser = Parse.User.current();
 			var userData = {};
 			if (currentUser) {
-				FB.api("/me/picture", function (response) {
-					userData.picture = response.data.url;
-				});
 				FB.api("/me", function (response) {
 					userData.email = response.email;
 					userData.name = response.name;
+					userData.id = response.id;
 					deferred.resolve(userData);
 				});
 			} else {
@@ -67,6 +80,81 @@ phonecatServices.factory('Phone', ['$q',
 			}
 
 			return deferred.promise;
+		}
+
+		factory.getUserPicture = function () {
+
+			var deferred = $q.defer();
+			var currentUser = Parse.User.current();
+			var userData = {};
+			if (currentUser) {
+				FB.api("/me/picture", function (response) {
+					userData.picture = response.data.url;
+					deferred.resolve(userData);
+
+				});
+			} else {
+				console.log("User Not Signed In");
+				deferred.reject("Sorry Bitch!!");
+			}
+
+			return deferred.promise;
+		}
+
+		factory.setUserData = function (userData) {
+
+			var deferred = $q.defer();
+			var currentUser = Parse.User.current();
+			if (currentUser) {
+
+
+
+				var image = new Image();
+				console.log(userData.picture);
+				image.src = userData.picture;
+				image.onload = function () {
+					var canvas = document.createElement("canvas");
+					canvas.width = image.width;
+					canvas.height = image.height;
+
+					var ctx = canvas.getContext("2d");
+					ctx.drawImage(image, 0, 0);
+
+					userData.name = userData.name.split(" ");
+
+					var dataURL = canvas.toDataURL("image/png");
+					var parseFile = new Parse.File(userData.name[0], {
+						base64: dataURL
+					});
+
+					parseFile.save().then(function () {
+
+							var username = currentUser.get("username");
+							currentUser.set("user_id", username);
+							currentUser.set("username", userData.name[0] + userData.id)
+							currentUser.set("email", userData.email);
+							currentUser.set("is_complete", false);
+							currentUser.set("profile_image", parseFile);
+							currentUser.save(null, {
+
+								success: function (user) {
+									console.log("Added User");
+									deferred.resolve(true);
+								},
+								error: function (error, message) {
+									console.log(message);
+									deferred.reject(message);
+								}
+							});
+						},
+						function (error, message) {
+							console.log(error);
+							deferred.reject(message);
+						});
+				}
+			} else {
+				console.log("Not Logged In");
+			}
 		}
 
 		//Pass the userID
@@ -87,10 +175,63 @@ phonecatServices.factory('Phone', ['$q',
 				},
 				error: function (error, message) {
 					console.log(message);
-					deferrred.reject(message);
+					deferred.reject(message);
 				}
 			});
 
+			return deferred.promise;
+
+		}
+
+		//Set user Data
+
+		factory.setUserDataParse = function (userData) {
+
+			var deferred = $q.defer();
+
+			var user = Parse.User.current();
+			user.set("username", userData.username);
+			user.set("email", userData.email);
+			user.set("website", userData.website);
+			user.set("is_complete", true);
+			user.set("description", userData.description);
+			user.set("no_stores_upvoted", 0);
+			user.save(null, {
+
+				success: function (user) {
+					console.log("Added User");
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.checkUsernameAvailablility = function (username) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query(Parse.User);
+			query.equalTo("username", username);
+
+			query.find({
+				success: function (user) {
+					if (user.length == 0)
+						deferred.resolve(true);
+					else
+						deferred.resolve(false);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
 		}
 
 		//Pass the storeID
@@ -112,6 +253,8 @@ phonecatServices.factory('Phone', ['$q',
 				}
 
 			});
+
+			return deferred.promise;
 		}
 
 		//Pass the userID
@@ -134,6 +277,8 @@ phonecatServices.factory('Phone', ['$q',
 				}
 
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the storeID
@@ -155,6 +300,7 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
 
 		}
 
@@ -202,6 +348,8 @@ phonecatServices.factory('Phone', ['$q',
 					// error is a Parse.Error with an error code and message.
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass product ID and the images from file selector
@@ -247,6 +395,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(error);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass imageId and image from file selector
@@ -293,6 +443,8 @@ phonecatServices.factory('Phone', ['$q',
 				console.log("No image selected");
 				deferred.reject("No image selected");
 			}
+			return deferred.promise;
+
 		}
 
 		//Pass the userId
@@ -318,6 +470,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		factory.fetchCommentOfStore = function () {
@@ -341,6 +495,7 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
 
 		}
 
@@ -387,6 +542,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Error handling not done, also function may be incomplete
@@ -403,10 +560,12 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the store id and an object with all the store details
-		factory.addDetailsToStore = function() {
+		factory.addDetailsToStore = function () {
 
 			var deferred = $q.defer();
 			var storeId = "Ik3uYT99O4";
@@ -475,6 +634,8 @@ phonecatServices.factory('Phone', ['$q',
 				console.log("No logo uploaded");
 				deferred.reject("No logo Image");
 			}
+			return deferred.promise;
+
 		}
 
 		//pass a notification object to this function
@@ -520,6 +681,7 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
 
 		}
 
@@ -593,6 +755,8 @@ phonecatServices.factory('Phone', ['$q',
 				console.log("No product picture selected");
 				deferrred.reject("No picture selected");
 			}
+			return deferred.promise;
+
 		}
 
 		//Pass the product details as an object which should include the product id
@@ -677,6 +841,8 @@ phonecatServices.factory('Phone', ['$q',
 					}
 				});
 			}
+			return deferred.promise;
+
 		}
 
 		//Pass the storeId to get store products
@@ -701,6 +867,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the product id of the product to be deleted
@@ -726,6 +894,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(error);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass a collection object with relevant details
@@ -779,6 +949,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(error);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//pass productId and CollectionID
@@ -822,6 +994,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(error);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//pass the store Id and the collection ID
@@ -862,6 +1036,8 @@ phonecatServices.factory('Phone', ['$q',
 					console.log(error);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the collection ID
@@ -884,6 +1060,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the collection ID
@@ -907,6 +1085,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Pass the user Id to fetch collections 
@@ -932,6 +1112,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Integrate with above function
@@ -956,6 +1138,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 		//Integrated function
@@ -980,6 +1164,8 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
 		}
 
 
