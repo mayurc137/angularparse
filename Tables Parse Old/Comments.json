@@ -1,0 +1,24 @@
+{ "results": [
+	{
+        "comment": "lorem impsum some shizz",
+        "createdAt": "2015-02-21T15:48:20.131Z",
+        "objectId": "wrnIfyH6Ps",
+        "updatedAt": "2015-02-21T15:48:20.131Z",
+        "user_id": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "OHjLjnyS4K"
+        }
+    },
+	{
+        "comment": "lorem impsum some shizz",
+        "createdAt": "2015-03-02T12:49:30.532Z",
+        "objectId": "DRayUsAcqK",
+        "updatedAt": "2015-03-02T12:49:30.532Z",
+        "user_id": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "OHjLjnyS4K"
+        }
+    }
+] }

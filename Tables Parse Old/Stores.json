@@ -1,0 +1,80 @@
+{ "results": [
+	{
+        "address": "b1-17 refocusTech",
+        "categories": [
+            "defg",
+            "hijk"
+        ],
+        "createdAt": "2015-02-24T15:56:34.493Z",
+        "description": "A new store",
+        "email": "refocusTech@gmail.com",
+        "latitude": "18.03",
+        "locality": "bhosale paradise",
+        "logo": {
+            "__type": "File",
+            "name": "tfss-8c9dc5a0-322f-4cc2-8436-29fabea9a809-screen1.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-8c9dc5a0-322f-4cc2-8436-29fabea9a809-screen1.png"
+        },
+        "longitude": "73.10",
+        "name": "Store1",
+        "objectId": "Ik3uYT99O4",
+        "phone": "7507118432",
+        "primary_category_id": "abcd",
+        "updatedAt": "2015-02-24T15:57:31.084Z",
+        "user_id": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "OHjLjnyS4K"
+        },
+        "website_link": "www.refocusTech.com"
+    },
+	{
+        "createdAt": "2015-02-24T16:15:23.232Z",
+        "objectId": "mF2AE0O88N",
+        "updatedAt": "2015-02-24T16:15:23.232Z"
+    },
+	{
+        "address": "b1-17 refocusTech",
+        "categories": [
+            "defg",
+            "hijk"
+        ],
+        "createdAt": "2015-02-19T14:29:08.593Z",
+        "description": "A new store",
+        "email": "refocusTech@gmail.com",
+        "followers_count": 12,
+        "latitude": "18.03",
+        "locality": "bhosale paradise",
+        "logo": {
+            "__type": "File",
+            "name": "tfss-f1d2b544-253e-4607-a0a9-be94522d9d20-screen4.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-f1d2b544-253e-4607-a0a9-be94522d9d20-screen4.png"
+        },
+        "longitude": "73.10",
+        "name": "Store1",
+        "objectId": "r13wY0LqKW",
+        "phone": "7507118432",
+        "primary_category_id": "abcd",
+        "products": [
+            {
+                "__type": "Pointer",
+                "className": "Products",
+                "objectId": "Vp3gKqt1eW"
+            }
+        ],
+        "store_joined_number": 2,
+        "updatedAt": "2015-02-25T15:35:17.598Z",
+        "upvote_count": 10,
+        "user_id": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "OHjLjnyS4K"
+        },
+        "website_link": "www.refocusTech.com"
+    },
+	{
+        "createdAt": "2015-03-02T12:49:24.450Z",
+        "objectId": "xxVQCLrbtm",
+        "updatedAt": "2015-03-02T12:49:24.450Z"
+    }
+] }

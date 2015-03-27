@@ -1,0 +1,60 @@
+{ "results": [
+	{
+        "bcryptPassword": "$2a$10$kr2DQMc3qXRe5U/HNwK.VuItwMPkEXvDZDBZD7JPeewUlFWZgSKw6",
+        "collections": [
+            {
+                "__type": "Pointer",
+                "className": "Collections",
+                "objectId": "qVlpiQgFC6"
+            },
+            {
+                "__type": "Pointer",
+                "className": "Collections",
+                "objectId": "ytdnoOwk5o"
+            }
+        ],
+        "createdAt": "2015-02-17T09:08:31.380Z",
+        "description": "CEO",
+        "objectId": "OHjLjnyS4K",
+        "profile_image": {
+            "__type": "File",
+            "name": "tfss-eba45be2-3892-4e74-9e06-5a41cb46fea4-coep.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-eba45be2-3892-4e74-9e06-5a41cb46fea4-coep.png"
+        },
+        "sessionToken": "V02stVOJz0gTkx8foO843PlmM",
+        "store_id": {
+            "__type": "Pointer",
+            "className": "Stores",
+            "objectId": "r13wY0LqKW"
+        },
+        "updatedAt": "2015-03-03T15:21:08.867Z",
+        "user_id": "",
+        "username": "dSPgV7ulAGlLF5SqS4HFm5rfX"
+    },
+	{
+        "authData": {
+            "facebook": {
+                "access_token": "CAALDtqRaTesBAML6YxVpIiL3GqSy355sbWZC4VhhWdQDCn8ysnqwYUKI2qaaQoBnGuUGFtGeZAiF5snGEJWkkczPFPjiJz28vhc0FzIJsO1PZAmzDpbeZAfeIt5NdZCoZASRBdBAgxsk37IJtx0ZC0AoXkMZCqoqFGZBHzdBP8vAsh0j9GWz7S7px3FwMGOPaRjVgGWZBdHkEjaFlb9zy4Sz3r",
+                "expiration_date": "2015-03-03T20:00:00.904Z",
+                "id": "10153033078641075"
+            }
+        },
+        "bcryptPassword": "$2a$10$B5VomsXr2CaUl/DiZU388OmMWAKL3jZ1zUKTYGpY5NHu2nlwkOrLK",
+        "createdAt": "2015-03-03T18:25:07.191Z",
+        "description": "Lorem ipsum",
+        "email": "newemail@new.com",
+        "is_complete": true,
+        "no_stores_upvoted": 0,
+        "objectId": "EK4JvnRygm",
+        "profile_image": {
+            "__type": "File",
+            "name": "tfss-891a2d21-2a5b-487f-a1b9-48a3ea6b04ee-Arun",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-891a2d21-2a5b-487f-a1b9-48a3ea6b04ee-Arun"
+        },
+        "sessionToken": "dhV2fmJ8o2swnFH5OmrzQXBWW",
+        "updatedAt": "2015-03-03T18:50:09.146Z",
+        "user_id": "dnDSWXk9AWV0t5VVctGO7NDKn",
+        "username": "New User",
+        "website": "abcd.com"
+    }
+] }

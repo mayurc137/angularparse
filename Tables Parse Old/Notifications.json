@@ -1,0 +1,21 @@
+{ "results": [
+	{
+        "createdAt": "2015-02-22T15:12:20.772Z",
+        "description": "Wah naya coupon mil gaya tujhya",
+        "global": false,
+        "objectId": "nsEFzJrr14",
+        "picture": {
+            "__type": "File",
+            "name": "tfss-3cacb1dc-bff2-45e6-9228-049317fe2f28-coep.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-3cacb1dc-bff2-45e6-9228-049317fe2f28-coep.png"
+        },
+        "seen": false,
+        "type": "Coupon",
+        "updatedAt": "2015-02-22T15:12:20.772Z",
+        "user_id": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "OHjLjnyS4K"
+        }
+    }
+] }

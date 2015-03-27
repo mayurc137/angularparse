@@ -1,0 +1,90 @@
+{ "results": [
+	{
+        "cprice": 102.5,
+        "createdAt": "2015-02-23T16:27:58.499Z",
+        "description": "Wow much swag",
+        "image": {
+            "__type": "File",
+            "name": "tfss-4b6fb8f0-2516-438d-8730-d25fe4fb8c22-coep.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-4b6fb8f0-2516-438d-8730-d25fe4fb8c22-coep.png"
+        },
+        "is_sale": true,
+        "is_visible": false,
+        "name": "Test Product",
+        "objectId": "l8iq4CTzxg",
+        "sprice": 99.99,
+        "stock": 10,
+        "store_id": {
+            "__type": "Pointer",
+            "className": "Stores",
+            "objectId": "r13wY0LqKW"
+        },
+        "updatedAt": "2015-02-23T16:27:58.499Z"
+    },
+	{
+        "cprice": 102.5,
+        "createdAt": "2015-02-24T14:43:15.654Z",
+        "description": "Wow much swag",
+        "image": {
+            "__type": "File",
+            "name": "tfss-0dce2a94-4592-43f0-aeb4-a477112d7ce0-screen1.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-0dce2a94-4592-43f0-aeb4-a477112d7ce0-screen1.png"
+        },
+        "is_sale": true,
+        "is_visible": false,
+        "name": "New Product",
+        "objectId": "QVYgvi4nxJ",
+        "sprice": 99.99,
+        "stock": 10,
+        "store_id": {
+            "__type": "Pointer",
+            "className": "Stores",
+            "objectId": "r13wY0LqKW"
+        },
+        "updatedAt": "2015-03-02T12:49:16.913Z"
+    },
+	{
+        "cprice": 102.5,
+        "createdAt": "2015-02-24T16:22:14.232Z",
+        "description": "Wow much swag",
+        "image": {
+            "__type": "File",
+            "name": "tfss-1bb249c4-b6d2-4b57-bcf3-fd0a6199778b-Arsenal-FC-2014-15-Puma-Home-Away-Third-Kits-Wallpaper-1024x768.jpg",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-1bb249c4-b6d2-4b57-bcf3-fd0a6199778b-Arsenal-FC-2014-15-Puma-Home-Away-Third-Kits-Wallpaper-1024x768.jpg"
+        },
+        "is_sale": true,
+        "is_visible": false,
+        "name": "Test Product",
+        "objectId": "NxjRdXlSVy",
+        "sprice": 99.99,
+        "stock": 10,
+        "store_id": {
+            "__type": "Pointer",
+            "className": "Stores",
+            "objectId": "r13wY0LqKW"
+        },
+        "updatedAt": "2015-02-24T16:22:14.232Z"
+    },
+	{
+        "cprice": 102.5,
+        "createdAt": "2015-02-25T15:35:16.835Z",
+        "description": "Wow much swag",
+        "image": {
+            "__type": "File",
+            "name": "tfss-b02104d2-a4f9-43bb-8044-fd9646f14c35-coep.png",
+            "url": "http://files.parsetfss.com/f0e76f3b-576b-457d-8321-d1d30db8f452/tfss-b02104d2-a4f9-43bb-8044-fd9646f14c35-coep.png"
+        },
+        "is_sale": true,
+        "is_visible": false,
+        "name": "Test Product",
+        "objectId": "Vp3gKqt1eW",
+        "sprice": 99.99,
+        "stock": 10,
+        "store_id": {
+            "__type": "Pointer",
+            "className": "Stores",
+            "objectId": "r13wY0LqKW"
+        },
+        "updatedAt": "2015-02-25T15:35:16.835Z"
+    }
+] }
