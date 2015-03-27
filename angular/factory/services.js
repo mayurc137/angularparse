@@ -1110,24 +1110,20 @@ phonecatServices.factory('Phone', ['$q',
 		//Pass a collection object with relevant details
 		//Remove the upvote count attribute from an object
 		//Check retrieval Based on the views count from analytics
-		factory.createCollection = function () {
+		factory.createCollection = function (user, name, image) {
 
 			var deferred = $q.defer();
 
-			var collectionDetails = {
-				type: "Product",
-				created_by: "OHjLjnyS4K",
-				no_comments: 0
-			};
+			var Collection = Parse.Object.extend("Collections");
+			var collection = new Collection();
 
-			var query = new Parse.Query(Parse.User);
-			query.get(collectionDetails.created_by, {
-				success: function (user) {
-					var Collection = Parse.Object.extend("Collections");
-					var collection = new Collection();
-					collection.set("type", collectionDetails.type);
+			if (image.files.length > 0) {
+				var picture = image.files[0];
+				var parseFile = new Parse.File(picture.name, picture);
+				parseFile.save().then(function () {
+					collection.set("image", parseFile);
+					collection.set("collection_name", name);
 					collection.set("created_by", user);
-					collection.set("no_comments", collectionDetails.no_comments);
 
 					collection.save(null, {
 						success: function (object) {
@@ -1150,106 +1146,178 @@ phonecatServices.factory('Phone', ['$q',
 							deferred.reject(error);
 						}
 					});
+				});
+			} else {
+				collection.set("collection_name", name);
+				collection.set("created_by", user);
+				collection.save(null, {
+					success: function (object) {
+						console.log(user);
+						user.addUnique("collections", object);
+						user.save(null, {
+							success: function (object) {
+								console.log("Added to user");
+								deferred.resolve(true);
+							},
+							error: function (error, message) {
+								console.log(error);
+								deferred.reject(message)
+							}
+						});
 
-
-				},
-				error: function (error) {
-					console.log(error);
-					deferred.reject(error);
-				}
-			});
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
+				});
+			}
 			return deferred.promise;
 
 		}
 
-		//pass productId and CollectionID
-		factory.addProductToCollection = function () {
+		factory.editCollection = function (collection, name, image) {
 
 			var deferred = $q.defer();
 
-			var productId = 'NxjRdXlSVy';
-			var collectionId = 'qVlpiQgFC6';
-			var productquery = new Parse.Query("Products");
-			productquery.equalTo("objectId", productId);
-			productquery.find({
-				success: function (product) {
-					var Collection = Parse.Object.extend("Collections");
-					var query = new Parse.Query(Collection);
-					query.get(collectionId, {
-						success: function (collection) {
-							// The object was retrieved successfully.
-							collection.addUnique("product_ids", product[0]);
-							collection.save(null, {
-								success: function (object) {
-									console.log(object);
-									deferred.resolve(true);
-								},
-								error: function (error) {
-									console.log(error);
-									deferred.reject(error);
-								}
-							});
+			var picture = image.files[0];
+			var parseFile = new Parse.File(picture.name, picture);
+			parseFile.save().then(function () {
+				collection.set("image", parseFile);
+				collection.set("collection_name", name);
+				collection.save(null, {
+					success: function (object) {
+						console.log("Edited Collection");
+						deferred.resolve(true);
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
+				});
+
+			});
+		}
+
+		factory.addProductToCollection = function (product, collection) {
+
+			var deferred = $q.defer();
+
+			collection.addUnique("product_ids", product);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Added Product");
+					product.addUnique("collections", collection);
+					product.save(null, {
+						success: function (object) {
+							console.log("Added To Collection");
+							deferred.resolve(true);
 						},
-						error: function (object, error) {
-							// The object was not retrieved successfully.
-							// error is a Parse.Error with an error code and message.
-							console.log(error);
-							deferred.reject(error);
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
 						}
 					});
 				},
-				error: function (error) {
-					console.log(error);
-					deferred.reject(error);
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
 				}
 			});
-			return deferred.promise;
 
+			return deferred.promise;
+		}
+
+		factory.addServiceToCollection = function (service, collection) {
+
+			var deferred = $q.defer();
+
+			collection.addUnique("service_ids", service);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Added Service");
+					service.addUnique("collections", collection);
+					service.save(null, {
+						success: function (object) {
+							console.log("Added To Collection");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
 		}
 
 		//pass the store Id and the collection ID
-		factory.addStoreToCollection = function () {
+		factory.addStoreToCollection = function (store, collection) {
 			var deferred = $q.defer();
-			var storeId = 'Ik3uYT99O4';
-			var collectionId = 'jk7briy5lx';
-			var storequery = new Parse.Query("Stores");
-			storequery.equalTo("objectId", storeId);
-			storequery.find({
-				success: function (store) {
-					var Collection = Parse.Object.extend("Collections");
-					var query = new Parse.Query(Collection);
-					query.get(collectionId, {
-						success: function (collection) {
-							// The object was retrieved successfully.
-							collection.addUnique("store_ids", store[0]);
-							collection.save(null, {
-								success: function (object) {
-									console.log(object);
-									deferred.resolve(true);
-								},
-								error: function (error) {
-									console.log(error);
-									deferred.reject(error);
-								}
-							});
+			collection.addUnique("store_ids", store);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Added Store");
+					store.addUnique("collections", collection);
+					store.save(null, {
+						success: function (object) {
+							console.log("Added Collection");
+							deferred.resolve(true);
 						},
-						error: function (object, error) {
-							// The object was not retrieved successfully.
-							// error is a Parse.Error with an error code and message.
-							console.log(error);
-							deferred.reject(error);
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
 						}
 					});
 				},
-				error: function (error) {
-					console.log(error);
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
 				}
 			});
+
+
 			return deferred.promise;
 
 		}
 
-		//Pass the collection ID
+		factory.favoriteCollection = function (user, collection) {
+
+			var deferred = $q.defer();
+			user.addUnique("collections_favorited", collection);
+			user.save(null, {
+				success: function (object) {
+					console.log("Added collection");
+					collection.addUnique("favorited_by", user);
+					collection.save(null, {
+						success: function (object) {
+							console.log("Added User");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+
+			return deferred.promise;
+
+		}
+
+		/*		//Pass the collection ID
 		factory.getAllProductsOfCollection = function () {
 
 			var deferred = $q.defer();
@@ -1272,8 +1340,9 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 
 		}
+*/
 
-		//Pass the collection ID
+		/*		//Pass the collection ID
 		factory.getAllStoresOfCollection = function () {
 
 			var deferred = $q.defer();
@@ -1297,9 +1366,101 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 
 		}
+*/
 
-		//Pass the user Id to fetch collections 
-		//Integrate function to get collection of stores and products
+		factory.deleteProductFromCollection = function (product, collection) {
+			var deferred = $q.defer();
+
+			collection.remove("product_ids", product);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Remove Product");
+					product.remove("collections", collection);
+					product.save(null, {
+						success: function (object) {
+							console.log("Removed From Collection");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		//done not tested
+		factory.deleteServiceFromCollection = function (service, collection) {
+
+			var deferred = $q.defer();
+
+			collection.remove("service_ids", service);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Removed Service");
+					service.remove("collections", collection);
+					service.save(null, {
+						success: function (object) {
+							console.log("Removed From Collection");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		//done not tested
+		factory.deleteStoreFromCollection = function (store, collection) {
+
+			var deferred = $q.defer();
+
+			collection.remove("store_ids", store);
+			collection.save(null, {
+				success: function (object) {
+					console.log("Removed Store");
+					store.remove("collections", collection);
+					store.save(null, {
+						success: function (object) {
+							console.log("Removed from Collection");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		/*		//Pass the user Id to fetch collections 
+				//Integrate function to get collection of stores and products
 		factory.getAllStoreCollectionOfUser = function (userId) {
 
 			var deferred = $q.defer();
@@ -1376,7 +1537,60 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 
 		}
+*/
 
+		factory.getCollectionById = function (collectionId) {
+
+			var deferrred = $q.defer();
+
+			var query = new Parse.Query("Collections");
+			query.equals("objectId", collectionId);
+			query.include("product_ids");
+			query.include("store_ids");
+			query.include("service_ids");
+			query.include("favorited_by");
+			query.find({
+				success: function (collection) {
+					console.log(collection);
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
+		factory.getStoreByHandle = function (handle) {
+
+			init();
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Stores");
+			query.equalTo('store_handle', handle);
+			query.include('products');
+			query.include('primary_category');
+			query.include('collections');
+			query.include('services');
+			query.include('followers');
+			query.include('locality');
+			query.include('upvoted_by');
+			query.include('tags');
+
+			query.find({
+				success: function (store) {
+					deferred.resolve(store);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		};
 
 		return factory;
 
