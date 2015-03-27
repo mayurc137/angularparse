@@ -342,6 +342,178 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 */
+
+		factory.changePassword = function (user, password) {
+
+			var deferred = $q.defer();
+
+			user.set("password", password);
+			user.save(null, {
+
+				success: function (object) {
+					console.log("Password Changed");
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.editUserProfile = function (user) {
+
+			var deferred = $q.defer();
+
+			var userDetails = {
+				name: "myra",
+				email: "b117@refocusTech.com",
+				description: "Swag yolo",
+				profile_image: $("#image")[0],
+				website: "abcd.com"
+			}
+
+
+
+			if (userDetails.profile_image.files.length > 0) {
+				var file = userDetails.profile_image.files[0];
+				console.log(userDetails.profile_image.files[0]);
+				var parseFile = new Parse.File(file.name, file);
+
+				parseFile.save().then(function () {
+
+					user.set("name", userDetails.name);
+					user.set("email", userDetails.email);
+					user.set("description", userDetails.description);
+					user.set("profile_image", parseFile);
+					user.set("website", userDetails.website);
+					user.save(null, {
+
+						success: function (object) {
+							console.log("Profile Changed");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+
+				});
+			}
+
+			return deferred.promise;
+
+		}
+
+		factory.userFollow = function (user1, user2) {
+
+			var deferred = $q.defer();
+
+			user1.addUnique("user_following", user2);
+			user1.save(null, {
+
+				success: function (object) {
+					console.log("Added to user1");
+					user2.addUnique("user_followed", user1);
+					user2.save(null, {
+
+						success: function (object) {
+							console.log("Added to user2");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.getNearestStores = function (locality) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Stores");
+			query.near("geolocation", locality);
+
+			query.find({
+				success: function (localityArray) {
+					console.log(localityArray);
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		//Done
+		factory.changeLocality = function (storeId, lat, lon) {
+
+			var deferred = $q.defer();
+
+			var point = new Parse.GeoPoint({
+				latitude: lat,
+				longitude: lon
+			});
+
+			var query = new Parse.Query("Locality");
+			query.near("location", point);
+			query.limit(2);
+
+			query.find({
+				success: function (locality) {
+					var location = locality[0];
+					console.log(location);
+					var storequery = new Parse.Query("Stores");
+					storequery.get(storeId, {
+						success: function (store) {
+							store.set("locality", location);
+							store.set("geolocation", point);
+							store.save(null, {
+								success: function (object) {
+									console.log("Success");
+									deferred.resolve(true);
+								},
+								error: function (error, message) {
+									console.log(message);
+									deferred.reject(message);
+								}
+							})
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+
+			});
+
+			return deferred.promise;
+
+		}
 		//Pass the storeID
 		factory.fetchGalleryOfStore = function (storeId) {
 
@@ -507,6 +679,27 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 
+		factory.deleteImagesInGallery = function (imageId) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Gallery");
+			query.get(imageId, {
+				success: function (picture) {
+					picture.destroy({});
+					console.log("Deleted");
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
 		//Pass imageId and image from file selector
 		factory.editImagesToGallery = function () {
 
@@ -552,25 +745,6 @@ phonecatServices.factory('Phone', ['$q',
 				deferred.reject("No image selected");
 			}
 			return deferred.promise;
-
-		}
-
-		//Delete Image in Gallery
-		factory.deleteImagesInGallery = function (imageId) {
-
-			var deferred = $q.defer();
-			var query = new Parse.Query("Gallery");
-			query.get(imageId, {
-				success: function (picture) {
-					picture.destroy({});
-					console.log("Deleted");
-					deferred.resolve(true);
-				},
-				error: function (error, message) {
-					console.log(message);
-					deferred.resolve(message);
-				}
-			});
 
 		}
 
