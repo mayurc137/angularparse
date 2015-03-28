@@ -21,8 +21,8 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         );
 
         $scope.storeHandle = $routeParams.storeHandle;
-        $scope.upvoters = null;
-        $scope.followers = null;
+        $scope.upvoters = [];
+        $scope.followers = [];
         $scope.upvoteCount = 0;
         $scope.followerCount = 0;
         $scope.isUpvoted = false;
@@ -31,8 +31,9 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         $scope.followerDisplayLimit = 9;
         $scope.tagDisplayLimit = 8;
         $scope.galleryDisplayLimit = 8;
-        $scope.storeTags = null;
-        $scope.galleryImages = null;
+        $scope.storeTags = [];
+        $scope.galleryImages = [];
+        $scope.reviews = [];
 
         if ($scope.storeData == null) {
 
@@ -43,8 +44,9 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                     $scope.storeData = store;
                     $scope.storeTags = store.get('tags');
                     $scope.checkUpvoted(store);
-
                     $scope.fetchGallery();
+
+                    //$scope.addReviewToStore("This is a sample review");
                 },
                 function(message) {
                     console.log(message);
@@ -56,7 +58,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
             ParseFactory.fetchGalleryOfStore($scope.storeData.id).then(
                 function(galleryImages) {
                     $scope.galleryImages = galleryImages;
-                    console.log(galleryImages);
+                    //console.log(galleryImages);
                 }, function(message) {
                     console.log(message);
                 }
@@ -96,6 +98,16 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                     }
                 }
             }
+        }
+
+        $scope.addReviewToStore = function(reviewText) {
+            ParseFactory.addReview($scope.currentUser, $scope.storeData, reviewText)
+                .then(function(reviewObject) {
+                    $scope.reviews.unshift(reviewObject);
+                    console.log($scope.reviews);
+                }, function(message) {
+                    console.log(message);
+                });
         }
 
     }

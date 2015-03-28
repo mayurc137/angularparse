@@ -52,6 +52,179 @@ parseServices.factory('ParseFactory', ['$q',
             }(document, 'script', 'facebook-jssdk'));
         }
 
+        /* Functions For User SignUp and Login Start Here */
+        factory.fbLogin = function() {
+
+            var deferred = $q.defer();
+
+            Parse.FacebookUtils.logIn("email", {
+                success: function(user) {
+                    if (!user.existed()) {
+                        console.log("User signed up and logged in through Facebook!");
+                        console.log(user);
+                        user.infoSet = false;
+                        deferred.resolve(user);
+
+                    } else {
+                        console.log("User logged in through Facebook!");
+                        console.log(user);
+                        user.infoSet = true;
+                        deferred.resolve(user);
+                    }
+                },
+                error: function(user, error) {
+                    alert("User cancelled the Facebook login or did not fully authorize.");
+                    deferred.reject(message);
+
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.getUserData = function() {
+
+            var deferred = $q.defer();
+            var currentUser = Parse.User.current();
+            var userData = {};
+            if (currentUser) {
+                FB.api("/me", function(response) {
+                    userData.email = response.email;
+                    userData.name = response.name;
+                    userData.id = response.id;
+                    deferred.resolve(userData);
+                });
+            } else {
+                deferred.reject("User Not Signed In");
+            }
+
+            return deferred.promise;
+        }
+
+        factory.getUserPicture = function() {
+
+            var deferred = $q.defer();
+            var currentUser = Parse.User.current();
+            var userData = {};
+            if (currentUser) {
+                FB.api("/me/picture", function(response) {
+                    userData.picture = response.data.url;
+                    deferred.resolve(userData);
+
+                });
+            } else {
+                console.log("User Not Signed In");
+                deferred.reject("Sorry Bitch!!");
+            }
+
+            return deferred.promise;
+        }
+
+        factory.setUserData = function(userData) {
+
+            var deferred = $q.defer();
+            var currentUser = Parse.User.current();
+            if (currentUser) {
+                var image = new Image();
+                //console.log(userData.picture);
+                image.src = userData.picture;
+                image.onload = function() {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(image, 0, 0);
+
+                    userData.name = userData.name.split(" ");
+
+                    var dataURL = canvas.toDataURL("image/png");
+                    var parseFile = new Parse.File(userData.name[0], {
+                        base64: dataURL
+                    });
+
+                    parseFile.save().then(function() {
+
+                            var username = currentUser.get("username");
+                            currentUser.set("user_id", username);
+                            currentUser.set("username", userData.name[0] + userData.id)
+                            currentUser.set("email", userData.email);
+                            currentUser.set("is_complete", false);
+                            currentUser.set("profile_image", parseFile);
+                            currentUser.save(null, {
+
+                                success: function(user) {
+                                    console.log("Added User Data");
+                                    deferred.resolve(user);
+                                },
+                                error: function(error, message) {
+                                    console.log(message);
+                                    deferred.reject(message);
+                                }
+                            });
+                        },
+                        function(error, message) {
+                            console.log(error);
+                            deferred.reject(message);
+                        });
+                }
+            } else {
+                console.log("Not Logged In");
+                deferred.reject("Not Logged In");
+            }
+        }
+
+
+
+        //Set user Data
+        factory.setUserProfile = function(userData) {
+
+            var deferred = $q.defer();
+
+            var user = Parse.User.current();
+            user.set("username", userData.username);
+            user.set("email", userData.email);
+            user.set("website", userData.website);
+            user.set("is_complete", true);
+            user.set("description", userData.description);
+            user.save(null, {
+
+                success: function(user) {
+                    console.log("Added User");
+                    deferred.resolve(user);
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.checkUsernameAvailablility = function(username) {
+
+            var deferred = $q.defer();
+
+            var query = new Parse.Query(Parse.User);
+            query.equalTo("username", username);
+
+            query.find({
+                success: function(user) {
+                    if (user.length == 0)
+                        deferred.resolve(true);
+                    else
+                        deferred.resolve(false);
+                },
+                error: function(error, message) {
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+        /* Functions for user Login and Sign Up End Here */
+
         factory.getStoreByHandle = function(handle) {
 
             var deferred = $q.defer();
@@ -123,6 +296,50 @@ parseServices.factory('ParseFactory', ['$q',
                     deferred.reject(message);
                 }
             });
+            return deferred.promise;
+
+        }
+
+        factory.addReview = function(user, store, reviewText) {
+
+            var deferred = $q.defer();
+
+            var Review = Parse.Object.extend("Reviews");
+            var review = new Review();
+
+            review.set("user_id", user);
+            review.set("store_id", store);
+            review.set("review", reviewText);
+
+            review.save(null, {
+                success: function(review) {
+                    user.addUnique("review_ids", review);
+                    user.save(null, {
+                        success: function(user) {
+                            store.addUnique("review_ids", review);
+                            store.save(null, {
+                                success: function(store) {
+                                    console.log("Success");
+                                    deferred.resolve(review);
+                                },
+                                error: function(error, message) {
+                                    console.log(message);
+                                    deferred.reject(message);
+                                }
+                            });
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
             return deferred.promise;
 
         }
