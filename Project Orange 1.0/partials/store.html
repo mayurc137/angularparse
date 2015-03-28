@@ -1,353 +1,54 @@
-<div class="navBar">
-	<div class="navBarContent">
+<div class='store'>
+	<p>{{storeData.get('name')}}</p>
+	<p>{{storeData.get('phone')}}</p>
+	<p>{{storeData.get('website_link')}}</p>
+	<p>{{storeData.get('facebook_link')}}</p>
+	<p>{{storeData.get('twitter_link')}}</p>
+	<p>{{storeData.get('locality').get('locality_name')}}</p>
+	<p>{{storeData.get('address')}}</p>
+	<p>{{storeData.get('description')}}</p>
+	<p>{{storeData.get('major_sale')}}</p>
+	<p>{{storeData.get('primary_category').get('categoryName')}} {{storeData.get('primary_category').get('image_link')}}</p>
+	<p>{{upvoteCount}}</p>
+	<p>{{isUpvoted}}</p>
+	<p>{{followerCount}}</p>
+	<p>{{isFollowing}}</p>
 
-	</div>
-</div>
-<div class="shopHeader" ng-style="{'background': 'url('store.attributes.banner_image._url') no-repeat'; 'background-size' : 'cover';}">
-	<div class="imgFader"></div>
-	<div class="shopHeaderContent">
-		<div class="upvoteFollowContainer">
-			<div class="upvoteFollowBtn shopUpvoteBtn primaryBtnVisited">
-				{{}}
-			</div>
-			<div class="upvoteFollowBtn shopFollowBtn primaryBtnVisited">
-				Following
-			</div>
-		</div>
-		<div class="shopHeaderButtons">
-			<div class="headerBtn shopAddBtn">
-				Add
-			</div>
-			<div class="headerBtn shopReviewBtn">
-				Review
-			</div>
-			<div class="headerBtn shopCouponsBtn">
-				Coupons
-			</div>
-			<div class="headerBtn shopActivityBtn">
-				Feed
-			</div>
-			<div class="headerBtn shopActivityBtn">
-				Showcase
-			</div>
-			<div class="headerBtn shopActivityBtn">
-				Shopped
-			</div>
-		</div>
-		<div class="shopCountDetails">
-			<p>2040  202 </p>
-		</div>
-		<div class="shopTitle">
-			<p class="shopTitleContent">I Love Kapda</p>
-		</div>
-		<img src="img/icons.png" class="shopCatImg">
-	</div>
-</div>
-<div class="emptySpace"></div>
-<div class="mainShopContent">
-	<div class="shopSideContent">
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Contact</p>
-				<p class="cardInnerContent">9028562767</p>
-				<p class="cardInnerContent action">ilovekapda.com</p>
-				<p class="cardInnerContent action">fb.com/ilovekapda</p>
-				<p class="cardInnerContent action">@ilovekapda</p>
-			</div>
-		</div>
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Location</p>
-				<p class="cardInnerContent action">Koregaon Park</p>
-				<p class="cardInnerContent">Shop No. 7, Gulmohar Garden, Lane Number 7, Meera Nagar, Pune</p>
-			</div>
-		</div>
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Popular For</p>
-				<p class="cardInnerContent">Designer Clothes, Jeans, Women Wear, Shoes</p>
-			</div>
-		</div>
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Collections</p>
-				<p class="cardInnerContent">Added in <span class="collectionLink action">10 great stores,</span><span class="collectionLink action">Love the way you Dress</span>Collections</p>
-			</div>
-		</div>
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Opening Hours</p>
-				<p class="cardInnerContent">10:30 to 7:30</p>
-			</div>
-		</div>
-		<div class="cardContainer">
-			<div class="cardContent">
-				<p class="cardHeader">Followers</p>
-				<div class="profileSmall">
-					<img src="img/img9.jpg" class="profileSmallImg">
-				</div><div class="profileSmall">
-				<img src="img/img10.jpg" class="profileSmallImg">
-			</div><div class="profileSmall">
-			<img src="img/img11.jpg" class="profileSmallImg">
-		</div><div class="profileSmall">
-		<img src="img/img12.jpg" class="profileSmallImg">
-	</div><div class="profileSmall">
-	<img src="img/img12.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img11.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img10.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img9.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img13.jpg" class="profileSmallImg">
-</div><div class="profileSmall moreProfileBtn">
-<p class="followUpvoteMoreCount">+28</p>
-</div>
-</div>
-</div>
-<div class="cardContainer">
-	<div class="cardContent">
-		<p class="cardHeader">Upvoted</p>
-		<div class="profileSmall">
-			<img src="img/img11.jpg" class="profileSmallImg">
-		</div><div class="profileSmall">
-		<img src="img/img13.jpg" class="profileSmallImg">
-	</div><div class="profileSmall">
-	<img src="img/img12.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img11.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img10.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img9.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img8.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img9.jpg" class="profileSmallImg">
-</div><div class="profileSmall">
-<img src="img/img13.jpg" class="profileSmallImg">
-</div><div class="profileSmall moreProfileBtn">
-<p class="followUpvoteMoreCount">+18</p>
-</div>
-</div>
-</div>
-</div><div class="shopMainContent">
-<div class="cardContainerFull">
-	<div class="cardContent">
-		<p class="cardHeader">About</p>
-		<p class="cardInnerContent">I Love Kapda, the most happening boutique in Koregaon Park has come up with their latest collection of Party Dresses and Gowns which are quite sexy and elegant. The boutique that has been famous for getting the best of party-wear for ladies has brought a classy collection that we thinks is really unique.</p>
-	</div>
-</div>
-<div class="cardContainerFull">
-	<div class="cardContent">
-		<p class="cardHeader">Known For</p>
-		<div class="popularElement">
-			<img class="popularElementImg" src="img/pop2.png"><p class="popularElementTitle">Women Designer</p>
-		</div><div class="popularElement">
-		<img class="popularElementImg" src="img/pop2.png"><p class="popularElementTitle">Men Designer</p>
-	</div><div class="popularElement">
-	<img class="popularElementImg" src="img/pop3.png"><p class="popularElementTitle">Mens Casuals</p>
-</div><div class="popularElement">
-<img class="popularElementImg" src="img/pop4.png"><p class="popularElementTitle">Kids Wear</p>
-</div><div class="popularElement">
-<img class="popularElementImg" src="img/pop2.png"><p class="popularElementTitle">Shoes</p>
-</div><div class="popularElement">
-<img class="popularElementImg" src="img/pop2.png"><p class="popularElementTitle">Accesories</p>
-</div><div class="popularElement">
-<img class="popularElementImg" src="img/pop3.png"><p class="popularElementTitle">Watches</p>
-</div><div class="popularElement">
-<img class="popularElementImg" src="img/pop4.png"><p class="popularElementTitle">Designer Tops</p>
-</div><div class="popularElement extraPopular">
-<img class="popularElementImg" src="img/pop3.png"><p class="popularElementTitle">Designer Jeans</p>
-</div><div class="popularElement extraPopular">
-<img class="popularElementImg" src="img/pop4.png"><p class="popularElementTitle">Socks</p>
-</div><div class="popularElement extraPopular">
-<img class="popularElementImg" src="img/pop3.png"><p class="popularElementTitle">Belts</p>
-</div><div class="popularElement extraPopular">
-<img class="popularElementImg" src="img/pop4.png"><p class="popularElementTitle">Helmets</p>
-</div><div class="popularElement extraPopular">
-<img class="popularElementImg" src="img/pop3.png"><p class="popularElementTitle">Leather Stuff</p>
-</div><div class="morePopular">+ MORE</div>
-</div>
-</div>
-<div class="cardContainerFull">
-	<div class="cardContent">
-		<p class="cardHeader">Sale</p>
-		<p class="cardInnerContent">Get 30% OFF on all designer clothes and shoes! Hurry Offer valid till June 20</p>
-	</div>
-</div>
-<div class="cardContainerFull">
-	<div class="cardContent">
-		<p class="cardHeader">Gallery</p>
-		<div class="galleryImgContainer"><img class="galleryImg" src="img/back2.jpg">
-		</div><div class="galleryImgContainer"><img class="galleryImg" src="img/back3.jpg">
-	</div><div class="galleryImgContainer"><img class="galleryImg" src="img/back4.jpg">
-</div><div class="galleryImgContainer"><img class="galleryImg" src="img/back.jpg">
-</div><div class="galleryImgContainer"><img class="galleryImg" src="img/back6.jpg">
-</div><div class="galleryImgMoreContainer"><div class="galleryMoreCount">+12</div></div>
-</div>
-</div>
-<div class="shopTabContainer">
-	<div class="tabBtn tabActive tabActivity">Activity</div>
-	<div class="tabBtn tabReview">Review</div>
-	<div class="tabBtn tabCoupon">Coupons</div>
-	<div class="tabBtn tabShowcase">Showcase</div>
-</div>
-<div class="cardContainerFull activityContainer tabContainer">
-	<div class="cardContent activityContent postTypeGeneralImageText">
-		<div class="postHeader">
-			<div class="userImgContainer">
-				<img src="img/img8.jpg" class="adjustImg">
-			</div>
-			<div class="postUserActivity">
-				<span class="postUsername">I Love Kapda</span><br/>
-				<span class="postUserTimeStamp">Today</span>
-			</div>
-		</div><div class="userActivityPostImgContainer">
-		<img class="userActivityPostImg" src="img/back3.jpg">
-	</div><div class="userActivityPostContent"><span class="userActivityPostTitle">New Arrivals at the Koregaon Park Store Check</span><span class="userActivityPostDetails">The wine choices are great and also love that they have different glasses for different wines ! Bang on with the fine dining etiquettes. Love that they serve you some bread and a cold soup to begin your meal with.</span>
-	<div class="userActivityActions">
-		<img class="postUpvoteIcon" src="img/pop3.png">
-		<span class="postUpvoteCount postActionBtnText">200</span>
-		<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-		<img class="postCommentIcon" src="img/pop4.png">
-		<span class="postCommentCount postActionBtnText">20</span>
-		<span class="postCommentBtn postActionBtnText">Comment</span>
-		<span class="postShareBtn postActionBtnText">Share</span>
-		<span class="postReadMoreBtn postActionBtnText">More</span>
-	</div>
-</div>
-</div><div class="cardContent activityContent postTypeGeneralTextOnly">
-<div class="postHeader">
-	<div class="userImgContainer">
-		<img src="img/img8.jpg" class="adjustImg">
-	</div>
-	<div class="postUserActivity">
-		<span class="postUsername">I Love Kapda</span><br/>
-		<span class="postUserTimeStamp">Today</span>
-	</div>
-</div><div class="userActivityPostContent"><span class="userActivityPostTitle">New Arrivals at the Koregaon Park Store Check</span><span class="userActivityPostDetails">The wine choices are great and also love that they have different glasses for different wines ! Bang on with the fine dining etiquettes. Love that they serve you some bread and a cold soup to begin your meal with.</span>
-<div class="userActivityActions">
-	<img class="postUpvoteIcon" src="img/pop3.png">
-	<span class="postUpvoteCount postActionBtnText">200</span>
-	<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-	<img class="postCommentIcon" src="img/pop4.png">
-	<span class="postCommentCount postActionBtnText">20</span>
-	<span class="postCommentBtn postActionBtnText">Comment</span>
-	<span class="postShareBtn postActionBtnText">Share</span>
-	<span class="postReadMoreBtn postActionBtnText">More</span>
-</div>
-</div>
-</div><div class="cardContent activityContent postTypeGeneralTextOnly">
-<div class="postHeader">
-	<div class="userImgContainer">
-		<img src="img/img8.jpg" class="adjustImg">
-	</div>
-	<div class="postUserActivity">
-		<span class="postUsername">I Love Kapda</span><br/>
-		<span class="postUserTimeStamp">Today</span>
-	</div>
-</div><div class="userActivityPostContent"><span class="userActivityPostDetails">The wine choices are great and also love that they have different glasses for different wines ! Bang on with the fine dining etiquettes. Love that they serve you some bread and a cold soup to begin your meal with.</span>
-<div class="userActivityActions">
-	<img class="postUpvoteIcon" src="img/pop3.png">
-	<span class="postUpvoteCount postActionBtnText">200</span>
-	<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-	<img class="postCommentIcon" src="img/pop4.png">
-	<span class="postCommentCount postActionBtnText">20</span>
-	<span class="postCommentBtn postActionBtnText">Comment</span>
-	<span class="postShareBtn postActionBtnText">Share</span>
-	<span class="postReadMoreBtn postActionBtnText">More</span>
-</div>
-</div>
-</div><div class="cardContent activityContent postTypeGeneralImageOnly">
-<div class="postHeader">
-	<div class="userImgContainer">
-		<img src="img/img8.jpg" class="adjustImg">
-	</div>
-	<div class="postUserActivity">
-		<span class="postUsername">I Love Kapda</span><br/>
-		<span class="postUserTimeStamp">Today</span>
-	</div>
-</div><div class="userActivityPostImgContainer">
-<img class="userActivityPostImg" src="img/back4.jpg">
-</div><div class="userActivityPostContent">
-<div class="userActivityActions">
-	<img class="postUpvoteIcon" src="img/pop3.png">
-	<span class="postUpvoteCount postActionBtnText">200</span>
-	<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-	<img class="postCommentIcon" src="img/pop4.png">
-	<span class="postCommentCount postActionBtnText">20</span>
-	<span class="postCommentBtn postActionBtnText">Comment</span>
-	<span class="postShareBtn postActionBtnText">Share</span>
-	<span class="postReadMoreBtn postActionBtnText">More</span>
+	<p>Upvoters</p>
+	<ul>
+		<li ng-repeat="user in upvoters | limitTo: upvoteDisplayLimit">
+			<p>{{user.get('name')}}</p>
+			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
+		</li>
+		<li ng-show="upvoteCount - upvoteDisplayLimit > 0">
+			<p>{{upvoteCount - upvoteDisplayLimit}}+</p>
+		</li>
+	</ul>
 
-</div>
-</div>
-</div>
-<div class="cardContent activityContent followForMoreContent">
-	Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
-</div>
-</div>
-<div class="cardContainerFull reviewContainer tabContainer">
-	<div class="cardContent reviewContainerInner">
-		<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.."></textarea>
-		<div class="addReviewBtn">Publish Review</div>
-	</div>
-	<div class="cardContent reviewContent">
-		<div class="postHeader">
-			<div class="userImgContainer">
-				<img src="img/img8.jpg" class="adjustImg">
-			</div>
-			<div class="postUserActivity">
-				<span class="postUsername">Arun S</span><br/>
-				<span class="postUserReviewCount">31 Reviews</span>
-				<span class="postUserFollowerCount">200 Followers</span>
-			</div>
-			<div class="userFollowBtn">Follow</div>
-		</div>
-		<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. Food and cocktails are lavish and amaze your palate. I would highly recommend Stone Water Grill to cheesy non veg lovers.</div>
-	</div>
-	<div class="cardContent reviewContent">
-		<div class="postHeader">
-			<div class="userImgContainer">
-				<img src="img/img9.jpg" class="adjustImg">
-			</div>
-			<div class="postUserActivity">
-				<span class="postUsername">Mayur More</span><br/>
-				<span class="postUserReviewCount">31 Reviews</span>
-				<span class="postUserFollowerCount">200 Followers</span>
-			</div>
-			<div class="userFollowBtn">Follow</div>
-		</div>
-		<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff.</div>
-	</div>
-	<div class="cardContent reviewContent">
-		<div class="postHeader">
-			<div class="userImgContainer">
-				<img src="img/img10.jpg" class="adjustImg">
-			</div>
-			<div class="postUserActivity">
-				<span class="postUsername">Aditya More</span><br/>
-				<span class="postUserReviewCount">31 Reviews</span>
-				<span class="postUserFollowerCount">200 Followers</span>
-			</div>
-			<div class="userFollowBtn ">Follow</div>
-		</div>
-		<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. </div>
-	</div>
-	<div class="loadMoreBtn">23 More</div>
-</div>
-<div class="cardContainerFull couponsContainer tabContainer">
-	<div class="cardContent">
+	<p>Followers</p>
+	<ul>
+		<li ng-repeat="user in followers | limitTo: followerDisplayLimit">
+			<p>{{user.get('name')}}</p>
+			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
+		</li>
+		<li  ng-show="followerCount - followerDisplayLimit > 0">
+			<p>{{followerCount - followerDisplayLimit}}+</p>
+		</li>
+	</ul>
 
-		<p class="cardHeader">Coupons Feed for I love Kapda</p>
-	</div>
-</div>
-<div class="cardContainerFull showcaseContainer tabContainer">
-	<div class="cardContent">
-		<p class="cardHeader">Showcase Feed for I love Kapda</p>
-	</div>
-</div>
-</div>
-</div>
+	<p>Tags</p>
+	<ul>
+		<li ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
+			<p> {{tag.get('tag_description')}} {{tag.get('tag_image')}} </p>
+		</li>
+		<li ng-show="storeTags.length - tagDisplayLimit > 0">+More</li>
+	</ul>
+
+	<p>Gallery</p>
+	<ul>
+		<li ng-repeat="image in galleryImages | limitTo: galleryDisplayLimit">
+			<img ng-src="{{image.get('image')._url}}" width = "100px" />
+		</li>
+		<li ng-show="galleryImages.length - galleryDisplayLimit > 0">+{{galleryImages.length - galleryDisplayLimit}}</li>
+	</ul>
+</di

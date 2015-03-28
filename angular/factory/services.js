@@ -5,32 +5,6 @@ phonecatServices.factory('Phone', ['$q',
 
 			var factory = {};
 
-			factory.init = function () {
-				Parse.initialize("1ZeyYfTJAhabLrrRpu9AwT8bWlpU9W3Fj0hesIzN", "wl2trYAjBeN1X7BVroZJjEtTuuFdnb3gmKDGC0D0");
-				window.fbAsyncInit = function () {
-					Parse.FacebookUtils.init({ // this line replaces FB.init({
-						appId: '778139162267115', // Facebook App ID
-						status: true, // check Facebook Login status
-						cookie: true, // enable cookies to allow Parse to access the session
-						xfbml: true, // initialize Facebook social plugins on the page
-						version: 'v2.2' // point to the latest Facebook Graph API version
-					});
-
-					// Run code after the Facebook SDK is loaded.
-				};
-
-				(function (d, s, id) {
-					var js, fjs = d.getElementsByTagName(s)[0];
-					if (d.getElementById(id)) {
-						return;
-					}
-					js = d.createElement(s);
-					js.id = id;
-					js.src = "http://connect.facebook.net/en_US/sdk.js";
-					fjs.parentNode.insertBefore(js, fjs);
-				}(document, 'script', 'facebook-jssdk'));
-			}
-
 			factory.fbLogin = function () {
 
 				var deferred = $q.defer();
@@ -201,13 +175,7 @@ phonecatServices.factory('Phone', ['$q',
 									});
 							}
 
-						}
-
-
-					},
-					function (error) {
-
-					});
+						});
 			} else {
 				console.log("User not logged in");
 			}
@@ -1738,8 +1706,6 @@ phonecatServices.factory('Phone', ['$q',
 		}
 
 		factory.getStoreByHandle = function (handle) {
-
-			init();
 
 			var deferred = $q.defer();
 
