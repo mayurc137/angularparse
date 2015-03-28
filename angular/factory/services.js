@@ -242,9 +242,12 @@ phonecatServices.factory('Phone', ['$q',
 			var query = new Parse.Query("Stores");
 			query.equalTo("objectId", storeid);
 			query.include("products");
+			query.include("primary_category");
+			query.include("secondary_category");
+			query.include("collections");
 			query.find({
 				success: function (store) {
-					console.table(store);
+					console.log(store);
 					deferred.resolve(store);
 				},
 				error: function (error, message) {
@@ -1164,6 +1167,51 @@ phonecatServices.factory('Phone', ['$q',
 					deferred.reject(message);
 				}
 			});
+			return deferred.promise;
+
+		}
+
+		factory.addReview = function (user, store) {
+
+			var deferrred = $q.defer();
+
+
+			var Review = new Parse.Object.extend("Review");
+			var review = new Review();
+
+			review.set("user_id", user);
+			review.set("store_id", store);
+			review.set("review", "Nice store bro :p");
+
+			review.save(null, {
+				success: function (review) {
+					user.addUnique("review_ids", review);
+					user.save(null, {
+						success: function (user) {
+							store.addUnique("review_ids", review);
+							store.save(null, {
+								success: function (store) {
+									console.log("Success");
+									deferred.resolve(true);
+								},
+								error: function (error, message) {
+									console.log(message);
+									deferred.reject(message);
+								}
+							});
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
 			return deferred.promise;
 
 		}

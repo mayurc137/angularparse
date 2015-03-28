@@ -1,0 +1,142 @@
+[
+{
+	"name":"Store 1",
+	"id":"0001",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle1"
+},
+{
+	"name":"Store 2",
+	"id":"0002",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle2"
+},
+{
+	"name":"Store 3",
+	"id":"0003",
+	"address":"Bhosale Nagar",
+	"upvote":2,
+	"owner":"userhandle3"
+},
+{
+	"name":"Store 4",
+	"id":"0004",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle4"
+},
+{
+	"name":"Store 5",
+	"id":"0005",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle5"
+},
+{
+	"name":"Store 6",
+	"id":"0006",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle6"
+},
+{
+	"name":"Store 7",
+	"id":"0007",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle7"
+},
+{
+	"name":"Store 8",
+	"id":"0008",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle8"
+},
+{
+	"name":"Store 9",
+	"id":"0009",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle9"
+},
+{
+	"name":"Store 10",
+	"id":"0010",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle10"
+},
+{
+	"name":"Store 11",
+	"id":"0011",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle11"
+},
+{
+	"name":"Store 12",
+	"id":"0012",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle12"
+},
+{
+	"name":"Store 13",
+	"id":"0013",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle13"
+},
+{
+	"name":"Store 14",
+	"id":"0014",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle14"
+},
+{
+	"name":"Store 15",
+	"id":"0015",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle15"
+},
+{
+	"name":"Store 16",
+	"id":"0016",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle16"
+},
+{
+	"name":"Store 17",
+	"id":"0017",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle17"
+},
+{
+	"name":"Store 18",
+	"id":"0018",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle18"
+},
+{
+	"name":"Store 19",
+	"id":"0019",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle19"
+},
+{
+	"name":"Store 20",
+	"id":"0020",
+	"address":"Bhosale Nagar",
+	"upvote":0,
+	"owner":"userhandle20"
+}
+]
