@@ -1,5 +1,5 @@
 function init() {
-	Parse.initialize("1ZeyYfTJAhabLrrRpu9AwT8bWlpU9W3Fj0hesIzN", "wl2trYAjBeN1X7BVroZJjEtTuuFdnb3gmKDGC0D0");
+	Parse.initialize("ZaHk6NzbXLus8EmO0DetfsigR3I2zi4O9D8u5iIG", "kqu6hlxW83BqIeaOBuEgaFr1wyOZ6kNO9VxO5f89");
 	console.log("Parse Initialized");
 }
 
@@ -10,6 +10,7 @@ function logIn() {
 		},
 		error: function (user, error) {
 			// The login failed. Check error to see why.
+			console.log(error);
 		}
 	});
 }
@@ -17,7 +18,7 @@ function logIn() {
 function getUserData(userId) {
 
 	var query = new Parse.Query(Parse.User);
-	query.equalTo("user_id", userId);
+	query.equalTo("objectId", userId);
 	query.include("collections");
 	query.include("collections.store_ids");
 	query.include("collections.product_ids");
@@ -26,6 +27,7 @@ function getUserData(userId) {
 
 			// Syntax = user[0].get('name of column')
 			console.log(user);
+			//createCollection(user[0], "My Collection", $("#image")[0]);
 		},
 		error: function (error, message) {
 			console.log(message);
@@ -34,14 +36,38 @@ function getUserData(userId) {
 
 }
 
+//Done
 function getStoreDataByStoreId(storeid) {
 
 	var query = new Parse.Query("Stores");
 	query.equalTo("objectId", storeid);
 	query.include("products");
+	query.include("primary_category");
+	query.include("secondary_category");
+	query.include("collections");
+	query.include("services");
+	query.include("followers");
+	query.include("locality");
+	query.include("upvoted_by");
+	query.include("tags");
 	query.find({
 		success: function (store) {
-			console.table(store);
+			console.log(store);
+			addUpvoters();
+			//addServices(store[0]);
+			//changeLocality("xxVQCLrbtm", 18.561128, 73.807060);
+			/*var point = new Parse.GeoPoint({
+				latitude: 18.561128,
+				longitude: 73.807060
+			});
+
+			getNearestStores(point);
+			*/
+
+
+			/*var lat = 18.561127;
+			var lon = 73.807060;
+			findClosestLocality(lat, lon);*/
 		},
 		error: function (error) {
 			console.log(error);
@@ -50,7 +76,71 @@ function getStoreDataByStoreId(storeid) {
 	});
 }
 
-function getStoreDataByUserId(userid) {
+function getNearestStores(locality) {
+
+	var query = new Parse.Query("Stores");
+	query.near("geolocation", locality);
+
+	query.find({
+		success: function (localityArray) {
+			console.log(localityArray);
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+//Done
+function changeLocality(storeId, lat, lon) {
+
+	var point = new Parse.GeoPoint({
+		latitude: lat,
+		longitude: lon
+	});
+
+	var query = new Parse.Query("Locality");
+	query.near("location", point);
+	query.limit(2);
+
+	query.find({
+		success: function (locality) {
+			var location = locality[0];
+			console.log(location);
+			var storequery = new Parse.Query("Stores");
+			storequery.get(storeId, {
+				success: function (store) {
+					store.set("locality", location);
+					store.set("geolocation", point);
+					store.save(null, {
+						success: function (object) {
+							console.log("Success");
+						},
+						error: function (error, message) {
+							console.log(message);
+						}
+					})
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+
+	});
+}
+
+//Done
+function findClosestLocality(point) {
+
+
+}
+
+/*function getStoreDataByUserId(userid) {
 
 	var query = new Parse.Query(Parse.User);
 	query.equalTo("objectId", userid);
@@ -67,21 +157,21 @@ function getStoreDataByUserId(userid) {
 
 	});
 
-}
+}*/
 
+
+//Done
 function fetchGalleryOfStore(storeId) {
 
 	var storequery = new Parse.Query("Stores");
 	storequery.equalTo("objectId", storeId);
-
-	//storequery.find({ success: function(store) { console.log(store);}})
 
 	var query = new Parse.Query("Gallery");
 	query.matchesQuery("store_id", storequery);
 	query.find({
 		success: function (gallery) {
 
-			console.log(gallery[0].attributes.image._url);
+			console.log(gallery);
 		},
 		error: function (error) {
 			console.log(error);
@@ -89,6 +179,7 @@ function fetchGalleryOfStore(storeId) {
 	});
 
 }
+
 
 function addStoreImagesToGallery(storeId) {
 
@@ -260,42 +351,116 @@ function addComment() {
 	});
 }
 
+//Done
 function createStore() {
 	var Store = Parse.Object.extend("Stores");
 	var store = new Store();
 	store.save();
 }
 
+//done (both store and user are parse objects)
+function upvoteStore(store, user) {
+
+	store.addUnique("upvoted_by", user);
+	store.save(null, {
+		success: function (object) {
+			console.log("Success");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	user.addUnique("stores_upvoted", store);
+	user.save(null, {
+		success: function (object) {
+			console.log("Success");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+}
+
+function addUpvoters() {
+
+	var query = new Parse.Query("Stores");
+	query.get("mF2AE0O88N", {
+		success: function (store) {
+
+			//add cloud
+			var userquery = new Parse.Query(Parse.User);
+			userquery.find({
+				success: function (user) {
+					for (var i = 0; i < 3; i++) {
+						upvoteStore(store, user[i]);
+					}
+				},
+				error: function (error, message) {
+
+				}
+			});
+		},
+		error: function (error, message) {
+
+		}
+	});
+}
+
+//done
+function followStore(store, user) {
+
+	store.addUnique("followers", user);
+	store.save(null, {
+		success: function (object) {
+			console.log("Success");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	user.addUnique("stores_followed", store);
+	user.save(null, {
+		success: function (object) {
+			console.log("Success");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+
+// Done
 function addDetailsToStore() {
 
-	var storeId = "Ik3uYT99O4";
+	var storeId = "mF2AE0O88N";
 
 	var Store = Parse.Object.extend("Stores");
 	var query = new Parse.Query(Store);
 
 	var storeDetails = {
-		name: "Store1",
-		primary_category_id: "abcd",
-		categories: [
-			"defg",
-			"hijk"
-		],
-		description: "A new store",
-		logo: $("#logo")[0],
 		address: "b1-17 refocusTech",
-		locality: "bhosale paradise",
-		phone: "7507118432",
-		website_link: "www.refocusTech.com",
-		latitude: "18.03",
-		longitude: "73.10",
-		upvote_count: 10,
-		store_joined_number: 2,
-		followers_count: 12,
+		description: "A new store",
 		email: "refocusTech@gmail.com",
-		twitter_handler: "haha"
+		logo: $("#logo")[0],
+		name: "Store1",
+		phone: "7507118432",
+		store_handle: "@store",
+		website_link: "www.refocusTech.com",
+		primary_category: "L3h57JJ3hm",
+		twitter_link: "#haha",
+		facebook_link: "#abcd"
 	};
 
+	getCategoryById();
+	getTags();
+
 	if (storeDetails.logo.files.length > 0) {
+
+		var querycategory = new Parse.Query("Categories");
 
 		var logo = storeDetails.logo.files[0];
 		var parseFile = new Parse.File(logo.name, logo);
@@ -304,18 +469,18 @@ function addDetailsToStore() {
 
 			query.get(storeId, {
 				success: function (store) {
-					store.set("name", storeDetails.name);
-					store.set("primary_category_id", storeDetails.primary_category_id);
-					store.set("categories", storeDetails.categories);
-					store.set("description", storeDetails.description);
-					store.set("logo", parseFile);
 					store.set("address", storeDetails.address);
-					store.set("locality", storeDetails.locality);
-					store.set("phone", storeDetails.phone);
-					store.set("website_link", storeDetails.website_link);
-					store.set("latitude", storeDetails.latitude);
-					store.set("longitude", storeDetails.longitude);
+					store.set("description", storeDetails.description);
 					store.set("email", storeDetails.email);
+					store.set("logo", parseFile);
+					store.set("name", storeDetails.name);
+					store.set("phone", storeDetails.phone);
+					store.set("store_handle", storeDetails.store_handle);
+					store.set("website_link", storeDetails.website_link);
+					store.set("primary_category", category);
+					store.set("twitter_link", storeDetails.twitter_link);
+					store.set("facebook_link", storeDetails.facebook_link);
+					store.set("tags", tags);
 					store.save(null, {
 						success: function (object) {
 							console.log(object);
@@ -325,15 +490,44 @@ function addDetailsToStore() {
 						}
 					});
 				},
-				error: function (error) {
+				error: function (error, message) {
 
-					console.log(error);
+					console.log(message);
 				}
 			});
 		});
+
+
+
 	} else {
 		console.log("No logo uploaded");
 	}
+}
+
+var category;
+//test function
+function getCategoryById() {
+	var querycategory = new Parse.Query("Categories");
+	querycategory.get("2zHBKSc2IZ", {
+		success: function (primary_category) {
+			category = primary_category;
+		},
+		error: function (error, message) {}
+	});
+}
+
+var tags;
+//test function
+function getTags() {
+	var query = new Parse.Query("Tags");
+	query.find({
+		success: function (tag) {
+			tags = tag;
+		},
+		error: function (error, message) {
+
+		}
+	});
 }
 
 function addNotification() {
@@ -395,65 +589,107 @@ function cloudFunction() {
 	});
 }
 
-function addProduct() {
+function addServices(store) {
 
-	var productDetails = {
-		name: "Test Product",
-		store_id: "r13wY0LqKW",
-		image: $("#productpic")[0],
-		stock: 10,
+	var serviceDetails = {
 		cprice: 102.50,
-		sprice: 99.99,
+		description: "Wow much swag",
+		image: $("#productpic")[0],
 		is_sale: true,
 		is_visible: false,
-		description: "Wow much swag"
+		name: "Test Product",
+		sprice: 99.99
+	};
+
+	if (serviceDetails.image.files.length > 0) {
+
+		var picture = serviceDetails.image.files[0];
+		var parseFile = new Parse.File(picture.name, picture);
+		parseFile.save().then(function () {
+			var Service = Parse.Object.extend("Services");
+			var service = new Service();
+			service.set("cprice", serviceDetails.cprice);
+			service.set("description", serviceDetails.description);
+			service.set("image", parseFile);
+			service.set("is_sale", serviceDetails.is_sale);
+			service.set("is_visible", serviceDetails.is_visible);
+			service.set("name", serviceDetails.name);
+			service.set("sprice", serviceDetails.sprice);
+			service.set("store_id", store);
+
+			service.save(null, {
+				success: function (object) {
+					console.log("Added To services");
+					store.addUnique("services", object);
+					store.save(null, {
+						success: function (object) {
+							console.log("Added to Store");
+						},
+						error: function (error, message) {
+							console.log(message);
+						}
+					});
+
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+		});
+
+	} else {
+		console.log("No product picture selected");
+	}
+}
+
+function addProduct(store) {
+
+	var productDetails = {
+		cprice: 102.50,
+		description: "Wow much swag",
+		image: $("#productpic")[0],
+		is_sale: true,
+		is_visible: false,
+		name: "Test Product",
+		sprice: 99.99
 	};
 
 	if (productDetails.image.files.length > 0) {
 
-		var query = new Parse.Query("Stores");
-		query.get(productDetails.store_id, {
-			success: function (store) {
-				var picture = productDetails.image.files[0];
-				var parseFile = new Parse.File(picture.name, picture);
-				parseFile.save().then(function () {
-					var Product = Parse.Object.extend("Products");
-					var product = new Product();
-					product.set("name", productDetails.name);
-					product.set("store_id", store);
-					product.set("image", parseFile);
-					product.set("stock", productDetails.stock);
-					product.set("cprice", productDetails.cprice);
-					product.set("sprice", productDetails.sprice);
-					product.set("is_sale", productDetails.is_sale);
-					product.set("is_visible", productDetails.is_visible);
-					product.set("description", productDetails.description);
+		var picture = productDetails.image.files[0];
+		var parseFile = new Parse.File(picture.name, picture);
+		parseFile.save().then(function () {
+			var Product = Parse.Object.extend("Products");
+			var product = new Product();
+			product.set("cprice", productDetails.cprice);
+			product.set("description", productDetails.description);
+			product.set("image", parseFile);
+			product.set("is_sale", productDetails.is_sale);
+			product.set("is_visible", productDetails.is_visible);
+			product.set("name", productDetails.name);
+			product.set("sprice", productDetails.sprice);
+			product.set("store_id", store);
 
-					product.save(null, {
+			product.save(null, {
+				success: function (object) {
+					console.log(object);
+					store.addUnique("products", object);
+					store.save(null, {
 						success: function (object) {
-							console.log(object);
-							store.addUnique("products", object);
-							store.save(null, {
-								success: function (object) {
-									console.log("Added to Store");
-								},
-								error: function (error, message) {
-									console.log(message);
-								}
-							});
-
+							console.log("Added to Store");
 						},
-						error: function (error) {
-							console.log(error);
+						error: function (error, message) {
+							console.log(message);
 						}
 					});
-				});
-			},
-			error: function (error) {
-				console.log(error);
-			}
 
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
 		});
+
 	} else {
 		console.log("No product picture selected");
 	}
@@ -566,25 +802,19 @@ function deleteProduct(productId) {
 	});
 }
 
-function createCollection() {
+function createCollection(user, name, image) {
 
-	var collectionDetails = {
-		type: "Product",
-		upvote_count: 0,
-		created_by: "OHjLjnyS4K",
-		no_comments: 0
-	};
+	var Collection = Parse.Object.extend("Collections");
+	var collection = new Collection();
 
-	var query = new Parse.Query(Parse.User);
-	query.get(collectionDetails.created_by, {
-		success: function (user) {
-			var Collection = Parse.Object.extend("Collections");
-			var collection = new Collection();
-			collection.set("type", collectionDetails.type);
-			collection.set("upvote_count", collectionDetails.upvote_count);
+
+	if (image.files.length > 0) {
+		var picture = image.files[0];
+		var parseFile = new Parse.File(picture.name, picture);
+		parseFile.save().then(function () {
+			collection.set("image", parseFile);
+			collection.set("collection_name", name);
 			collection.set("created_by", user);
-			collection.set("no_comments", collectionDetails.no_comments);
-
 			collection.save(null, {
 				success: function (object) {
 					console.log(user);
@@ -604,100 +834,131 @@ function createCollection() {
 				}
 			});
 
+		});
+	} else {
+		collection.set("collection_name", name);
+		collection.set("created_by", user);
+		collection.save(null, {
+			success: function (object) {
+				console.log(user);
+				user.addUnique("collections", object);
+				user.save(null, {
+					success: function (object) {
+						console.log("Added to user");
+					},
+					error: function (object, error) {
+						console.log(error);
+					}
+				});
 
+			},
+			error: function (error, message) {
+				console.log(message);
+			}
+		});
+	}
+}
+
+
+function addProductToCollection(product, collection) {
+
+	collection.addUnique("product_ids", product);
+	collection.save(null, {
+		success: function (object) {
+			console.log("Added Product");
 		},
-		error: function (error) {
-			console.log(error);
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	product.addUnique("collections", collection);
+	product.save(null, {
+		success: function (object) {
+			console.log("Added To Collection");
+		},
+		error: function (error, message) {
+			console.log(message);
 		}
 	});
 }
 
+function addServiceToCollection(service, collection) {
 
-function addProductToCollection() {
-
-	var productId = 'NxjRdXlSVy';
-	var collectionId = 'qVlpiQgFC6';
-	var productquery = new Parse.Query("Products");
-	productquery.equalTo("objectId", productId);
-	productquery.find({
-		success: function (product) {
-			var Collection = Parse.Object.extend("Collections");
-			var query = new Parse.Query(Collection);
-			query.get(collectionId, {
-				success: function (collection) {
-					// The object was retrieved successfully.
-					collection.addUnique("product_ids", product[0]);
-					collection.save(null, {
-						success: function (object) {
-							console.log(object);
-						},
-						error: function (error) {
-							console.log(error);
-						}
-					});
-				},
-				error: function (object, error) {
-					// The object was not retrieved successfully.
-					// error is a Parse.Error with an error code and message.
-					console.log(error);
-				}
-			});
+	collection.addUnique("service_ids", service);
+	collection.save(null, {
+		success: function (object) {
+			console.log(object);
 		},
-		error: function (error) {
-			console.log(error);
+		error: function (error, message) {
+			console.log(message);
 		}
 	});
 
-
-
-}
-
-function addStoreToCollection() {
-	var storeId = 'Ik3uYT99O4';
-	var collectionId = 'jk7briy5lx';
-	var storequery = new Parse.Query("Stores");
-	storequery.equalTo("objectId", storeId);
-	storequery.find({
-		success: function (store) {
-			var Collection = Parse.Object.extend("Collections");
-			var query = new Parse.Query(Collection);
-			query.get(collectionId, {
-				success: function (collection) {
-					// The object was retrieved successfully.
-					collection.addUnique("store_ids", store[0]);
-					collection.save(null, {
-						success: function (object) {
-							console.log(object);
-						},
-						error: function (error) {
-							console.log(error);
-						}
-					});
-				},
-				error: function (object, error) {
-					// The object was not retrieved successfully.
-					// error is a Parse.Error with an error code and message.
-					console.log(error);
-				}
-			});
+	service.addUnique("collections", collection);
+	service.save(null, {
+		success: function (object) {
+			console.log(object);
 		},
-		error: function (error) {
-			console.log(error);
+		error: function (error, message) {
+			console.log(message);
 		}
 	});
 }
+
+function addStoreToCollection(store, collection) {
+
+	collection.addUnique("store_ids", store);
+	collection.save(null, {
+		success: function (object) {
+			console.log(object);
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	store.addUnique("collections", collection);
+	store.save(null, {
+		success: function (object) {
+			console.log(object);
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
 
 function getAllProductsOfCollection() {
 
-	var collectionId = "wLE4KuCz1G";
+	var collectionId = "qVlpiQgFC6";
 
 	var query = new Parse.Query("Collections");
 	query.equalTo("objectId", collectionId);
 	query.include("product_ids");
 
 	query.find({
-		success: function (products) {
-			console.log(products[0].get("product_ids"));
+		success: function (collection) {
+			console.log(collection[0].get("product_ids"));
+			//deleteProductFromCollection(collection[0].get("product_ids")[0], collection[0]);
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+function getAllServicesOfCollection(collectionId) {
+
+	var query = new Parse.Query("Collections");
+	query.equalTo("objectId", collectionId);
+	query.include("service_ids");
+
+	query.find({
+		success: function (collection) {
+			console.log(collection[0].get("service_ids"));
+			//addStoreToCollection(collection[0].get("store_ids")[0], collection[0]);
 		},
 		error: function (error) {
 			console.log(error);
@@ -714,8 +975,9 @@ function getAllStoresOfCollection() {
 	query.include("store_ids");
 
 	query.find({
-		success: function (store) {
-			console.log(store[0].get("store_ids"));
+		success: function (collection) {
+			console.log(collection[0].get("store_ids"));
+			//addStoreToCollection(collection[0].get("store_ids")[0], collection[0]);
 		},
 		error: function (error) {
 			console.log(error);
@@ -761,4 +1023,109 @@ function getAllProductCollectionOfUser(userId) {
 
 		}
 	});
+}
+
+function deleteProductFromCollection(product, collection) {
+
+	collection.remove("product_ids", product);
+	collection.save(null, {
+		success: function (object) {
+			console.log("Remove Product");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	product.remove("collections", collection);
+	product.save(null, {
+		success: function (object) {
+			console.log("Removed From Collection");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+function deleteServiceFromCollection(service, collection) {
+
+	collection.remove("service_ids", service);
+	collection.save(null, {
+		success: function (object) {
+			console.log("Removed Service");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	service.remove("collections", collection);
+	service.save(null, {
+		success: function (object) {
+			console.log("Removed From Collection");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+function deleteStoreFromCollection(store, collection) {
+
+	collection.remove("store_ids", store);
+	collection.save(null, {
+		success: function (object) {
+			console.log("Removed Store");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+	store.remove("collections", collection);
+	store.save(null, {
+		success: function (object) {
+			console.log("Removed from Collection");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+function addReview(user, store) {
+
+	var Review = new Parse.Object.extend("Review");
+	var review = new Review();
+
+	review.set("user_id", user);
+	review.set("store_id", store);
+	review.set("review", "Nice store bro :p");
+
+	review.save(null, {
+		success: function (review) {
+			user.addUnique("review_ids", review);
+			user.save(null, {
+				success: function (user) {
+					store.addUnique("review_ids", review);
+					store.save(null, {
+						success: function (store) {
+							console.log("Success");
+						},
+						error: function (error, message) {
+							console.log(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
 }
