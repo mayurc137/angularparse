@@ -4,7 +4,7 @@ function init() {
 }
 
 function logIn() {
-	Parse.User.logIn("mayur", "mayur", {
+	Parse.User.logIn("New User", "mayur", {
 		success: function (user) {
 			console.log("Logged In");
 		},
@@ -17,6 +17,7 @@ function logIn() {
 
 function getUserData(userId) {
 
+	var currentUser = Parse.User.current();
 	var query = new Parse.Query(Parse.User);
 	query.equalTo("objectId", userId);
 	query.include("collections");
@@ -27,6 +28,7 @@ function getUserData(userId) {
 
 			// Syntax = user[0].get('name of column')
 			console.log(user);
+			followUser(currentUser, user[0]);
 			//createCollection(user[0], "My Collection", $("#image")[0]);
 		},
 		error: function (error, message) {
@@ -389,7 +391,6 @@ function addUpvoters() {
 	query.get("mF2AE0O88N", {
 		success: function (store) {
 
-			//add cloud
 			var userquery = new Parse.Query(Parse.User);
 			userquery.find({
 				success: function (user) {
@@ -580,12 +581,17 @@ function addNotification() {
 }
 
 //Not added
-function cloudFunction() {
-	Parse.Cloud.run('hello', {}, {
+function followUser(usera, userb) {
+	Parse.Cloud.run('followUsers', {
+		user1: usera.id,
+		user2: userb.id
+	}, {
 		success: function (result) {
 			console.log(result);
 		},
-		error: function (error) {}
+		error: function (error) {
+			console.log(error);
+		}
 	});
 }
 

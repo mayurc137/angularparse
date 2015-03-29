@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "Project Orange": {
+            "applicationId": "ZaHk6NzbXLus8EmO0DetfsigR3I2zi4O9D8u5iIG", 
+            "masterKey": "cXoAPr9CrvZGwF6ODL9r34O5OyYQY4cTvtbApazX"
+        }, 
+        "_default": {
+            "link": "Project Orange"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.4.0"
+    }
+}
