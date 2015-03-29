@@ -1,7 +1,6 @@
-var appControllers = angular.module('Controllers', []);
+var appControllers = angular.module('appControllers', []);
 
-
-app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLocalStorage',
+appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLocalStorage',
     function($scope, ParseFactory, $routeParams, storeLocalStorage) {
 
         ParseFactory.init();
@@ -22,6 +21,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         $scope.followerDisplayLimit = 9;
         $scope.tagDisplayLimit = 8;
         $scope.galleryDisplayLimit = 8;
+        $scope.reviewDisplayLimit = 3;
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
@@ -116,7 +116,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                     var userConcerned = $scope.reviews[i].get('user_id');
 
                     if ($scope.currentUser.id == userConcerned.id) {
-                        userConcerned.following = true;
+                        userConcerned.following = false;
                         userConcerned.isCurrentUser = true;
                         continue;
                     }

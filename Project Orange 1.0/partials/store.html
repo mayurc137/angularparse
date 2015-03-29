@@ -55,4 +55,18 @@
 		</li>
 		<li ng-show="galleryImages.length - galleryDisplayLimit > 0">+{{galleryImages.length - galleryDisplayLimit}}</li>
 	</ul>
+
+	<p>Reviews</p>
+	<ul>
+		<li ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
+			<img ng-src="{{review.get('user_id').get('profile_image')._url}}" width="50px">
+			<p>{{review.get('user_id').get('name')}}</p>
+			<p>{{review.get('user_id').get('review_ids').length | reviewCount}}</p>
+			<p>{{review.get('user_id').get('user_followed').length | followerCount}}</p>
+			<p>isFollowing {{review.get('user_id').following}}</p>
+			<p>isCurrentUser {{review.get('user_id').isCurrentUser}}</p>
+			<p>{{review.get('review')}}</p>
+		</li>
+		<li ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} MORE</li>
+	</ul>
 </di

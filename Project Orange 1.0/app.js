@@ -1,4 +1,4 @@
-var app = angular.module('orange', ['ngRoute', 'parseServices']);
+var app = angular.module('orange', ['ngRoute', 'appControllers', 'parseServices', 'appFilters']);
 
 app.config(['$routeProvider',
     function($routeProvider) {
