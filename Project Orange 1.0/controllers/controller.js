@@ -9,8 +9,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         $scope.storeData = storeLocalStorage.getStoreData();
 
         //Testing part
-        $scope.currentUser = null;
-        //$scope.currentUser = ParseFactory.getCurrentUser();
+        $scope.currentUser = ParseFactory.getCurrentUser();
 
         $scope.storeHandle = $routeParams.storeHandle;
         $scope.upvoters = [];
@@ -26,18 +25,20 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
+        $scope.reviewCount = 0;
 
         if ($scope.storeData == null) {
 
             ParseFactory.getStoreByHandle($scope.storeHandle).then(
                 function(store) {
 
-                    console.log(store);
+                    //console.log(store);
                     $scope.storeData = store;
                     $scope.storeTags = store.get('tags');
                     $scope.checkUpvoted(store);
                     $scope.checkFollowing(store);
                     $scope.fetchGallery();
+                    $scope.fetchReviews();
 
                     //$scope.addReviewToStore("This is a sample review");
                 },
@@ -96,7 +97,45 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                     }
                 }
             }
+        }
 
+        $scope.fetchReviews = function() {
+
+            console.log($scope.currentUser);
+
+            var usersFollowed = $scope.currentUser.get("user_following");
+
+            $scope.reviews = $scope.storeData.get('review_ids');
+
+            if ($scope.reviews != null) {
+
+                $scope.reviewCount = $scope.reviews.length;
+
+                //Iterate through each review
+                for (var i = 0; i < $scope.reviewCount; i++) {
+                    var userConcerned = $scope.reviews[i].get('user_id');
+
+                    if ($scope.currentUser.id == userConcerned.id) {
+                        userConcerned.following = true;
+                        userConcerned.isCurrentUser = true;
+                        continue;
+                    }
+
+                    var j;
+                    for (j = 0; j < usersFollowed.length; j++) {
+
+                        if (userFollowed[i].id == userConcerned.id) {
+                            userConcerned.following = true;
+                            break;
+                        }
+                    }
+
+                    if (j == usersFollowed.length)
+                        userConcerned.following = false;
+                }
+
+                console.log($scope.reviews);
+            }
         }
 
         $scope.addReviewToStore = function(reviewText) {
@@ -148,6 +187,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         }
 
         $scope.setUserDetails = function(userDetails) {
+
             ParseFactory.setUserData(userDetails).then(
                 function(user) {
                     $scope.currentUser = user;
@@ -160,6 +200,17 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
 
                 }, function(message) {
                     console.log(message);
+                }
+            );
+        }
+
+        $scope.followUser = function(user) {
+            ParseFactory.followUser($scope.currentUser, user).then(
+                function(success) {
+                    user.following = true;
+                }, function(error) {
+                    console.log(error);
+                    user.following = false;
                 }
             );
         }

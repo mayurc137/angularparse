@@ -6,7 +6,7 @@ parseServices.service('storeLocalStorage', [
         var storeData = null;
 
         var setStoreData = function(newData) {
-
+            storeData = newData;
         }
 
         var getStoreData = function() {
@@ -136,10 +136,10 @@ parseServices.factory('ParseFactory', ['$q',
                     var ctx = canvas.getContext("2d");
                     ctx.drawImage(image, 0, 0);
 
-                    userData.name = userData.name.split(" ");
+                    var newUserName = userData.name.split(" ");
 
                     var dataURL = canvas.toDataURL("image/png");
-                    var parseFile = new Parse.File(userData.name[0], {
+                    var parseFile = new Parse.File(newUserName[0], {
                         base64: dataURL
                     });
 
@@ -147,10 +147,20 @@ parseServices.factory('ParseFactory', ['$q',
 
                             var username = currentUser.get("username");
                             currentUser.set("user_id", username);
-                            currentUser.set("username", userData.name[0] + userData.id)
+                            currentUser.set("username", newUserName[0] + userData.id);
+                            currentUser.set("name", userData.name);
                             currentUser.set("email", userData.email);
                             currentUser.set("is_complete", false);
                             currentUser.set("profile_image", parseFile);
+
+                            currentUser.set("collections", []);
+                            currentUser.set("stores_upvoted", []);
+                            currentUser.set("collections_favorited", []);
+                            currentUser.set("user_following", []);
+                            currentUser.set("user_followed", []);
+                            currentUser.set("stores_followed", []);
+                            currentUser.set("coupons_redeemed", []);
+                            currentUser.set("review_ids", []);
                             currentUser.save(null, {
 
                                 success: function(user) {
@@ -172,6 +182,8 @@ parseServices.factory('ParseFactory', ['$q',
                 console.log("Not Logged In");
                 deferred.reject("Not Logged In");
             }
+
+            return deferred.promise;
         }
 
 
@@ -239,6 +251,8 @@ parseServices.factory('ParseFactory', ['$q',
             query.include('locality');
             query.include('upvoted_by');
             query.include('tags');
+            query.include('review_ids');
+            query.include('review_ids.user_id');
 
             query.find({
                 success: function(store) {
@@ -337,6 +351,30 @@ parseServices.factory('ParseFactory', ['$q',
                 error: function(error, message) {
                     console.log(message);
                     deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+
+        }
+
+        factory.followUser = function(usera, userb) {
+
+            var deferrred = $q.defer();
+
+            Parse.Cloud.run('followUsers', {
+                user1: usera.id,
+                user2: userb.id
+            }, {
+                success: function(result) {
+                    if (result == true) {
+                        deferred.resolve(true);
+                    } else {
+                        deferred.reject(false);
+                    }
+                },
+                error: function(error, message) {
+                    deferred.reject(false);
                 }
             });
 
