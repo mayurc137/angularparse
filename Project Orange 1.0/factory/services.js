@@ -72,7 +72,7 @@ parseServices.factory('ParseFactory', ['$q',
                         deferred.resolve(user);
                     }
                 },
-                error: function(user, error) {
+                error: function(error, message) {
                     alert("User cancelled the Facebook login or did not fully authorize.");
                     deferred.reject(message);
 
@@ -109,7 +109,7 @@ parseServices.factory('ParseFactory', ['$q',
             if (currentUser) {
                 FB.api("/me/picture", function(response) {
                     userData.picture = response.data.url;
-                    deferred.resolve(userData);
+                    deferred.resolve(userData.picture);
 
                 });
             } else {

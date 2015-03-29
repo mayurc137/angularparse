@@ -11,14 +11,6 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         //Testing part
         $scope.currentUser = null;
         //$scope.currentUser = ParseFactory.getCurrentUser();
-        ParseFactory.getUser("dnDSWXk9AWV0t5VVctGO7NDKn").then(
-            function(user) {
-                $scope.currentUser = user;
-
-            }, function(message) {
-                $scope.currentUser = null;
-            }
-        );
 
         $scope.storeHandle = $routeParams.storeHandle;
         $scope.upvoters = [];
@@ -44,6 +36,7 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                     $scope.storeData = store;
                     $scope.storeTags = store.get('tags');
                     $scope.checkUpvoted(store);
+                    $scope.checkFollowing(store);
                     $scope.fetchGallery();
 
                     //$scope.addReviewToStore("This is a sample review");
@@ -68,36 +61,42 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
         $scope.checkUpvoted = function(store) {
             $scope.upvoters = store.get('upvoted_by');
 
-            $scope.upvoteCount = $scope.upvoters.length;
+            if ($scope.upvoters != null) {
+                $scope.upvoteCount = $scope.upvoters.length;
 
-            if ($scope.currentUser != null) {
-                for (var i = 0; i < $scope.upvoters.length; i++) {
+                if ($scope.currentUser != null) {
+                    for (var i = 0; i < $scope.upvoters.length; i++) {
 
-                    if ($scope.upvoters[i].id == $scope.currentUser.id) {
+                        if ($scope.upvoters[i].id == $scope.currentUser.id) {
 
-                        $scope.isUpvoted = true;
-                        break;
+                            $scope.isUpvoted = true;
+                            break;
+                        }
                     }
                 }
             }
+
         }
 
         $scope.checkFollowing = function(store) {
             $scope.followers = store.get('followers');
 
-            $scope.followerCount = $scope.followers.length;
+            if ($scope.followers != null) {
+                $scope.followerCount = $scope.followers.length;
 
-            if ($scope.currentUser != null) {
+                if ($scope.currentUser != null) {
 
-                for (var i = 0; i < $scope.followers.length; i++) {
+                    for (var i = 0; i < $scope.followers.length; i++) {
 
-                    if ($scope.followers[i].id == $scope.currentUser.id) {
+                        if ($scope.followers[i].id == $scope.currentUser.id) {
 
-                        $scope.isFollowing = true;
-                        break;
+                            $scope.isFollowing = true;
+                            break;
+                        }
                     }
                 }
             }
+
         }
 
         $scope.addReviewToStore = function(reviewText) {
@@ -108,6 +107,61 @@ app.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams', 'storeLoc
                 }, function(message) {
                     console.log(message);
                 });
+        }
+
+        $scope.handleLogin = function() {
+            ParseFactory.fbLogin().then(
+                function(user) {
+                    if (!user.infoSet) {
+                        $scope.getUserDetails();
+                    } else {
+                        $scope.currentUser = user;
+
+                        //Needed on store Page
+                        if ($scope.storeData != null) {
+                            $scope.checkUpvoted($scope.storeData);
+                            $scope.checkFollowing($scope.storeData);
+                        }
+
+                    }
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.getUserDetails = function() {
+            ParseFactory.getUserData().then(
+                function(userData) {
+                    ParseFactory.getUserPicture().then(
+                        function(picture) {
+                            userData.picture = picture;
+                            $scope.setUserDetails(userData);
+                        }, function(message) {
+                            console.log(message);
+                        }
+                    );
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.setUserDetails = function(userDetails) {
+            ParseFactory.setUserData(userDetails).then(
+                function(user) {
+                    $scope.currentUser = user;
+
+                    //Needed on store Page
+                    if ($scope.storeData != null) {
+                        $scope.checkUpvoted($scope.storeData);
+                        $scope.checkFollowing($scope.storeData);
+                    }
+
+                }, function(message) {
+                    console.log(message);
+                }
+            );
         }
 
     }
