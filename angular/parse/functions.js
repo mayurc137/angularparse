@@ -55,7 +55,8 @@ function getStoreDataByStoreId(storeid) {
 	query.find({
 		success: function (store) {
 			console.log(store);
-			addUpvoters();
+			//addUpvoters();
+			fetchReviews(store[0]);
 			//addServices(store[0]);
 			//changeLocality("xxVQCLrbtm", 18.561128, 73.807060);
 			/*var point = new Parse.GeoPoint({
@@ -1135,3 +1136,66 @@ function addReview(user, store) {
 	});
 
 }
+
+function fetchReviews(store) {
+
+	var query = new Parse.Query("Reviews");
+	query.equalTo("store_id", store);
+
+	query.find({
+		success: function (reviews) {
+			console.log(reviews);
+		},
+		error: function (error, message) {
+			console.log("message");
+		}
+
+	});
+}
+
+
+function getActivityByStore(store) {
+
+	var query = new Parse.Query("Stores");
+	query.equalTo("store_id", store);
+	query.include("comment_ids");
+	query.include("user_id");
+	query.include("coupon_id");
+	query.include("product_id");
+	query.include("service_id");
+	query.include("liked_by");
+	query.find({
+		success: function (activity) {
+			console.log(activity);
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}
+
+/*function test() {
+
+	var query = new Parse.Query("Locality");
+	query.find({
+		success: function (locality) {
+			console.log(locality.length);
+			for (var i = 0; i < locality.length; i++) {
+
+
+				locality[i].set("city", "Pune");
+				locality[i].save(null, {
+					success: function (object) {
+						console.log("added city " + i);
+					},
+					error: function (error, message) {
+						console.log(message);
+					}
+				});
+			}
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+}*/

@@ -1240,6 +1240,54 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 
+		factory.fetchReviews = function (store) {
+
+			var deferrred = $q.defer();
+
+			var query = new Parse.Query("Reviews");
+			query.equalTo("store_id", store);
+
+			query.find({
+				success: function (reviews) {
+					console.log(reviews);
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.resolve(message);
+				}
+
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.getActivityByStore = function (store) {
+
+			var deferrred = $q.defer();
+
+			var query = new Parse.Query("Stores");
+			query.equalTo("store_id", store);
+			query.include("comment_ids");
+			query.include("user_id");
+			query.include("coupon_id");
+			query.include("product_id");
+			query.include("service_id");
+			query.include("liked_by");
+			query.find({
+				success: function (activity) {
+					console.log(activity);
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
 
 		return factory;
 
