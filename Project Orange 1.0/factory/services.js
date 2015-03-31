@@ -300,6 +300,7 @@ parseServices.factory('ParseFactory', ['$q',
             storequery.equalTo("objectId", storeId);
             var query = new Parse.Query("Gallery");
             query.matchesQuery("store_id", storequery);
+            query.descending("createdAt");
             query.find({
                 success: function(gallery) {
 
@@ -326,6 +327,7 @@ parseServices.factory('ParseFactory', ['$q',
             query.include("product_id");
             query.include("service_id");
             query.include("liked_by");
+            query.descending("createdAt");
             query.find({
                 success: function(activities) {
                     deferred.resolve(activities);

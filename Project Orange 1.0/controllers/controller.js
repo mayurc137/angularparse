@@ -11,6 +11,8 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.currentUser = ParseFactory.getCurrentUser();
 
         $scope.storeHandle = $routeParams.storeHandle;
+        //Default Image should be specified Here
+        $scope.bannerImg = 'img/back.jpg';
         $scope.upvoters = [];
         $scope.followers = [];
         $scope.upvoteCount = 0;
@@ -22,6 +24,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.tagDisplayLimit = 8;
         $scope.galleryDisplayLimit = 8;
         $scope.reviewDisplayLimit = 3;
+        $scope.activityDisplayLimit = 4;
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
@@ -33,8 +36,10 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             ParseFactory.getStoreByHandle($scope.storeHandle).then(
                 function(store) {
 
-                    //console.log(store);
+                    console.log(store);
                     $scope.storeData = store;
+                    //Ideally 
+                    $scope.bannerImg = 'img/back2.jpg';
                     $scope.storeTags = store.get('tags');
                     $scope.checkUpvoted(store);
                     $scope.checkFollowing(store);
@@ -65,7 +70,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             ParseFactory.getActivityByStore($scope.storeData).then(
                 function(activities) {
                     $scope.activities = activities;
-                    console.log($scope.activities);
+                    //console.log($scope.activities);
                 }, function(message) {
                     console.log(message);
                 }
@@ -211,6 +216,20 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     console.log(message);
                 }
             );
+        }
+
+        $scope.decideActivityClass = function(activity) {
+            var image = activity.get('activity_image');
+            var title = activity.get('activity_title');
+
+            if (image == undefined) {
+                return "postTypeGeneralTextOnly";
+            }
+            if (title == undefined) {
+                return "postTypeGeneralImageOnly";
+            }
+
+            return "postTypeGeneralImageText";
         }
 
         $scope.followUser = function(user) {

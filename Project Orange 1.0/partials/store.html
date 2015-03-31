@@ -1,100 +1,233 @@
-<div class='store'>
+<div class="navBar">
+		<div class="navBarContent">
+			
+		</div>
+	</div>
+	<div class="shopHeader" ng-style=" { 'background' : 'url({{bannerImg}}) no-repeat', 'background-size' : 'cover' }">
+		<div class="imgFader"></div>
+		<div class="shopHeaderContent">
+			<div class="upvoteFollowContainer">
+				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}">
+					Upvoted
+				</div>
+				<div class="upvoteFollowBtn shopFollowBtn" ng-class="{primaryBtnVisited : isFollowing}">
+					Following
+				</div>
+			</div>
+			<div class="shopHeaderButtons">
+				<div class="headerBtn shopAddBtn">
+					Add
+				</div>
+				<div class="headerBtn shopReviewBtn">
+					Review
+				</div>
+				<div class="headerBtn shopCouponsBtn">
+					Coupons
+				</div>
+				<div class="headerBtn shopActivityBtn">
+					Feed
+				</div>
+				<div class="headerBtn shopActivityBtn">
+					Showcase
+				</div>
+			</div>
+			<div class="shopCountDetails">
+				<p>{{upvoteCount}}  {{followerCount}} </p>
+			</div>
+			<div class="shopTitle">
+				<p class="shopTitleContent">{{storeData.get('name')}}</p>
+			</div>
+			
+			<img ng-src="{{storeData.get('primary_category').get('image_link')}}" class="shopCatImg">
+		</div>
+	</div>
+	<div class="emptySpace"></div>
+	<div class="mainShopContent">
+		<div class="shopSideContent">
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Contact</p>
+					<p class="cardInnerContent">{{storeData.get('phone')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('website_link')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('facebook_link')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('twitter_link')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Location</p>
+					<p class="cardInnerContent action">{{storeData.get('locality').get('locality_name')}}</p>
+					<p class="cardInnerContent">{{storeData.get('address')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Popular For</p>
+					<p class="cardInnerContent">Designer Clothes, Jeans, Women Wear, Shoes</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Collections</p>
+					<p class="cardInnerContent">Added in <span class="collectionLink action">10 great stores,</span><span class="collectionLink action">Love the way you Dress</span>Collections</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Working Hours</p>
+					<p class="cardInnerContent">{{storeData.get('working_hours')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Followers</p>
 
-	<div ng-click="handleLogin()">Click Here to Sign Up / Login</div>
-	<div ng-click="addReviewToStore('This is a sample review posted by Neeraj')">Add Review</div>
+					<div class="profileSmall" ng-repeat="user in followers | limitTo: followerDisplayLimit">
+						<img ng-src="{{user.get('profile_image')._url}}" class="profileSmallImg">
+					</div><div class="profileSmall moreProfileBtn" ng-show="followerCount - followerDisplayLimit > 0">
+						<p class="followUpvoteMoreCount">+{{followerCount - followerDisplayLimit}}</p>
+					</div>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Upvoted</p>
+					<div class="profileSmall" ng-repeat="user in upvoters | limitTo: upvoteDisplayLimit">
+						<img ng-src="{{user.get('profile_image')._url}}" class="profileSmallImg">
+					</div><div class="profileSmall moreProfileBtn" ng-show="upvoteCount - upvoteDisplayLimit > 0">
+						<p class="followUpvoteMoreCount">+{{upvoteCount - upvoteDisplayLimit}}</p>
+					</div>
+				</div>
+			</div>
+		</div><div class="shopMainContent">
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">About</p>
+					<p class="cardInnerContent">{{storeData.get('description')}}</p>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Known For</p>
 
-	<p>{{storeData.get('name')}}</p>
-	<p>{{storeData.get('phone')}}</p>
-	<p>{{storeData.get('website_link')}}</p>
-	<p>{{storeData.get('facebook_link')}}</p>
-	<p>{{storeData.get('twitter_link')}}</p>
-	<p>{{storeData.get('locality').get('locality_name')}}</p>
-	<p>{{storeData.get('address')}}</p>
-	<p>{{storeData.get('description')}}</p>
-	<p>{{storeData.get('major_sale')}}</p>
-	<p>{{storeData.get('primary_category').get('categoryName')}} {{storeData.get('primary_category').get('image_link')}}</p>
-	<p>{{upvoteCount}}</p>
-	<p>{{isUpvoted}}</p>
-	<p>{{followerCount}}</p>
-	<p>{{isFollowing}}</p>
+					<div class="popularElement" ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
+						<img class="popularElementImg" ng-src="{{tag.get('tag_image')}}"><p class="popularElementTitle">{{tag.get('tag_description')}}</p>
+					</div><div class="morePopular" ng-show="storeTags.length - tagDisplayLimit > 0">+ MORE</div>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Sale</p>
+					<p class="cardInnerContent">{{storeData.get('major_sale')}}</p>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Gallery</p>
 
-	<p>Upvoters</p>
-	<ul>
-		<li ng-repeat="user in upvoters | limitTo: upvoteDisplayLimit">
-			<p>{{user.get('name')}}</p>
-			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
-		</li>
-		<li ng-show="upvoteCount - upvoteDisplayLimit > 0">
-			<p>{{upvoteCount - upvoteDisplayLimit}}+</p>
-		</li>
-	</ul>
+					<div class="galleryImgContainer" ng-repeat="image in galleryImages | limitTo: galleryDisplayLimit"><img class="galleryImg" ng-src="{{image.get('image')._url}}">
+					</div><div class="galleryImgMoreContainer" ng-show="galleryImages.length - galleryDisplayLimit > 0"><div class="galleryMoreCount">+{{galleryImages.length - galleryDisplayLimit}}</div></div>
+				</div>
+			</div>
+			<div class="shopTabContainer">
+				<div class="tabBtn tabActive tabActivity">Activity</div>
+				<div class="tabBtn tabReview">Review</div>
+				<div class="tabBtn tabCoupon">Coupons</div>
+				<div class="tabBtn tabShowcase">Showcase</div>
+			</div>
+			<div class="cardContainerFull activityContainer tabContainer">
 
-	<p>Followers</p>
-	<ul>
-		<li ng-repeat="user in followers | limitTo: followerDisplayLimit">
-			<p>{{user.get('name')}}</p>
-			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
-		</li>
-		<li  ng-show="followerCount - followerDisplayLimit > 0">
-			<p>{{followerCount - followerDisplayLimit}}+</p>
-		</li>
-	</ul>
+				<div class="cardContent activityContent"
+				ng-repeat="activity in activities | limitTo:activityDisplayLimit" 
+				ng-show="{{activity.get('is_visible')}}"
+				ng-class="decideActivityClass(activity)">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img ng-src="{{storeData.get('logo')._url}}" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">{{storeData.get('name')}}</span><br/>
+							<span class="postUserTimeStamp">{{activity.createdAt | postDate}}</span>
+						</div>
+					</div><div class="userActivityPostImgContainer">
+					<img class="userActivityPostImg" ng-src="{{activity.get('activity_image')._url}}">
+					</div><div class="userActivityPostContent"><span class="userActivityPostTitle">{{activity.get('activity_title')}}</span><span class="userActivityPostDetails">{{activity.get('activity_content')}}</span>
+					<div class="userActivityActions">
+						<img class="postUpvoteIcon" src="img/pop3.png">
+						<span class="postUpvoteCount postActionBtnText">{{activity.get('liked_by').length | likeCount}}</span>
+						<span class="postUpvoteBtn postActionBtnText">Like</span>
+						<img class="postCommentIcon" src="img/pop4.png">
+						<span class="postCommentCount postActionBtnText">{{activity.get('comment_ids').length | commentCount}}</span>
+						<span class="postCommentBtn postActionBtnText">Comment</span>
+						<span class="postShareBtn postActionBtnText">Share</span>
+						<span class="postReadMoreBtn postActionBtnText">More</span>
+					</div>
+					</div>
+				</div>
+				<div class="cardContent activityContent followForMoreContent"
+				ng-show="activities.length - activityDisplayLimit > 0">
+					Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
+				</div>
+			</div>
+			<div class="cardContainerFull reviewContainer tabContainer">
+				<div class="cardContent reviewContainerInner">
+					<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.."></textarea>
+					<div class="addReviewBtn">Publish Review</div>
+				</div>
+				<div class="cardContent reviewContent">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img src="img/img8.jpg" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">Arun S</span><br/>
+							<span class="postUserReviewCount">31 Reviews</span>
+							<span class="postUserFollowerCount">200 Followers</span>
+						</div>
+						<div class="userFollowBtn">Follow</div>
+					</div>
+					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. Food and cocktails are lavish and amaze your palate. I would highly recommend Stone Water Grill to cheesy non veg lovers.</div>
+				</div>
+				<div class="cardContent reviewContent">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img src="img/img9.jpg" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">Mayur More</span><br/>
+							<span class="postUserReviewCount">31 Reviews</span>
+							<span class="postUserFollowerCount">200 Followers</span>
+						</div>
+						<div class="userFollowBtn">Follow</div>
+					</div>
+					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff.</div>
+				</div>
+				<div class="cardContent reviewContent">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img src="img/img10.jpg" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">Aditya More</span><br/>
+							<span class="postUserReviewCount">31 Reviews</span>
+							<span class="postUserFollowerCount">200 Followers</span>
+						</div>
+						<div class="userFollowBtn ">Follow</div>
+					</div>
+					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. </div>
+				</div>
+				<div class="loadMoreBtn">23 More</div>
+			</div>
+			<div class="cardContainerFull couponsContainer tabContainer">
+				<div class="cardContent">
 
-	<p>Tags</p>
-	<ul>
-		<li ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
-			<p> {{tag.get('tag_description')}} {{tag.get('tag_image')}} </p>
-		</li>
-		<li ng-show="storeTags.length - tagDisplayLimit > 0">+More</li>
-	</ul>
-
-	<p>Gallery</p>
-	<ul>
-		<li ng-repeat="image in galleryImages | limitTo: galleryDisplayLimit">
-			<img ng-src="{{image.get('image')._url}}" width = "100px" />
-		</li>
-		<li ng-show="galleryImages.length - galleryDisplayLimit > 0">+{{galleryImages.length - galleryDisplayLimit}}</li>
-	</ul>
-
-	<p>Reviews</p>
-	<ul>
-		<li ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
-			<img ng-src="{{review.get('user_id').get('profile_image')._url}}" width="50px">
-			<p>{{review.get('user_id').get('name')}}</p>
-			<p>{{review.get('user_id').get('review_ids').length | reviewCount}}</p>
-			<p>{{review.get('user_id').get('user_followed').length | followerCount}}</p>
-			<p>isFollowing {{review.get('user_id').following}}</p>
-			<p>isCurrentUser {{review.get('user_id').isCurrentUser}}</p>
-			<p>{{review.get('review')}}</p>
-		</li>
-		<li ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} MORE</li>
-	</ul>
-
-	<p>Activity List</p>
-	<ul>
-		<li ng-repeat="activity in activities">
-			<p>{{activity.get('activity_title')}}</p>
-			<p>{{activity.get('activity_content')}}</p>
-			<img ng-src="{{activity.get('activity_image')._url}}" width="100px">
-			<p>{{activity.get('comment_ids').length | commentCount}}</p>
-			<p>{{activity.get('liked_by').length | likeCount}}</p>
-			<p>{{activity.createdAt | postDate}}</p>
-			<p>Comments</p>
-			<ul>
-				<li ng-repeat="comment in activity.get('comment_ids')">
-					<p>{{comment.get('user_id').get('name')}}</p>
-					<img ng-src="{{comment.get('user_id').get('profile_image')._url}}" width="50px"/>
-					<p>{{comment.get('first_level_comment')}}</p>
-					<p>{{comment.createdAt | postDate}}</p>
-				</li>
-			</ul>
-			<p>Likes</p>
-			<ul>
-				<li ng-repeat="liker in activity.get('liked_by')">
-					<p>{{liker.get('name')}}</p>
-					<img ng-src="{{liker.get('profile_image')._url}}" width="50px"/>
-				</li>
-			</ul>
-		</li>
-	</ul>
-</di
+					<p class="cardHeader">Coupons Feed for I love Kapda</p>
+				</div>
+			</div>
+			<div class="cardContainerFull showcaseContainer tabContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Showcase Feed for I love Kapda</p>
+				</div>
+			</div>
+		</div>
+	</div>

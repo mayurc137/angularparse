@@ -1,0 +1,100 @@
+<div class='store'>
+
+	<div ng-click="handleLogin()">Click Here to Sign Up / Login</div>
+	<div ng-click="addReviewToStore('This is a sample review posted by Neeraj')">Add Review</div>
+
+	<p>{{storeData.get('name')}}</p>
+	<p>{{storeData.get('phone')}}</p>
+	<p>{{storeData.get('website_link')}}</p>
+	<p>{{storeData.get('facebook_link')}}</p>
+	<p>{{storeData.get('twitter_link')}}</p>
+	<p>{{storeData.get('locality').get('locality_name')}}</p>
+	<p>{{storeData.get('address')}}</p>
+	<p>{{storeData.get('description')}}</p>
+	<p>{{storeData.get('major_sale')}}</p>
+	<p>{{storeData.get('primary_category').get('categoryName')}} {{storeData.get('primary_category').get('image_link')}}</p>
+	<p>{{upvoteCount}}</p>
+	<p>{{isUpvoted}}</p>
+	<p>{{followerCount}}</p>
+	<p>{{isFollowing}}</p>
+
+	<p>Upvoters</p>
+	<ul>
+		<li ng-repeat="user in upvoters | limitTo: upvoteDisplayLimit">
+			<p>{{user.get('name')}}</p>
+			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
+		</li>
+		<li ng-show="upvoteCount - upvoteDisplayLimit > 0">
+			<p>{{upvoteCount - upvoteDisplayLimit}}+</p>
+		</li>
+	</ul>
+
+	<p>Followers</p>
+	<ul>
+		<li ng-repeat="user in followers | limitTo: followerDisplayLimit">
+			<p>{{user.get('name')}}</p>
+			<img ng-src = "{{user.get('profile_image')._url}}" width="50px"/>
+		</li>
+		<li ng-show="followerCount - followerDisplayLimit > 0">
+			<p>{{followerCount - followerDisplayLimit}}+</p>
+		</li>
+	</ul>
+
+	<p>Tags</p>
+	<ul>
+		<li ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
+			<p> {{tag.get('tag_description')}} {{tag.get('tag_image')}} </p>
+		</li>
+		<li ng-show="storeTags.length - tagDisplayLimit > 0">+More</li>
+	</ul>
+
+	<p>Gallery</p>
+	<ul>
+		<li ng-repeat="image in galleryImages | limitTo: galleryDisplayLimit">
+			<img ng-src="{{image.get('image')._url}}" width = "100px" />
+		</li>
+		<li ng-show="galleryImages.length - galleryDisplayLimit > 0">+{{galleryImages.length - galleryDisplayLimit}}</li>
+	</ul>
+
+	<p>Reviews</p>
+	<ul>
+		<li ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
+			<img ng-src="{{review.get('user_id').get('profile_image')._url}}" width="50px">
+			<p>{{review.get('user_id').get('name')}}</p>
+			<p>{{review.get('user_id').get('review_ids').length | reviewCount}}</p>
+			<p>{{review.get('user_id').get('user_followed').length | followerCount}}</p>
+			<p>isFollowing {{review.get('user_id').following}}</p>
+			<p>isCurrentUser {{review.get('user_id').isCurrentUser}}</p>
+			<p>{{review.get('review')}}</p>
+		</li>
+		<li ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} MORE</li>
+	</ul>
+
+	<p>Activity List</p>
+	<ul>
+		<li ng-repeat="activity in activities">
+			<p>{{activity.get('activity_title')}}</p>
+			<p>{{activity.get('activity_content')}}</p>
+			<img ng-src="{{activity.get('activity_image')._url}}" width="100px">
+			<p>{{activity.get('comment_ids').length | commentCount}}</p>
+			<p>{{activity.get('liked_by').length | likeCount}}</p>
+			<p>{{activity.createdAt | postDate}}</p>
+			<p>Comments</p>
+			<ul>
+				<li ng-repeat="comment in activity.get('comment_ids')">
+					<p>{{comment.get('user_id').get('name')}}</p>
+					<img ng-src="{{comment.get('user_id').get('profile_image')._url}}" width="50px"/>
+					<p>{{comment.get('first_level_comment')}}</p>
+					<p>{{comment.createdAt | postDate}}</p>
+				</li>
+			</ul>
+			<p>Likes</p>
+			<ul>
+				<li ng-repeat="liker in activity.get('liked_by')">
+					<p>{{liker.get('name')}}</p>
+					<img ng-src="{{liker.get('profile_image')._url}}" width="50px"/>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</di
