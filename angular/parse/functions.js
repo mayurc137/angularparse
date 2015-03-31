@@ -1156,7 +1156,7 @@ function fetchReviews(store) {
 
 function getActivityByStore(store) {
 
-	var query = new Parse.Query("Stores");
+	var query = new Parse.Query("Activity");
 	query.equalTo("store_id", store);
 	query.include("comment_ids");
 	query.include("user_id");
@@ -1173,6 +1173,135 @@ function getActivityByStore(store) {
 		}
 	});
 }
+
+function createGeneralPost(store, activityDetails) {
+
+	var Activity = Parse.Object.extend("Activity");
+	var activity = new Activity();
+
+	if (activityDetails.image.files.length > 0) {
+		var picture = activityDetails.image.files[0];
+		var parseFile = new Parse.File(picture.name, picture);
+		parseFile.save().then(function () {
+
+			activity.set("store_id", store);
+			activity.set("activity_type", 4);
+			activity.set("activity_title", activityDetails.title);
+			activity.set("activity_content", activityDetails.content);
+			activity.set("activity_image", parseFile);
+			activity.set("activity_likes", 0);
+			activity.set("liked_by", []);
+			activity.set("comment_ids", []);
+			activity.set("is_visible", true);
+
+			activity.save(null, {
+				success: function (object) {
+					console.log("Added General Post");
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+
+		});
+	} else {
+		activity.set("store_id", store);
+		activity.set("activity_type", 4);
+		activity.set("activity_title", activityDetails.title);
+		activity.set("activity_content", activityDetails.content);
+		activity.set("activity_likes", 0);
+		activity.set("liked_by", []);
+		activity.set("comment_ids", []);
+		activity.set("is_visible", true);
+
+		activity.save(null, {
+			success: function (object) {
+				console.log("Added General Post");
+			},
+			error: function (error, message) {
+				console.log(message);
+			}
+		});
+	}
+}
+
+function createCouponPost(store, coupon) {
+
+	var Activity = Parse.Object.extend("Activity");
+	var activity = new Activity();
+
+
+	activity.set("store_id", store);
+	activity.set("coupon_id", coupon);
+	activity.set("activity_type", 1);
+	activity.set("inline_content", "added a new Coupon: ");
+	activity.set("activity_likes", 0);
+	activity.set("liked_by", []);
+	activity.set("comment_ids", []);
+	activity.save(null, {
+		success: function (object) {
+			console.log("Added Coupon Post");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+}
+
+function createProductPost(store, product) {
+
+	var Activity = Parse.Object.extend("Activity");
+	var activity = new Activity();
+
+
+	activity.set("store_id", store);
+	activity.set("product_id", product);
+	activity.set("activity_type", 2);
+	activity.set("inline_content", "added a new Product: ");
+	activity.set("activity_likes", 0);
+	activity.set("liked_by", []);
+	activity.set("comment_ids", []);
+	activity.set("activity_image", product.get("image"));
+	activity.save(null, {
+		success: function (object) {
+			console.log("Added Product Post");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+}
+
+
+function createServicePost(store, service) {
+
+	var Activity = Parse.Object.extend("Activity");
+	var activity = new Activity();
+
+
+	activity.set("store_id", store);
+	activity.set("service_id", service);
+	activity.set("activity_type", 3);
+	activity.set("inline_content", "added a new Service: ");
+	activity.set("activity_likes", 0);
+	activity.set("liked_by", []);
+	activity.set("comment_ids", []);
+	activity.set("activity_image", service.get("image"));
+	activity.save(null, {
+		success: function (object) {
+			console.log("Added Service Post");
+		},
+		error: function (error, message) {
+			console.log(message);
+		}
+	});
+
+}
+
+
+
 
 /*function test() {
 
