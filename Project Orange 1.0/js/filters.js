@@ -2,25 +2,25 @@ var appFilters = angular.module('appFilters', []);
 
 appFilters.filter('reviewCount', function() {
     return function(input) {
-        return input + (input == 1 ? " Review" : "Reviews");
+        return input + (input == 1 ? " Review" : " Reviews");
     };
 });
 
 appFilters.filter('followerCount', function() {
     return function(input) {
-        return input + (input == 1 ? " Follower" : "Followers");
+        return input + (input == 1 ? " Follower" : " Followers");
     };
 });
 
 appFilters.filter('likeCount', function() {
     return function(input) {
-        return input + (input == 1 ? " Like" : "Likes");
+        return input + (input == 1 ? " Like" : " Likes");
     };
 });
 
 appFilters.filter('commentCount', function() {
     return function(input) {
-        return input + (input == 1 ? " Comment" : "Comments");
+        return input + (input == 1 ? " Comment" : " Comments");
     };
 });
 

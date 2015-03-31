@@ -62,12 +62,6 @@
 			</div>
 			<div class="cardContainer">
 				<div class="cardContent">
-					<p class="cardHeader">Popular For</p>
-					<p class="cardInnerContent">Designer Clothes, Jeans, Women Wear, Shoes</p>
-				</div>
-			</div>
-			<div class="cardContainer">
-				<div class="cardContent">
 					<p class="cardHeader">Collections</p>
 					<p class="cardInnerContent">Added in <span class="collectionLink action">10 great stores,</span><span class="collectionLink action">Love the way you Dress</span>Collections</p>
 				</div>
@@ -154,10 +148,10 @@
 					</div><div class="userActivityPostContent"><span class="userActivityPostTitle">{{activity.get('activity_title')}}</span><span class="userActivityPostDetails">{{activity.get('activity_content')}}</span>
 					<div class="userActivityActions">
 						<img class="postUpvoteIcon" src="img/pop3.png">
-						<span class="postUpvoteCount postActionBtnText">{{activity.get('liked_by').length | likeCount}}</span>
+						<span class="postUpvoteCount postActionBtnText">{{activity.get('liked_by').length}}</span>
 						<span class="postUpvoteBtn postActionBtnText">Like</span>
 						<img class="postCommentIcon" src="img/pop4.png">
-						<span class="postCommentCount postActionBtnText">{{activity.get('comment_ids').length | commentCount}}</span>
+						<span class="postCommentCount postActionBtnText">{{activity.get('comment_ids').length}}</span>
 						<span class="postCommentBtn postActionBtnText">Comment</span>
 						<span class="postShareBtn postActionBtnText">Share</span>
 						<span class="postReadMoreBtn postActionBtnText">More</span>
@@ -165,7 +159,7 @@
 					</div>
 				</div>
 				<div class="cardContent activityContent followForMoreContent"
-				ng-show="activities.length - activityDisplayLimit > 0">
+				ng-show="activities.length - activityDisplayLimit >  0 && !isFollowing">
 					Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
 				</div>
 			</div>

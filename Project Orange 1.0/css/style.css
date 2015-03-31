@@ -653,7 +653,9 @@ footer {
 .postTypeGeneralTextOnly .userActivityPostContent {
   width: 100%;
   height: auto; }
-
+.postTypeGeneralTextOnly .userActivityPostImgContainer{
+  display: none;
+}
 .postTypeGeneralTextOnly .userActivityActions {
   position: relative;
   width: 100%;
