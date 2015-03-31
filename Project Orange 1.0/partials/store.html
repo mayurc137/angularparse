@@ -63,7 +63,9 @@
 			<div class="cardContainer">
 				<div class="cardContent">
 					<p class="cardHeader">Collections</p>
-					<p class="cardInnerContent">Added in <span class="collectionLink action">10 great stores,</span><span class="collectionLink action">Love the way you Dress</span>Collections</p>
+					<p class="cardInnerContent">
+						Added in <span class="collectionLink action" ng-repeat="collection in collections | limitTo: collectionDisplayLimit">{{collection.get('collection_name')}}<span ng-class="{'hide' : $last}">, </span></span> Collections
+					</p>
 				</div>
 			</div>
 			<div class="cardContainer">
@@ -124,12 +126,12 @@
 				</div>
 			</div>
 			<div class="shopTabContainer">
-				<div class="tabBtn tabActive tabActivity">Activity</div>
-				<div class="tabBtn tabReview">Review</div>
-				<div class="tabBtn tabCoupon">Coupons</div>
-				<div class="tabBtn tabShowcase">Showcase</div>
+				<div class="tabBtn tabActivity" ng-click="setSelectedTab(1)" ng-class="{'tabActive' : isSelectedTab(1)}">Activity</div>
+				<div class="tabBtn tabReview" ng-click="setSelectedTab(2)" ng-class="{'tabActive' : isSelectedTab(2)}">Review</div>
+				<div class="tabBtn tabCoupon" ng-click="setSelectedTab(3)" ng-class="{'tabActive' : isSelectedTab(3)}">Coupons</div>
+				<div class="tabBtn tabShowcase" ng-click="setSelectedTab(4)" ng-class="{'tabActive' : isSelectedTab(4)}">Showcase</div>
 			</div>
-			<div class="cardContainerFull activityContainer tabContainer">
+			<div class="cardContainerFull activityContainer tabContainer" ng-show="isSelectedTab(1)">
 
 				<div class="cardContent activityContent"
 				ng-repeat="activity in activities | limitTo:activityDisplayLimit" 
@@ -163,62 +165,35 @@
 					Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
 				</div>
 			</div>
-			<div class="cardContainerFull reviewContainer tabContainer">
+			<div class="cardContainerFull reviewContainer tabContainer" ng-show="isSelectedTab(2)">
 				<div class="cardContent reviewContainerInner">
 					<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.."></textarea>
 					<div class="addReviewBtn">Publish Review</div>
 				</div>
-				<div class="cardContent reviewContent">
+
+				<div class="cardContent reviewContent" ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
 					<div class="postHeader">
 						<div class="userImgContainer">
-							<img src="img/img8.jpg" class="adjustImg">
+							<img ng-src="{{review.get('user_id').get('profile_image')._url}}" class="adjustImg">
 						</div>
 						<div class="postUserActivity">
-							<span class="postUsername">Arun S</span><br/>
-							<span class="postUserReviewCount">31 Reviews</span>
-							<span class="postUserFollowerCount">200 Followers</span>
+							<span class="postUsername">{{review.get('user_id').get('name')}}</span><br/>
+							<span class="postUserReviewCount">{{review.get('user_id').get('review_ids').length | reviewCount}}</span>
+							<span class="postUserFollowerCount">{{review.get('user_id').get('user_followed').length | followerCount}}</span>
 						</div>
-						<div class="userFollowBtn">Follow</div>
+						<div class="userFollowBtn" ng-hide="review.get('user_id').following || review.get('user_id').isCurrentUser">Follow</div>
 					</div>
-					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. Food and cocktails are lavish and amaze your palate. I would highly recommend Stone Water Grill to cheesy non veg lovers.</div>
-				</div>
-				<div class="cardContent reviewContent">
-					<div class="postHeader">
-						<div class="userImgContainer">
-							<img src="img/img9.jpg" class="adjustImg">
-						</div>
-						<div class="postUserActivity">
-							<span class="postUsername">Mayur More</span><br/>
-							<span class="postUserReviewCount">31 Reviews</span>
-							<span class="postUserFollowerCount">200 Followers</span>
-						</div>
-						<div class="userFollowBtn">Follow</div>
-					</div>
-					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff.</div>
-				</div>
-				<div class="cardContent reviewContent">
-					<div class="postHeader">
-						<div class="userImgContainer">
-							<img src="img/img10.jpg" class="adjustImg">
-						</div>
-						<div class="postUserActivity">
-							<span class="postUsername">Aditya More</span><br/>
-							<span class="postUserReviewCount">31 Reviews</span>
-							<span class="postUserFollowerCount">200 Followers</span>
-						</div>
-						<div class="userFollowBtn ">Follow</div>
-					</div>
-					<div class="userReviewText">This review was long due. The moment you set foot in, you know you have a great night in store for you. Very posh and suave ambience and decor welcomes you with friendly staff. We chose to sit in the lounge section thumping with music. This is one of the few places in Pune which play amazing music. </div>
-				</div>
-				<div class="loadMoreBtn">23 More</div>
+					<div class="userReviewText">{{review.get('review')}}</div>
+				</div>s
+				<div class="loadMoreBtn" ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} More</div>
 			</div>
-			<div class="cardContainerFull couponsContainer tabContainer">
+			<div class="cardContainerFull couponsContainer tabContainer" ng-show="isSelectedTab(3)">
 				<div class="cardContent">
 
 					<p class="cardHeader">Coupons Feed for I love Kapda</p>
 				</div>
 			</div>
-			<div class="cardContainerFull showcaseContainer tabContainer">
+			<div class="cardContainerFull showcaseContainer tabContainer" ng-show="isSelectedTab(4)">
 				<div class="cardContent">
 					<p class="cardHeader">Showcase Feed for I love Kapda</p>
 				</div>

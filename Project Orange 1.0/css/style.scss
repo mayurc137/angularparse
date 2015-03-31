@@ -326,17 +326,8 @@ footer{
 	margin-bottom:15px;
 	color:$primary;
 }
-.activityContainer{
+.activityContainer, .reviewContainer, .couponsContainer, .showcaseContainer{
 	display:inline-block;	
-}
-.reviewContainer{
-	display:none;
-}
-.couponsContainer{
-	display:none;
-}
-.showcaseContainer{
-	display:none;
 }
 
 .tabBtn:hover{
@@ -715,7 +706,9 @@ footer{
 	width:100%;
 	height:auto;
 }
-
+.hide{
+	display: none;
+}
 .userActivityPostImg:hover{
 	opacity:0.7;
 	cursor:pointer;

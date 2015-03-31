@@ -28,8 +28,13 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
+        $scope.collections = [];
+        $scope.collectionDisplayLimit = 4;
         $scope.activities = [];
         $scope.reviewCount = 0;
+
+        //For Tab Control
+        $scope.selectedTab = 1;
 
         if ($scope.storeData == null) {
 
@@ -41,6 +46,8 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     //Ideally 
                     $scope.bannerImg = 'img/back2.jpg';
                     $scope.storeTags = store.get('tags');
+                    $scope.collections = store.get('collections');
+                    console.log($scope.collections);
                     $scope.checkUpvoted(store);
                     $scope.checkFollowing(store);
                     $scope.fetchGallery();
@@ -241,6 +248,14 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     user.following = false;
                 }
             );
+        }
+
+        //For Tab Control
+        $scope.setSelectedTab = function(x) {
+            $scope.selectedTab = x;
+        }
+        $scope.isSelectedTab = function(x) {
+            return $scope.selectedTab == x;
         }
 
     }

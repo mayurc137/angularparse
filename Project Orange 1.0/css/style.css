@@ -297,17 +297,8 @@ footer {
   margin-bottom: 15px;
   color: #7323DC; }
 
-.activityContainer {
+.activityContainer, .reviewContainer, .couponsContainer, .showcaseContainer {
   display: inline-block; }
-
-.reviewContainer {
-  display: none; }
-
-.couponsContainer {
-  display: none; }
-
-.showcaseContainer {
-  display: none; }
 
 .tabBtn:hover {
   cursor: pointer;
@@ -683,4 +674,7 @@ footer {
   opacity: 0.7;
   cursor: pointer; }
 
+.hide{
+  display: none;
+}
 /*# sourceMappingURL=style.css.map */
