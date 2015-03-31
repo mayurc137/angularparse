@@ -25,6 +25,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
+        $scope.activities = [];
         $scope.reviewCount = 0;
 
         if ($scope.storeData == null) {
@@ -38,6 +39,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     $scope.checkUpvoted(store);
                     $scope.checkFollowing(store);
                     $scope.fetchGallery();
+                    $scope.fetchActivity();
                     $scope.fetchReviews();
 
                     //$scope.addReviewToStore("This is a sample review");
@@ -53,6 +55,17 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                 function(galleryImages) {
                     $scope.galleryImages = galleryImages;
                     //console.log(galleryImages);
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.fetchActivity = function() {
+            ParseFactory.getActivityByStore($scope.storeData).then(
+                function(activities) {
+                    $scope.activities = activities;
+                    console.log($scope.activities);
                 }, function(message) {
                     console.log(message);
                 }
@@ -101,8 +114,6 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
 
         $scope.fetchReviews = function() {
 
-            console.log($scope.currentUser);
-
             var usersFollowed = $scope.currentUser.get("user_following");
 
             $scope.reviews = $scope.storeData.get('review_ids');
@@ -133,8 +144,6 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     if (j == usersFollowed.length)
                         userConcerned.following = false;
                 }
-
-                console.log($scope.reviews);
             }
         }
 

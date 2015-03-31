@@ -69,4 +69,32 @@
 		</li>
 		<li ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} MORE</li>
 	</ul>
+
+	<p>Activity List</p>
+	<ul>
+		<li ng-repeat="activity in activities">
+			<p>{{activity.get('activity_title')}}</p>
+			<p>{{activity.get('activity_content')}}</p>
+			<img ng-src="{{activity.get('activity_image')._url}}" width="100px">
+			<p>{{activity.get('comment_ids').length | commentCount}}</p>
+			<p>{{activity.get('liked_by').length | likeCount}}</p>
+			<p>{{activity.createdAt | postDate}}</p>
+			<p>Comments</p>
+			<ul>
+				<li ng-repeat="comment in activity.get('comment_ids')">
+					<p>{{comment.get('user_id').get('name')}}</p>
+					<img ng-src="{{comment.get('user_id').get('profile_image')._url}}" width="50px"/>
+					<p>{{comment.get('first_level_comment')}}</p>
+					<p>{{comment.createdAt | postDate}}</p>
+				</li>
+			</ul>
+			<p>Likes</p>
+			<ul>
+				<li ng-repeat="liker in activity.get('liked_by')">
+					<p>{{liker.get('name')}}</p>
+					<img ng-src="{{liker.get('profile_image')._url}}" width="50px"/>
+				</li>
+			</ul>
+		</li>
+	</ul>
 </di
