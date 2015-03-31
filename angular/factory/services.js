@@ -2,6 +2,7 @@ var phonecatServices = angular.module('phonecatServices', ['parse-angular']);
 
 phonecatServices.factory('Phone', ['$q',
 <<<<<<< HEAD
+<<<<<<< HEAD
 	function ($q) {
 
 		var factory = {};
@@ -1443,6 +1444,8 @@ phonecatServices.factory('Phone', ['$q',
 
 	}
 =======
+=======
+>>>>>>> parent of 5c731b7... services.js, functions.js
     function($q) {
 
         var factory = {};
@@ -2718,8 +2721,13 @@ phonecatServices.factory('Phone', ['$q',
             query.include("service_id");
             query.include("liked_by");
             query.find({
+<<<<<<< HEAD
                 success: function(activities) {
                     console.log(activities);
+=======
+                success: function(activity) {
+                    console.log(activity);
+>>>>>>> parent of 5c731b7... services.js, functions.js
                 },
                 error: function(error, message) {
                     console.log(message);
@@ -2734,7 +2742,10 @@ phonecatServices.factory('Phone', ['$q',
         return factory;
 
     }
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> parent of 5c731b7... services.js, functions.js
 
 
 ]);
