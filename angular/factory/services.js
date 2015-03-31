@@ -1276,8 +1276,8 @@ phonecatServices.factory('Phone', ['$q',
             query.include("service_id");
             query.include("liked_by");
             query.find({
-                success: function(activity) {
-                    console.log(activity);
+                success: function(activities) {
+                    console.log(activities);
                 },
                 error: function(error, message) {
                     console.log(message);

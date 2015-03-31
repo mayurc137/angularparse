@@ -311,6 +311,31 @@ parseServices.factory('ParseFactory', ['$q',
                 }
             });
             return deferred.promise;
+        }
+
+        factory.getActivityByStore = function(store) {
+
+            var deferred = $q.defer();
+
+            var query = new Parse.Query("Activity");
+            query.equalTo("store_id", store);
+            query.include("comment_ids");
+            query.include("comment_ids.user_id");
+            query.include("user_id");
+            query.include("coupon_id");
+            query.include("product_id");
+            query.include("service_id");
+            query.include("liked_by");
+            query.find({
+                success: function(activities) {
+                    deferred.resolve(activities);
+                },
+                error: function(error, message) {
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
 
         }
 
@@ -381,7 +406,6 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
 
         }
-
 
         return factory;
 
