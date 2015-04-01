@@ -1465,6 +1465,96 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 
+		factory.upvoteStore = function (store, user) {
+
+			var deferred = $q.defer();
+
+			store.addUnique("upvoted_by", user);
+			store.save(null, {
+				success: function (object) {
+					console.log("Success");
+					user.addUnique("stores_upvoted", store);
+					user.save(null, {
+						success: function (object) {
+							console.log("Success");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		//done
+		factory.followStore = function (store, user) {
+
+			var deferred = $q.defer();
+
+			store.addUnique("followers", user);
+			store.save(null, {
+				success: function (object) {
+					user.addUnique("stores_followed", store);
+					user.save(null, {
+						success: function (object) {
+							console.log("Success");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message)
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.unfollowStore = function (store, user) {
+
+			var deferred = $q.defer();
+
+			store.remove("followers", user);
+			store.save(null, {
+				success: function (object) {
+					console.log("Success");
+
+					user.remove("stores_followed", store);
+					user.save(null, {
+						success: function (object) {
+							console.log("Success");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
 
 		return factory;
 
