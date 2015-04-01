@@ -1224,9 +1224,9 @@ phonecatServices.factory('Phone', ['$q',
 				user1: usera.id,
 				user2: userb.id
 			}, {
-				success: function (result) {
-					if (result) {
-						deferred.resolve(true);
+				success: function (user2) {
+					if (user2) {
+						deferred.resolve(user2);
 					} else {
 						deferred.reject(false);
 					}
@@ -1293,6 +1293,7 @@ phonecatServices.factory('Phone', ['$q',
 
 			var query = new Parse.Query("Activity");
 			query.equalTo("store_id", store);
+			query.descending("createdAt");
 			query.include("comment_ids");
 			query.include("user_id");
 			query.include("coupon_id");
@@ -1545,6 +1546,35 @@ phonecatServices.factory('Phone', ['$q',
 							deferred.reject(message);
 						}
 					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		factory.getGeneralActivityByStore = function (store) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Activity");
+			query.equalTo("store_id", store);
+			query.descending("createdAt");
+			query.equalTo("activity_type", 4);
+			query.include("comment_ids");
+			query.include("user_id");
+			query.include("coupon_id");
+			query.include("product_id");
+			query.include("service_id");
+			query.include("liked_by");
+			query.find({
+				success: function (activity) {
+					console.log(activity);
+					deferred.resolve(activity);
 				},
 				error: function (error, message) {
 					console.log(message);
