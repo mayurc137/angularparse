@@ -1240,6 +1240,30 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 
+		factory.unfollowUser = function (usera, userb) {
+
+			var deferred = $q.defer();
+
+			Parse.Cloud.run('unfollowUsers', {
+				user1: usera.id,
+				user2: userb.id
+			}, {
+				success: function (result) {
+					if (result) {
+						deferred.resolve(true);
+					} else {
+						deferred.reject(false);
+					}
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
 		factory.fetchReviews = function (store) {
 
 			var deferred = $q.defer();
