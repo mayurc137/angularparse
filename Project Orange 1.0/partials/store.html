@@ -7,10 +7,10 @@
 		<div class="imgFader"></div>
 		<div class="shopHeaderContent">
 			<div class="upvoteFollowContainer">
-				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}">
+				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}" ng-click="upvoteStore()">
 					Upvoted
 				</div>
-				<div class="upvoteFollowBtn shopFollowBtn" ng-class="{primaryBtnVisited : isFollowing}">
+				<div class="upvoteFollowBtn shopFollowBtn" ng-class="{primaryBtnVisited : isFollowing}" ng-click="toggleFollow()">
 					Following
 				</div>
 			</div>
@@ -161,14 +161,14 @@
 					</div>
 				</div>
 				<div class="cardContent activityContent followForMoreContent"
-				ng-show="activities.length - activityDisplayLimit >  0 && !isFollowing">
+				ng-show="!isFollowing">
 					Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
 				</div>
 			</div>
 			<div class="cardContainerFull reviewContainer tabContainer" ng-show="isSelectedTab(2)">
 				<div class="cardContent reviewContainerInner">
-					<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.."></textarea>
-					<div class="addReviewBtn">Publish Review</div>
+					<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.." ng-model="newReview"></textarea>
+					<div class="addReviewBtn" ng-click="addReviewToStore()">Publish Review</div>
 				</div>
 
 				<div class="cardContent reviewContent" ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
@@ -184,7 +184,7 @@
 						<div class="userFollowBtn" ng-hide="review.get('user_id').following || review.get('user_id').isCurrentUser">Follow</div>
 					</div>
 					<div class="userReviewText">{{review.get('review')}}</div>
-				</div>s
+				</div>
 				<div class="loadMoreBtn" ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} More</div>
 			</div>
 			<div class="cardContainerFull couponsContainer tabContainer" ng-show="isSelectedTab(3)">

@@ -7,7 +7,6 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
 
         $scope.storeData = storeLocalStorage.getStoreData();
 
-        //Testing part
         $scope.currentUser = ParseFactory.getCurrentUser();
 
         $scope.storeHandle = $routeParams.storeHandle;
@@ -24,7 +23,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.tagDisplayLimit = 8;
         $scope.galleryDisplayLimit = 8;
         $scope.reviewDisplayLimit = 3;
-        $scope.activityDisplayLimit = 4;
+        $scope.activityDisplayLimit = 3;
         $scope.storeTags = [];
         $scope.galleryImages = [];
         $scope.reviews = [];
@@ -32,6 +31,8 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.collectionDisplayLimit = 4;
         $scope.activities = [];
         $scope.reviewCount = 0;
+
+        $scope.newReview = '';
 
         //For Tab Control
         $scope.selectedTab = 1;
@@ -45,16 +46,14 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     $scope.storeData = store;
                     //Ideally 
                     $scope.bannerImg = 'img/back2.jpg';
-                    $scope.storeTags = store.get('tags');
-                    $scope.collections = store.get('collections');
-                    console.log($scope.collections);
-                    $scope.checkUpvoted(store);
-                    $scope.checkFollowing(store);
+                    $scope.storeTags = $scope.storeData.get('tags');
+                    $scope.collections = $scope.storeData.get('collections');
+                    $scope.checkUpvoted($scope.storeData);
+                    $scope.checkFollowing($scope.storeData);
                     $scope.fetchGallery();
                     $scope.fetchActivity();
                     $scope.fetchReviews();
 
-                    //$scope.addReviewToStore("This is a sample review");
                 },
                 function(message) {
                     console.log(message);
@@ -159,16 +158,77 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             }
         }
 
-        $scope.addReviewToStore = function(reviewText) {
-            ParseFactory.addReview($scope.currentUser, $scope.storeData, reviewText)
-                .then(function(reviewObject) {
+        $scope.addReviewToStore = function() {
+
+            ParseFactory.addReview($scope.currentUser, $scope.storeData, $scope.newReview).then(
+                function(reviewObject) {
+                    $scope.newReview = '';
                     $scope.reviews.unshift(reviewObject);
                     console.log($scope.reviews);
                 }, function(message) {
                     console.log(message);
-                });
+                }
+            );
         }
 
+        $scope.upvoteStore = function() {
+
+            //To Show quick Feedback
+            $scope.isUpvoted = true;
+
+            ParseFactory.upvoteStore($scope.storeData, $scope.currentUser).then(
+                function(newStoreData) {
+                    $scope.storeData = newStoreData;
+                    $scope.isUpvoted = true;
+                    $scope.upvoters = $scope.storeData.get('upvoted_by');
+                    $scope.upvoteCount = $scope.upvoters.length;
+                    $scope.currentUser = ParseFactory.getCurrentUser();
+
+                }, function(message) {
+                    $scope.isUpvoted = false;
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.toggleFollow = function() {
+            if ($scope.isFollowing) {
+                $scope.isFollowing = false;
+
+                ParseFactory.unfollowStore($scope.storeData, $scope.currentUser).then(
+                    function(newStoreData) {
+                        $scope.storeData = newStoreData;
+                        $scope.isFollowing = false;
+                        $scope.followers = $scope.storeData.get('followers');
+                        $scope.followerCount = $scope.followers.length;
+                        $scope.currentUser = ParseFactory.getCurrentUser();
+
+                    }, function(message) {
+                        $scope.isFollowing = true;
+                        console.log(message);
+                    }
+                );
+            } else {
+                $scope.isFollowing = true;
+
+                ParseFactory.followStore($scope.storeData, $scope.currentUser).then(
+                    function(newStoreData) {
+                        $scope.storeData = newStoreData;
+                        $scope.isFollowing = true;
+                        $scope.followers = $scope.storeData.get('followers');
+                        $scope.followerCount = $scope.followers.length;
+                        $scope.currentUser = ParseFactory.getCurrentUser();
+
+                    }, function(message) {
+                        $scope.isFollowing = false;
+                        console.log(message);
+                    }
+                );
+            }
+        }
+
+
+        /* Functions for user Login and Sign Up End Here */
         $scope.handleLogin = function() {
             ParseFactory.fbLogin().then(
                 function(user) {
@@ -224,6 +284,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                 }
             );
         }
+        /* Functions for user Login and Sign Up End Here */
 
         $scope.decideActivityClass = function(activity) {
             var image = activity.get('activity_image');
@@ -239,13 +300,38 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             return "postTypeGeneralImageText";
         }
 
-        $scope.followUser = function(user) {
-            ParseFactory.followUser($scope.currentUser, user).then(
-                function(success) {
-                    user.following = true;
+        $scope.followUser = function(user2) {
+
+            user2.following = true;
+
+            ParseFactory.followUser($scope.currentUser, user2).then(
+                function(userFollowed) {
+                    //Update user2
+                    user2 = userFollowed;
+                    user2.following = true;
+                    //Update user1
+                    $scope.currentUser = ParseFactory.getCurrentUser();
                 }, function(error) {
                     console.log(error);
-                    user.following = false;
+                    user2.following = false;
+                }
+            );
+        }
+
+        $scope.unfollowUser = function(user2) {
+
+            user2.following = false;
+
+            ParseFactory.unfollowUser($scope.currentUser, user2).then(
+                function(unfollowedUser) {
+                    //Update User2
+                    user2 = unfollowedUser;
+                    user2.following = false;
+                    //Update User1
+                    $scope.currentUser = ParseFactory.getCurrentUser();
+                }, function(mesage) {
+                    user2.following = true;
+                    console.log(message);
                 }
             );
         }
