@@ -1567,6 +1567,36 @@ phonecatServices.factory('Phone', ['$q',
 
 		}
 
+		factory.downvoteStore = function (store, user) {
+
+			var deferred = $q.defer();
+
+			store.remove("upvoted_by", user);
+			store.save(null, {
+				success: function (object) {
+					console.log("Success");
+					user.remove("stores_upvoted", store);
+					user.save(null, {
+						success: function (object) {
+							console.log("Success");
+							deferred.resolve(true);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
 		//done
 		factory.followStore = function (store, user) {
 
