@@ -244,9 +244,11 @@ parseServices.factory('ParseFactory', ['$q',
             var query = new Parse.Query("Stores");
             query.equalTo('store_handle', handle);
             query.include('products');
+            query.include("products.gallery_ids");
             query.include('primary_category');
             query.include('collections');
             query.include('services');
+            query.include("services.gallery_ids");
             query.include('followers');
             query.include('locality');
             query.include('upvoted_by');
@@ -271,27 +273,23 @@ parseServices.factory('ParseFactory', ['$q',
             return currentUser;
         }
 
-        //For testing purposes only
-        factory.getUser = function(userId) {
-
+        factory.getCurrentUserCollections = function(currentUser) {
             var deferred = $q.defer();
 
-            var query = new Parse.Query(Parse.User);
-            query.equalTo("user_id", userId);
-
-            query.find({
-                success: function(user) {
-                    // Syntax = user[0].get('name of column')
-                    deferred.resolve(user[0]);
+            var collectionQuery = new Parse.Query("Collections");
+            collectionQuery.equalTo('created_by', currentUser);
+            collectionQuery.find({
+                success: function(collections) {
+                    deferred.resolve(collections);
                 },
                 error: function(error, message) {
-                    deferred.reject(message);
+                    deferred.resolve(message);
                 }
             });
 
             return deferred.promise;
-
         }
+
 
         factory.fetchGalleryOfStore = function(storeId) {
 

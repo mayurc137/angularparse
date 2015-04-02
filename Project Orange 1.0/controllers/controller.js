@@ -8,6 +8,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.storeData = storeLocalStorage.getStoreData();
 
         $scope.currentUser = ParseFactory.getCurrentUser();
+        console.log($scope.currentUser);
 
         $scope.storeHandle = $routeParams.storeHandle;
         //Default Image should be specified Here
@@ -28,9 +29,11 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.galleryImages = [];
         $scope.reviews = [];
         $scope.collections = [];
-        $scope.collectionDisplayLimit = 4;
+        $scope.collectionDisplayLimit = 5;
         $scope.activities = [];
         $scope.reviewCount = 0;
+
+        $scope.userCollections = null;
 
         $scope.newReview = '';
 
@@ -59,6 +62,15 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     console.log(message);
                 }
             );
+        } else {
+            $scope.bannerImg = 'img/back2.jpg';
+            $scope.storeTags = $scope.storeData.get('tags');
+            $scope.collections = $scope.storeData.get('collections');
+            $scope.checkUpvoted($scope.storeData);
+            $scope.checkFollowing($scope.storeData);
+            $scope.fetchGallery();
+            $scope.fetchActivity();
+            $scope.fetchReviews();
         }
 
         $scope.fetchGallery = function() {
@@ -125,37 +137,56 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
 
         $scope.fetchReviews = function() {
 
-            var usersFollowed = $scope.currentUser.get("user_following");
+            if ($scope.currentUser) {
+                var usersFollowed = $scope.currentUser.get("user_following");
 
-            $scope.reviews = $scope.storeData.get('review_ids');
+                $scope.reviews = $scope.storeData.get('review_ids');
 
-            if ($scope.reviews != null) {
+                if ($scope.reviews != null) {
 
-                $scope.reviewCount = $scope.reviews.length;
+                    $scope.reviewCount = $scope.reviews.length;
 
-                //Iterate through each review
-                for (var i = 0; i < $scope.reviewCount; i++) {
-                    var userConcerned = $scope.reviews[i].get('user_id');
+                    //Iterate through each review
+                    for (var i = 0; i < $scope.reviewCount; i++) {
+                        var userConcerned = $scope.reviews[i].get('user_id');
 
-                    if ($scope.currentUser.id == userConcerned.id) {
-                        userConcerned.following = false;
-                        userConcerned.isCurrentUser = true;
-                        continue;
-                    }
-
-                    var j;
-                    for (j = 0; j < usersFollowed.length; j++) {
-
-                        if (userFollowed[i].id == userConcerned.id) {
-                            userConcerned.following = true;
-                            break;
+                        if ($scope.currentUser.id == userConcerned.id) {
+                            userConcerned.following = false;
+                            userConcerned.isCurrentUser = true;
+                            continue;
                         }
-                    }
 
-                    if (j == usersFollowed.length)
+                        var j;
+                        for (j = 0; j < usersFollowed.length; j++) {
+
+                            if (userFollowed[i].id == userConcerned.id) {
+                                userConcerned.following = true;
+                                break;
+                            }
+                        }
+
+                        if (j == usersFollowed.length)
+                            userConcerned.following = false;
+                    }
+                }
+            } else {
+                $scope.reviews = $scope.storeData.get('review_ids');
+
+                if ($scope.reviews != null) {
+
+                    $scope.reviewCount = $scope.reviews.length;
+
+                    //Iterate through each review
+                    for (var i = 0; i < $scope.reviewCount; i++) {
+                        var userConcerned = $scope.reviews[i].get('user_id');
+
                         userConcerned.following = false;
+                        userConcerned.isCurrentUser = false;
+
+                    }
                 }
             }
+
         }
 
         $scope.addReviewToStore = function() {
@@ -342,6 +373,37 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         }
         $scope.isSelectedTab = function(x) {
             return $scope.selectedTab == x;
+        }
+
+        $scope.showUserCollections = function() {
+            if ($scope.userCollections == null) {
+                ParseFactory.getCurrentUserCollections($scope.currentUser).then(
+                    function(collections) {
+                        $scope.userCollections = collections;
+                        console.log($scope.userCollections);
+                    }, function(message) {
+                        console.log(message);
+                    }
+                )
+            }
+
+        }
+
+        $scope.addStoreToCollection = function(collection) {
+            ParseFactory.addStoreToCollection($scope.storeData, collection).then(
+                function(storeObject) {
+                    $scope.storeData = storeObject;
+                    $scope.storeTags = $scope.storeData.get('tags');
+                    $scope.collections = $scope.storeData.get('collections');
+                    $scope.checkUpvoted($scope.storeData);
+                    $scope.checkFollowing($scope.storeData);
+                    $scope.fetchActivity();
+                    $scope.fetchReviews();
+                    console.log(storeObject);
+                }, function(message) {
+                    console.log(message);
+                }
+            );
         }
 
     }
