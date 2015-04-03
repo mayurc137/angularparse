@@ -11,8 +11,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         console.log($scope.currentUser);
 
         $scope.storeHandle = $routeParams.storeHandle;
-        //Default Image should be specified Here
-        $scope.bannerImg = 'img/back.jpg';
+        $scope.bannerImgStyle = '';
         $scope.upvoters = [];
         $scope.followers = [];
         $scope.upvoteCount = 0;
@@ -32,7 +31,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.collectionDisplayLimit = 5;
         $scope.activities = [];
         $scope.reviewCount = 0;
-
+        $scope.hasReviewed = false;
         $scope.userCollections = null;
 
         $scope.newReview = '';
@@ -48,7 +47,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     console.log(store);
                     $scope.storeData = store;
                     //Ideally 
-                    $scope.bannerImg = 'img/back2.jpg';
+                    $scope.bannerImgStyle = 'url(' + $scope.storeData.get('banner_image')._url + ')';
                     $scope.storeTags = $scope.storeData.get('tags');
                     $scope.collections = $scope.storeData.get('collections');
                     $scope.checkUpvoted($scope.storeData);
@@ -56,6 +55,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     $scope.fetchGallery();
                     $scope.fetchActivity();
                     $scope.fetchReviews();
+                    $scope.checkIfReviewed();
 
                 },
                 function(message) {
@@ -63,7 +63,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                 }
             );
         } else {
-            $scope.bannerImg = 'img/back2.jpg';
+            $scope.bannerImgStyle = 'url(' + $scope.storeData.get('banner_image')._url + ')';
             $scope.storeTags = $scope.storeData.get('tags');
             $scope.collections = $scope.storeData.get('collections');
             $scope.checkUpvoted($scope.storeData);
@@ -74,7 +74,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         }
 
         $scope.fetchGallery = function() {
-            ParseFactory.fetchGalleryOfStore($scope.storeData.id).then(
+            ParseFactory.fetchGalleryOfStore($scope.storeData).then(
                 function(galleryImages) {
                     $scope.galleryImages = galleryImages;
                     //console.log(galleryImages);
@@ -93,6 +93,14 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     console.log(message);
                 }
             );
+        }
+
+        $scope.checkIfReviewed = function() {
+            var storeId = $scope.storeData.id;
+            var storesReviewed = $scope.currentUser.get('stores_reviewed');
+            var index = storesReviewed.indexOf(storeId);
+            if (index != -1)
+                $scope.hasReviewed = true;
         }
 
         $scope.checkUpvoted = function(store) {
@@ -138,7 +146,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         $scope.fetchReviews = function() {
 
             if ($scope.currentUser) {
-                var usersFollowed = $scope.currentUser.get("user_following");
+                var usersFollowed = $scope.currentUser.get("users_followed");
 
                 $scope.reviews = $scope.storeData.get('review_ids');
 
@@ -146,6 +154,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
 
                     $scope.reviewCount = $scope.reviews.length;
 
+                    console.log(usersFollowed);
                     //Iterate through each review
                     for (var i = 0; i < $scope.reviewCount; i++) {
                         var userConcerned = $scope.reviews[i].get('user_id');
@@ -159,14 +168,17 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                         var j;
                         for (j = 0; j < usersFollowed.length; j++) {
 
-                            if (userFollowed[i].id == userConcerned.id) {
+                            if (usersFollowed[j].id == userConcerned.id) {
                                 userConcerned.following = true;
+                                userConcerned.isCurrentUser = false;
                                 break;
                             }
                         }
 
-                        if (j == usersFollowed.length)
+                        if (j == usersFollowed.length) {
                             userConcerned.following = false;
+                        }
+
                     }
                 }
             } else {
@@ -191,35 +203,58 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
 
         $scope.addReviewToStore = function() {
 
-            ParseFactory.addReview($scope.currentUser, $scope.storeData, $scope.newReview).then(
-                function(reviewObject) {
-                    $scope.newReview = '';
-                    $scope.reviews.unshift(reviewObject);
-                    console.log($scope.reviews);
-                }, function(message) {
-                    console.log(message);
-                }
-            );
+            if ($scope.hasReviewed == false) {
+                ParseFactory.addReview($scope.currentUser, $scope.storeData, $scope.newReview).then(
+                    function(reviewObject) {
+                        $scope.newReview = '';
+                        $scope.reviews.unshift(reviewObject);
+                        console.log($scope.reviews);
+                    }, function(message) {
+                        console.log(message);
+                    }
+                );
+            } else {
+                $scope.newReview = "";
+                console.log("Already reviewed this store");
+            }
+
         }
 
-        $scope.upvoteStore = function() {
 
-            //To Show quick Feedback
-            $scope.isUpvoted = true;
+        $scope.toggleUpvote = function() {
+            if ($scope.isUpvoted) {
+                $scope.isUpvoted = false;
 
-            ParseFactory.upvoteStore($scope.storeData, $scope.currentUser).then(
-                function(newStoreData) {
-                    $scope.storeData = newStoreData;
-                    $scope.isUpvoted = true;
-                    $scope.upvoters = $scope.storeData.get('upvoted_by');
-                    $scope.upvoteCount = $scope.upvoters.length;
-                    $scope.currentUser = ParseFactory.getCurrentUser();
+                ParseFactory.downvoteStore($scope.storeData, $scope.currentUser).then(
+                    function(newStoreData) {
+                        $scope.storeData = newStoreData;
+                        $scope.isUpvoted = false;
+                        $scope.upvoters = $scope.storeData.get('upvoted_by');
+                        $scope.upvoteCount = $scope.upvoters.length;
+                        $scope.currentUser = ParseFactory.getCurrentUser();
 
-                }, function(message) {
-                    $scope.isUpvoted = false;
-                    console.log(message);
-                }
-            );
+                    }, function(message) {
+                        $scope.isUpvoted = true;
+                        console.log(message);
+                    }
+                );
+            } else {
+                $scope.isUpvoted = true;
+
+                ParseFactory.upvoteStore($scope.storeData, $scope.currentUser).then(
+                    function(newStoreData) {
+                        $scope.storeData = newStoreData;
+                        $scope.isUpvoted = true;
+                        $scope.upvoters = $scope.storeData.get('upvoted_by');
+                        $scope.upvoteCount = $scope.upvoters.length;
+                        $scope.currentUser = ParseFactory.getCurrentUser();
+
+                    }, function(message) {
+                        $scope.isUpvoted = false;
+                        console.log(message);
+                    }
+                );
+            }
         }
 
         $scope.toggleFollow = function() {
@@ -281,6 +316,10 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             );
         }
 
+        $scope.handleLogOut = function() {
+            ParseFactory.logOut();
+        }
+
         $scope.getUserDetails = function() {
             ParseFactory.getUserData().then(
                 function(userData) {
@@ -338,6 +377,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             ParseFactory.followUser($scope.currentUser, user2).then(
                 function(userFollowed) {
                     //Update user2
+                    console.log(user2);
                     user2 = userFollowed;
                     user2.following = true;
                     //Update user1
@@ -395,8 +435,10 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     $scope.storeData = storeObject;
                     $scope.storeTags = $scope.storeData.get('tags');
                     $scope.collections = $scope.storeData.get('collections');
-                    $scope.checkUpvoted($scope.storeData);
-                    $scope.checkFollowing($scope.storeData);
+                    $scope.upvoters = $scope.storeData.get('upvoted_by');
+                    $scope.upvoteCount = $scope.upvoters.length;
+                    $scope.followers = $scope.storeData.get('followers');
+                    $scope.followerCount = $scope.followers.length;
                     $scope.fetchActivity();
                     $scope.fetchReviews();
                     console.log(storeObject);

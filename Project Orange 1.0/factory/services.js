@@ -82,6 +82,10 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.logOut = function() {
+            Parse.User.logOut();
+        }
+
         factory.getUserData = function() {
 
             var deferred = $q.defer();
@@ -294,10 +298,8 @@ parseServices.factory('ParseFactory', ['$q',
         factory.fetchGalleryOfStore = function(storeId) {
 
             var deferred = $q.defer();
-            var storequery = new Parse.Query("Stores");
-            storequery.equalTo("objectId", storeId);
             var query = new Parse.Query("Gallery");
-            query.matchesQuery("store_id", storequery);
+            query.equalTo("store_id", store);
             query.descending("createdAt");
             query.find({
                 success: function(gallery) {
@@ -353,6 +355,7 @@ parseServices.factory('ParseFactory', ['$q',
             review.save(null, {
                 success: function(review) {
                     user.addUnique("review_ids", review);
+                    user.addUnique("stores_reviewed", store.id);
                     user.save(null, {
                         success: function(user) {
                             store.addUnique("review_ids", review);
@@ -385,7 +388,7 @@ parseServices.factory('ParseFactory', ['$q',
 
         factory.followUser = function(usera, userb) {
 
-            var deferrred = $q.defer();
+            var deferred = $q.defer();
 
             Parse.Cloud.run('followUsers', {
                 user1: usera.id,
@@ -399,7 +402,7 @@ parseServices.factory('ParseFactory', ['$q',
                     }
                 },
                 error: function(error, message) {
-                    deferred.reject(false);
+                    deferred.reject(message);
                 }
             });
 
@@ -458,6 +461,36 @@ parseServices.factory('ParseFactory', ['$q',
             });
 
             return deferred.promise;
+        }
+
+        factory.downvoteStore = function(store, user) {
+
+            var deferred = $q.defer();
+
+            store.remove("upvoted_by", user);
+            store.save(null, {
+                success: function(store) {
+                    console.log("Success");
+                    user.remove("stores_upvoted", store);
+                    user.save(null, {
+                        success: function(user) {
+                            console.log("Success");
+                            deferred.resolve(store);
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+
         }
 
         factory.followStore = function(store, user) {

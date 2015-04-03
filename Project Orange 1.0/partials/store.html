@@ -3,11 +3,11 @@
 			
 		</div>
 	</div>
-	<div class="shopHeader" ng-style=" { 'background' : 'url({{bannerImg}}) no-repeat', 'background-size' : 'cover' }">
+	<div class="shopHeader" ng-style=" { backgroundImage : bannerImgStyle }">
 		<div class="imgFader"></div>
 		<div class="shopHeaderContent">
 			<div class="upvoteFollowContainer">
-				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}" ng-click="upvoteStore()">
+				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}" ng-click="toggleUpvote()">
 					Upvoted
 				</div>
 				<div class="upvoteFollowBtn shopFollowBtn" ng-class="{primaryBtnVisited : isFollowing}" ng-click="toggleFollow()">
@@ -179,9 +179,9 @@
 						<div class="postUserActivity">
 							<span class="postUsername">{{review.get('user_id').get('name')}}</span><br/>
 							<span class="postUserReviewCount">{{review.get('user_id').get('review_ids').length | reviewCount}}</span>
-							<span class="postUserFollowerCount">{{review.get('user_id').get('user_followed').length | followerCount}}</span>
+							<span class="postUserFollowerCount">{{review.get('user_id').get('followers').length | followerCount}}</span>
 						</div>
-						<div class="userFollowBtn" ng-hide="review.get('user_id').following || review.get('user_id').isCurrentUser">Follow</div>
+						<div class="userFollowBtn" ng-hide="review.get('user_id').following || review.get('user_id').isCurrentUser" ng-click="followUser(review.get('user_id'))">Follow</div>
 					</div>
 					<div class="userReviewText">{{review.get('review')}}</div>
 				</div>
