@@ -88,11 +88,29 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
             ParseFactory.getActivityByStore($scope.storeData).then(
                 function(activities) {
                     $scope.activities = activities;
-                    //console.log($scope.activities);
+                    console.log($scope.activities);
+                    $scope.checkActivityLiked();
                 }, function(message) {
                     console.log(message);
                 }
             );
+        }
+
+        $scope.checkActivityLiked = function() {
+            if ($scope.activities) {
+                angular.forEach($scope.activities, function(activity) {
+                    activity.likeButton = "Like";
+                    var likers = activity.get('liked_by');
+                    if (likers) {
+                        for (var i = 0; i < likers.length; i++) {
+                            if (likers[i].id == $scope.currentUser.id) {
+                                activity.liked = "Dislike";
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         $scope.checkIfReviewed = function() {

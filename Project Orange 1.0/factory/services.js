@@ -295,7 +295,7 @@ parseServices.factory('ParseFactory', ['$q',
         }
 
 
-        factory.fetchGalleryOfStore = function(storeId) {
+        factory.fetchGalleryOfStore = function(store) {
 
             var deferred = $q.defer();
             var query = new Parse.Query("Gallery");
@@ -698,6 +698,76 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.likeActivity = function(activity, store, user) {
+
+            var deferred = $q.defer();
+
+            activity.addUnique("liked_by", user);
+            activity.increment("activity_likes");
+
+            activity.save(null, {
+                success: function(object) {
+                    var Activity = Parse.Object.extend("Activity");
+                    var likeactivity = new Activity;
+                    likeactivity.set("type", 14);
+                    likeactivity.set("user_id", user);
+                    likeactivity.set("activity_concerned", activity);
+                    likeactivity.set("store_concerned", activity);
+
+                    likeactivity.save(null, {
+                        success: function(object) {
+                            console.log("Success");
+                            deferred.resolve(true);
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        function dislikeActivity(activity, store, user) {
+
+            var deferred = $q.defer();
+
+            activity.remove("liked_by", user);
+            activity.decrement("activity_likes");
+            activity.save(null, {
+                success: function(object) {
+                    var Activity = Parse.Object.extend("Activity");
+                    var likeactivity = new Activity;
+                    likeactivity.set("type", 15);
+                    likeactivity.set("user_id", user);
+                    likeactivity.set("activity_concerned", activity);
+                    likeactivity.set("store_concerned", activity);
+
+                    likeactivity.save(null, {
+                        success: function(object) {
+                            console.log("Success");
+                            deferred.resolve(true);
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
 
 
         return factory;
