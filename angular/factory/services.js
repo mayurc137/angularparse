@@ -554,44 +554,67 @@ phonecatServices.factory('Phone', ['$q',
 
 		//Pass the userId and the commentText
 		//StoreID / CollectionID needs to be added
-		factory.addComment = function () {
+		factory.addUserComment = function (activity, user, store, comment) {
 
 			var deferred = $q.defer();
-			var userId = "OHjLjnyS4K";
-			var storeId = "Ik3uYT99O4";
-			var commenttext = "lorem impsum some shizz";
 
-			var query = new Parse.Query(Parse.User);
-			query.get(userId, {
-				success: function (user) {
-					var Comment = Parse.Object.extend("Comments");
-					var comment = new Comment();
+			//Add Notification to Store
 
-					var querystore = new Parse.Query("Stores");
-					querystore.get(storeId, {
-						success: function (store) {
-							comment.set("user_id", user);
-							comment.set("comment", commenttext);
-							comment.set("store_id", store);
-							comment.save(null, {
-
-								success: function (comment) {
-									console.log("Added to Database" + comment);
+			var Comment = Parse.Object.extend("Comments");
+			var comment = new Comment();
+			comment.set("user_id", user);
+			comment.set("store_id", store);
+			comment.set("first_level_comment", comment);
+			comment.save(null, {
+				success: function (comment) {
+					activity.addUnique("comment_ids", comment);
+					activity.save(null, {
+						success: function (activity) {
+							var Activity = Parse.Object.extend("Activity");
+							var commentactivity = new Activity();
+							commentactivity.set("user_id", user);
+							commentactivity.set("store_concerned", store);
+							commentactivity.set("type", 13);
+							commentactivity.save({
+								success: function (object) {
+									console.log("Success");
 									deferred.resolve(true);
 								},
 								error: function (error, message) {
-									console.log(error);
+									console.log("message");
 									deferred.reject(message);
 								}
 							});
 						},
 						error: function (error, message) {
-
+							console.log(message);
+							deferred.reject(message);
 						}
 					});
 				},
 				error: function (error, message) {
-					console.log(error);
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+
+		}
+
+		function addStoreComment(comment, store_comment) {
+
+			var deferred = $q.defer();
+
+			comment.set("second_level_comment", store_comment);
+			comment.save(null, {
+				success: function (comment) {
+					//Add notification to User
+					console.log("Success");
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log(message);
 					deferred.reject(message);
 				}
 			});
