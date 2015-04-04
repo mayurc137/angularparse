@@ -703,21 +703,20 @@ parseServices.factory('ParseFactory', ['$q',
             var deferred = $q.defer();
 
             activity.addUnique("liked_by", user);
-            activity.increment("activity_likes");
 
             activity.save(null, {
-                success: function(object) {
+                success: function(activity) {
                     var Activity = Parse.Object.extend("Activity");
                     var likeactivity = new Activity;
                     likeactivity.set("type", 14);
                     likeactivity.set("user_id", user);
                     likeactivity.set("activity_concerned", activity);
-                    likeactivity.set("store_concerned", activity);
+                    likeactivity.set("store_concerned", store);
 
                     likeactivity.save(null, {
-                        success: function(object) {
+                        success: function(likeactivity) {
                             console.log("Success");
-                            deferred.resolve(true);
+                            deferred.resolve(activity);
                         },
                         error: function(error, message) {
                             console.log(message);
@@ -734,25 +733,25 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
-        function dislikeActivity(activity, store, user) {
+        factory.dislikeActivity = function(activity, store, user) {
 
             var deferred = $q.defer();
 
             activity.remove("liked_by", user);
-            activity.decrement("activity_likes");
+
             activity.save(null, {
-                success: function(object) {
+                success: function(activity) {
                     var Activity = Parse.Object.extend("Activity");
                     var likeactivity = new Activity;
                     likeactivity.set("type", 15);
                     likeactivity.set("user_id", user);
                     likeactivity.set("activity_concerned", activity);
-                    likeactivity.set("store_concerned", activity);
+                    likeactivity.set("store_concerned", store);
 
                     likeactivity.save(null, {
-                        success: function(object) {
+                        success: function(likeactivity) {
                             console.log("Success");
-                            deferred.resolve(true);
+                            deferred.resolve(activity);
                         },
                         error: function(error, message) {
                             console.log(message);

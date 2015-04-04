@@ -104,12 +104,36 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     if (likers) {
                         for (var i = 0; i < likers.length; i++) {
                             if (likers[i].id == $scope.currentUser.id) {
-                                activity.liked = "Dislike";
+                                activity.likeButton = "Dislike";
                                 break;
                             }
                         }
                     }
                 });
+            }
+        }
+
+        $scope.toggleActivityLike = function(activity) {
+            if (activity.likeButton == "Dislike") {
+                activity.likeButton = "Like";
+                ParseFactory.dislikeActivity(activity, $scope.storeData, $scope.currentUser).then(
+                    function(newActivity) {
+                        activity = newActivity;
+                    }, function(message) {
+                        activity.likeButton = "Dislike";
+                        console.log(message);
+                    }
+                );
+            } else {
+                activity.likeButton = "Dislike";
+                ParseFactory.likeActivity(activity, $scope.storeData, $scope.currentUser).then(
+                    function(newActivity) {
+                        activity = newActivity;
+                    }, function(message) {
+                        activity.likeButton = "Like";
+                        console.log(message);
+                    }
+                );
             }
         }
 
@@ -465,6 +489,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                 }
             );
         }
+
 
     }
 ]);
