@@ -42,6 +42,10 @@ app.controller('storeListCtrl', ['$http', '$scope', 'Phone', '$q',
 			});
 		}
 
+		$scope.invokeShare = function () {
+
+		}
+
 		$scope.getUserInfo = function () {
 
 			var promise = Phone.getUserData();
