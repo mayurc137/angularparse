@@ -2426,6 +2426,7 @@ phonecatServices.factory('Phone', ['$q',
                     activity.set("is_visible", true);
                     activity.set("is_notification", false);
                     activity.set("is_seen", false);
+                    activity.set("engage_count", 0);
 
                     activity.save(null, {
                         success: function(object) {
@@ -2450,6 +2451,7 @@ phonecatServices.factory('Phone', ['$q',
                 activity.set("is_visible", true);
                 activity.set("is_notification", false);
                 activity.set("is_seen", false);
+                activity.set("engage_count", 0);
 
                 activity.save(null, {
                     success: function(object) {
