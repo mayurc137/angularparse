@@ -31,16 +31,16 @@ phonecatServices.factory('Phone', ['$q',
 			}(document, 'script', 'facebook-jssdk'));
 		}
 
-    factory.shareToFb = function() {
-        var url = "sampleUrl.html";
-        FB.ui({
-            method: 'share_open_graph',
-            action_type: 'og.likes',
-            action_properties: JSON.stringify({
-                object: 'http://refocustech.in/orange/store/',
-            })
-        }, function(response) {});
-    }
+		factory.shareToFb = function () {
+			var url = "sampleUrl.html";
+			FB.ui({
+				method: 'share_open_graph',
+				action_type: 'og.likes',
+				action_properties: JSON.stringify({
+					object: 'http://refocustech.in/orange/store/',
+				})
+			}, function (response) {});
+		}
 
 		factory.fbLogin = function () {
 
@@ -1441,9 +1441,9 @@ phonecatServices.factory('Phone', ['$q',
 			var Collection = Parse.Object.extend("Collections");
 			var collection = new Collection();
 
-			collection.set("type", collectionDetails.type);
+			collection.set("collection_name", name);
+			collection.set("description", description);
 			collection.set("created_by", user);
-			collection.set("no_comments", collectionDetails.no_comments);
 			collection.save(null, {
 				success: function (collection) {
 					console.log(user);
