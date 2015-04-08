@@ -775,7 +775,7 @@ phonecatServices.factory('Phone', ['$q',
             return deferred.promise;
         }
 
-        function upvoteStoreActivity(user, store) {
+        factory.upvoteStoreActivity = function(user, store) {
 
             var deferred = $q.defer();
 
@@ -813,7 +813,6 @@ phonecatServices.factory('Phone', ['$q',
             store.remove("upvoted_by", user);
             store.save(null, {
                 success: function(store) {
-                    console.log("Success");
                     user.remove("stores_upvoted", store);
                     user.save(null, {
                         success: function(user) {
@@ -1110,11 +1109,11 @@ phonecatServices.factory('Phone', ['$q',
                 user1: usera.id,
                 user2: userb.id
             }, {
-                success: function(result) {
-                    if (result) {
-                        deferred.resolve(true);
+                success: function(user2) {
+                    if (user2) {
+                        deferred.resolve(user2);
                     } else {
-                        deferred.reject(false);
+                        deferred.reject("Unable to follow");
                     }
                 },
                 error: function(error, message) {
@@ -1123,6 +1122,7 @@ phonecatServices.factory('Phone', ['$q',
             });
 
             return deferred.promise;
+
         }
 
         factory.addService = function(store, serviceDetails) {
