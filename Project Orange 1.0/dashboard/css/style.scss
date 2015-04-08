@@ -1,0 +1,716 @@
+$navBarColor:#2E2E30;
+$faintBackColor:#E5E5E5;
+$contentWidth:960px;
+$primary:#7323DC;
+$hash21:#212121;
+@mixin backColor($color,$opacity:1){
+	background:rgba($color,$opacity);
+}
+
+@mixin cardContentText(){
+	color:rgba(black,0.7);
+	margin:0 0;
+	font-size:15px;
+}
+@mixin cardHeaderText(){
+	color:rgba(black,1);
+	line-height:30px;
+	margin:0 0;
+	margin-top:10px;
+	margin-bottom:3px;
+	font-size:13px;
+	text-transform:uppercase;
+	font-weight:bold;
+}
+@font-face {
+	font-family: 'Gotham';
+	src: url('../fonts/font.otf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+
+}
+
+*{
+	box-sizing:border-box;
+}
+body{
+	@include backColor($faintBackColor);
+	font-family: 'Gotham';
+}
+.action{
+	color:$primary !important;
+	opacity:1;
+	text-decoration:none;
+}
+.action:hover{
+	opacity:0.8;
+	cursor:pointer;
+}
+
+.navBar{
+	position: relative;
+	width:100%;
+	height:60px;
+	@include backColor($navBarColor);
+}
+
+.navBarContent{
+	position: relative;
+	margin: 0 auto;
+	width:$contentWidth;
+	height:100%;
+}
+.imgFader{
+	position:absolute;
+	width:100%;
+	height:100%;
+	@include backColor(#000000,0.4);
+}
+.shopHeader{
+	position:relative;
+	width:100%;
+	height:280px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.shopHeaderContent{
+	position: relative;
+	height:100%;
+	width:$contentWidth;
+	margin:0 auto;
+}
+
+.shopHeaderButtons{
+	position: absolute;
+	bottom:0px;
+	width:100%;
+	height:55px;
+	text-align:center;
+	border-top:1px solid rgba(white,0.3);
+	padding-top:5px;
+}
+.upvoteFollowContainer{
+	position: absolute;
+	bottom:55px;
+	width:100%;
+	height:55px;
+	text-align:center;
+	padding-top:5px;
+}
+.shopCountDetails{
+	position: absolute;
+	bottom:100px;
+	height:50px;
+	width:100%;
+	color:white;
+	opacity:0.7;
+	font-size:20px;
+	text-align:center;
+}
+
+.shopTitle{
+	position: absolute;
+	bottom:150px;
+	height:80px;
+	width:100%;
+	color:white;
+	font-size:35px;
+	line-height:80px;
+	text-align:center;
+}
+.shopTitleContent:hover{
+	cursor:pointer;
+}
+.headerBtn{
+	position: relative;
+	margin-right:5px;
+	margin-top:7px;
+	margin-bottom:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-radius:300px;
+	color:white;
+	display:inline-block;
+	font-size:15px;
+	text-transform:uppercase;
+}
+.upvoteFollowBtn{
+	position: relative;
+	margin-right:5px;
+	margin-top:7px;
+	margin-bottom:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-radius:300px;
+	border:1px solid rgba(white,0.5);
+	color:white;
+	display:inline-block;
+	font-size:15px;
+	text-transform:uppercase;
+}
+.headerBtn:hover{
+	cursor:pointer;
+	@include backColor($primary,1);
+}
+.upvoteFollowBtn:hover{
+	cursor:pointer;
+	@include backColor($primary,1);
+	border:1px solid $primary;
+}
+.shopCatImg{
+	position:absolute;
+	bottom:180px;
+	margin:0 auto;
+	width:80px;
+	left:50%;
+	margin-left:-40px;
+	opacity:0.8;
+}
+
+.primaryBtnVisited{
+	@include backColor($primary,1);
+	border:1px solid $primary;
+	color:white !important;
+}
+
+.mainShopContent{
+	position:relative;
+	width:$contentWidth;
+	margin:0 auto;
+}
+.shopSideContent{
+	position:relative;
+	width:240px;
+	display:inline-block;
+	vertical-align:top;
+}
+.shopMainContent{
+	position:relative;
+	width:720px;
+	display:inline-block;
+	vertical-align:top;
+}
+footer{
+	margin-top:50px;
+	height:300px;
+	width:100%;
+	@include backColor($navBarColor);
+}
+
+.cardContainer{
+	position:relative;
+	display:inline-block;
+	padding-left:3px;
+	padding-right:3px;
+	width:240px;
+	margin-top:5px;
+}
+.cardContent{
+	background:white;
+	border-radius:3px;
+	border:1px solid rgba(#000,0.1);
+	padding-left:10px;
+	padding-right:10px;
+	padding-bottom:10px;
+}
+
+.cardHeader{
+	@include cardHeaderText();
+	line-height:20px;
+
+}
+.cardInnerContent{
+	@include cardContentText();
+}
+
+.cardContainerFull{
+	position:relative;
+	display:inline-block;
+	padding-left:3px;
+	padding-right:3px;
+	width:720px;
+	margin-top:5px;
+}
+.galleryImgContainer{
+	display:inline-block;
+	width:105px;
+	height:105px;
+	margin-right:6px;
+	border-radius:3px;
+	overflow:hidden;
+	text-align:center;
+	line-height:105px;
+	@include backColor(#212121,1);
+}
+.galleryImgMoreContainer{
+	display:inline-block;
+	width:105px;
+	height:105px;
+	margin-right:6px;
+	border-radius:3px;
+	overflow:hidden;
+	text-align:center;
+	line-height:105px;
+	@include backColor(#212121,0.2);
+}
+.galleryImg{
+	position:relative;
+	height:100%;
+	opacity:0.8;
+}
+.popularElement{
+	display:inline-block;
+	width:230px;
+	line-height:30px;
+	padding:5px;
+	overflow:hidden;
+}
+.popularElementImg{
+	display:inline-block;
+	height:30px;
+	vertical-align:middle;
+	opacity:0.8;
+}
+.popularElementTitle{
+	display:inline-block;
+	padding-left:15px;
+	line-height:30px;
+	font-size:14px;
+	margin:0 0 ;
+	vertical-align:middle;
+	overflow:ellipses;
+	color:rgba(#000,0.7);
+}
+.morePopular{
+	display:inline-block;
+	line-height:30px;
+	padding:5px;
+	overflow:hidden;
+	color:$primary;
+	font-size:15px;
+}
+.morePopular:hover{
+	opacity:0.7;
+	cursor:pointer;
+}
+.emptySpace{
+	position:relative;
+	padding:5px;
+	width:960px;
+	margin:0 auto;
+}
+
+.shopTabContainer{
+	position:relative;
+	width:720px;
+	display:inline-block;
+	padding:5px;
+	margin-top:5px;
+	text-align:center;
+}
+.tabBtn{
+	position:relative;
+	display:inline-block;
+	padding-left:15px;
+	padding-right:15px;
+	padding-top:5px;
+	padding-bottom:5px;
+	text-transform:uppercase;
+	font-size:13px;
+	vertical-align:middle;
+	margin-left:10px;
+	margin-top:15px;
+	margin-bottom:15px;
+	color:$primary;
+}
+.activityContainer, .reviewContainer, .couponsContainer, .showcaseContainer{
+	display:inline-block;	
+}
+
+.tabBtn:hover{
+	cursor:pointer;
+	border-radius:3px;
+	border-radius:300px;
+	@include backColor($primary,1);
+	color:white;
+}
+.tabActive{
+	border-radius:3px;
+	border-radius:300px;
+	@include backColor($primary,1);
+	color:white;
+}
+.extraPopular{
+	display:none;
+}
+.profileSmall{
+	position:relative;
+	width:35px;
+	height:35px;
+	display:inline-block;
+	border-radius:300px;
+	overflow:hidden;
+	margin:3px;
+	@include backColor($hash21);
+	line-height:35px;
+	
+}
+.profileSmallImg{
+	position:relative;
+	width:100%;
+	opacity:1;
+}
+.profileSmall:hover .profileSmallImg{
+	opacity:0.8;
+	cursor:pointer;
+}
+.moreProfileBtn{
+	@include backColor(#212121,0.2);
+}
+.followUpvoteMoreCount{
+	position:relative;
+	text-align:center;
+	color:$hash21;
+	font-size:9px;
+	margin:0 0 ;
+}
+.collectionLink{
+	margin-right:5px;
+}
+.followUpvoteMoreCount:hover{
+	cursor:pointer;
+}
+.galleryMoreCount{
+	position:relative;
+	color:rgba($hash21,0.7);
+	font-size:16px;
+}
+.galleryImgMoreContainer:hover .galleryMoreCount{
+	color:rgba($hash21,1);
+	cursor:pointer;
+
+}
+.galleryImgContainer:hover .galleryImg{
+	cursor:pointer;
+	opacity: 1;
+}
+
+.reviewTextArea{
+	position:relative;
+	width:100%;
+	border-radius:3px;
+	border:1px solid rgba($hash21,0.4);
+	resize:vertical;
+	margin-top:10px;
+	font-size:15px;
+	padding:10px;
+	height:100px;
+}
+.reviewTextArea:focus{
+	border:1px solid rgba($hash21,0.7);
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	outline:none;
+}
+.addReviewBtn{
+	position: relative;
+	right:0px;
+	margin-right:5px;
+	margin-top:7px;
+	margin-bottom:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-radius:300px;
+	display:inline-block;
+	font-size:14px;
+	text-transform:uppercase;
+	color:$primary;
+
+}
+.reviewContainerInner{
+	text-align:right;
+}
+.addReviewBtn:hover{
+	opacity:0.9;
+	cursor:pointer;
+	@include backColor($primary);
+	color:white;
+}
+.cardContainerFullInner{
+	position:relative;
+	display:inline-block;
+	padding-left:3px;
+	padding-right:3px;
+	width:720px;
+	margin-top:5px;
+}
+.reviewContent{
+	margin-top:5px;
+}
+.activityContent{
+	margin-top:5px;
+}
+.userImgContainer{
+	position:relative;
+	height:40px;
+	width:40px;
+	border-radius:300px;
+	overflow:hidden;
+	display:inline-block;
+}
+.adjustImg{
+	position:relative;
+	width:100%;
+}
+.postHeader{
+	position:relative;
+	height:40px;
+	width:100%;
+	vertical-align:middle;
+	margin-top:10px;
+	display:inline-block;
+}
+.postUserActivity{
+	display:inline-block;
+	vertical-align:top;
+	font-size:15px;
+	padding:2px;
+}
+.postUserReviewCount{
+	color:rgba($hash21,0.6);
+	font-size:12px;
+}
+.postUserTimeStamp{
+	color:rgba($hash21,0.6);
+	font-size:12px;
+}
+.postUserFollowerCount{
+	color:rgba($hash21,0.6);
+	font-size:12px;
+}
+.postUsername, .postCoupon, .postProduct, .postService{
+	color:$primary;
+	font-size:15px;
+}
+.userFollowBtn{
+	position:absolute;
+	right:0px;
+	display:inline-block;
+	font-size:14px;
+	text-transform:uppercase;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;
+	border-radius:300px;
+	color:$primary;
+	margin-right:10px;
+	margin-top:5px;
+}
+.userFollowBtn:hover{
+	color:white;
+	cursor:pointer;
+	@include backColor($primary);
+}
+.postUsername:hover, .postCoupon:hover, .postProduct:hover, .postService:hover{
+	cursor:pointer;
+	opacity:0.9;
+}
+.userReviewText{
+	position:relative;
+	color:rgba(black,0.7);
+	font-size:15px;
+	padding-top:10px;
+	padding-bottom:10px;
+	text-align:justify;
+}
+.loadMoreBtn{
+	text-align:center;
+	text-transform:uppercase;
+	color:$primary;
+	margin-top:15px;
+}
+.loadMoreBtn:hover{
+	cursor:pointer;
+	opacity:0.8;
+}
+.followForMoreContent{
+	text-align:left;
+	font-size:14px;
+	padding-top:15px;
+	padding-bottom:15px;
+}
+.followForMoreBtn{
+	position:absolute;
+	right:10px;
+	color:white;
+	padding-right:10px;
+	padding-left:10px;
+	padding-top:5px;
+	padding-bottom:5px;
+	margin-top:-5px;
+	@include backColor($primary);
+	border-radius:300px;
+	display:inline-block;
+	vertical-align:middle;
+	text-transform:uppercase;
+}
+.followForMoreBtn:hover{
+	cursor:pointer;
+	opacity:0.9;
+}
+.userActivityPostImgContainer{
+	position:relative;
+	margin:10px 10px 0 0;	
+	width:280px;
+	height:210px;
+	overflow:hidden;
+	text-align:center;
+	display:inline-block;
+	text-align:center;
+	border-radius:3px;
+	vertical-align:top;
+	@include backColor($hash21,1);
+}
+.userActivityPostImg{
+	height:100%;
+	border-radius:3px;
+}
+.userActivityPostContent{
+	position:relative;
+	display:inline-block;
+	width:400px;
+	height:220px;
+	overflow:hidden;
+	vertical-align:top;
+	padding:10px 10px 0px 10px;
+}
+.userActivityPostDetails{
+	position:relative;
+	display:inline-block;
+	color:black;
+	font-size:15px;
+	padding-top:5px;
+	color:rgba($hash21,0.7);
+	text-align:justify;
+}
+.userActivityPostTitle{
+	position:relative;
+	display:inline-block;
+	color:black;
+	font-size:15px;
+	color:black;
+	text-align:justify;
+}
+.userActivityPostTitle:hover{
+	cursor:pointer;
+	color:$primary;
+}
+.userActivityActions{
+	position:absolute;
+	bottom:0px;
+	height:35px;
+	width:380px;
+	border-top:1px solid rgba($hash21,0.2);
+	display:inline-block;
+	line-height:35px;
+	vertical-align:middle;
+}
+.postUpvoteIcon{
+	position:relative;
+	display:inline-block;
+	height:20px;
+	opacity:0.7;
+	vertical-align:middle;
+	margin-right:2px;
+}
+.postCommentIcon{
+	position:relative;
+	display:inline-block;
+	height:20px;
+	opacity:0.5;
+	vertical-align:middle;
+	margin-right:2px;
+}
+.postActionBtnText{
+	position:relative;
+	text-transform:uppercase;
+	line-height:35px;
+	font-size:12px;
+	color:rgba($hash21,0.7);
+	vertical-align:top;
+}
+.postUpvoteBtn{
+	margin-right:15px;
+}
+.postShareBtn{
+	margin-right:15px;
+}
+.postUpvoteBtn:hover{
+	cursor:pointer;
+	color:$primary;
+	font-weight:bold;
+}
+.postCommentBtn:hover{
+	cursor:pointer;
+	color:$primary;
+	font-weight:bold;
+}
+.postReadMoreBtn:hover{
+	cursor:pointer;
+	color:$primary;
+	font-weight:bold;
+}
+.postShareBtn:hover{
+	cursor:pointer;
+	color:$primary;
+	font-weight:bold;
+}
+.postCommentBtn{
+	margin-right:15px;
+}
+
+.postTypeGeneralTextOnly .userActivityPostContent{
+	width:100%;
+	height:auto;
+}
+.postTypeGeneralTextOnly .userActivityPostImgContainer{
+	display: none;
+}
+.postTypeGeneralTextOnly .userActivityActions{
+	position:relative;
+	width:100%;
+	margin-top:15px;
+}
+.postTypeGeneralImageOnly .userActivityActions{
+	position:relative;
+	width:100%;
+	margin-top:15px;
+}
+.postTypeGeneralImageOnly .userActivityPostImgContainer{
+	position:relative;
+	width:100%;
+	height:300px;
+}
+.postTypeGeneralImageOnly .userActivityPostImg{
+	width:100%;
+	height:auto;
+}
+.postTypeGeneralImageOnly .userActivityPostContent{
+	width:100%;
+	height:auto;
+}
+.hide{
+	display: none;
+}
+.userActivityPostImg:hover{
+	opacity:0.7;
+	cursor:pointer;
+}

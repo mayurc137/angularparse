@@ -1,0 +1,202 @@
+<div class="navBar">
+		<div class="navBarContent">
+			
+		</div>
+	</div>
+	<div class="shopHeader" ng-style=" { backgroundImage : bannerImgStyle }">
+		<div class="imgFader"></div>
+		<div class="shopHeaderContent">
+			<div class="upvoteFollowContainer">
+				<div class="upvoteFollowBtn shopUpvoteBtn" ng-class="{primaryBtnVisited : isUpvoted}" ng-click="toggleUpvote()">
+					Upvoted
+				</div>
+				<div class="upvoteFollowBtn shopFollowBtn" ng-class="{primaryBtnVisited : isFollowing}" ng-click="toggleFollow()">
+					Following
+				</div>
+			</div>
+			<div class="shopHeaderButtons">
+				<div class="headerBtn shopAddBtn" ng-click="showUserCollections()">
+					Add
+				</div>
+				<div class="headerBtn shopReviewBtn">
+					Review
+				</div>
+				<div class="headerBtn shopCouponsBtn">
+					Coupons
+				</div>
+				<div class="headerBtn shopActivityBtn">
+					Feed
+				</div>
+				<div class="headerBtn shopActivityBtn">
+					Showcase
+				</div>
+			</div>
+			<div class="shopCountDetails">
+				<p>{{upvoteCount}}  {{followerCount}} </p>
+			</div>
+			<div class="shopTitle">
+				<p class="shopTitleContent">{{storeData.get('name')}}</p>
+			</div>
+			
+			<img ng-src="{{storeData.get('primary_category').get('image_link')}}" class="shopCatImg">
+		</div>
+	</div>
+	<div class="emptySpace"></div>
+	<div class="mainShopContent">
+		<div class="shopSideContent">
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Contact</p>
+					<p class="cardInnerContent">{{storeData.get('phone')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('website_link')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('facebook_link')}}</p>
+					<p class="cardInnerContent action">{{storeData.get('twitter_link')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Location</p>
+					<p class="cardInnerContent action">{{storeData.get('locality').get('locality_name')}}</p>
+					<p class="cardInnerContent">{{storeData.get('address')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Collections</p>
+					<p class="cardInnerContent">
+						Added in <span class="collectionLink action" ng-repeat="collection in collections | limitTo: collectionDisplayLimit">{{collection.get('collection_name')}}<span ng-class="{'hide' : $last}">, </span></span> Collections
+					</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Working Hours</p>
+					<p class="cardInnerContent">{{storeData.get('working_hours')}}</p>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Followers</p>
+
+					<div class="profileSmall" ng-repeat="user in followers | limitTo: followerDisplayLimit">
+						<img ng-src="{{user.get('profile_image')._url}}" class="profileSmallImg">
+					</div><div class="profileSmall moreProfileBtn" ng-show="followerCount - followerDisplayLimit > 0">
+						<p class="followUpvoteMoreCount">+{{followerCount - followerDisplayLimit}}</p>
+					</div>
+				</div>
+			</div>
+			<div class="cardContainer">
+				<div class="cardContent">
+					<p class="cardHeader">Upvoted</p>
+					<div class="profileSmall" ng-repeat="user in upvoters | limitTo: upvoteDisplayLimit">
+						<img ng-src="{{user.get('profile_image')._url}}" class="profileSmallImg">
+					</div><div class="profileSmall moreProfileBtn" ng-show="upvoteCount - upvoteDisplayLimit > 0">
+						<p class="followUpvoteMoreCount">+{{upvoteCount - upvoteDisplayLimit}}</p>
+					</div>
+				</div>
+			</div>
+		</div><div class="shopMainContent">
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">About</p>
+					<p class="cardInnerContent">{{storeData.get('description')}}</p>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Known For</p>
+
+					<div class="popularElement" ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
+						<img class="popularElementImg" ng-src="{{tag.get('tag_image')}}"><p class="popularElementTitle">{{tag.get('tag_description')}}</p>
+					</div><div class="morePopular" ng-show="storeTags.length - tagDisplayLimit > 0">+ MORE</div>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Sale</p>
+					<p class="cardInnerContent">{{storeData.get('major_sale')}}</p>
+				</div>
+			</div>
+			<div class="cardContainerFull">
+				<div class="cardContent">
+					<p class="cardHeader">Gallery</p>
+
+					<div class="galleryImgContainer" ng-repeat="image in galleryImages | limitTo: galleryDisplayLimit"><img class="galleryImg" ng-src="{{image.get('image')._url}}">
+					</div><div class="galleryImgMoreContainer" ng-show="galleryImages.length - galleryDisplayLimit > 0"><div class="galleryMoreCount">+{{galleryImages.length - galleryDisplayLimit}}</div></div>
+				</div>
+			</div>
+			<div class="shopTabContainer">
+				<div class="tabBtn tabActivity" ng-click="setSelectedTab(1)" ng-class="{'tabActive' : isSelectedTab(1)}">Activity</div>
+				<div class="tabBtn tabReview" ng-click="setSelectedTab(2)" ng-class="{'tabActive' : isSelectedTab(2)}">Review</div>
+				<div class="tabBtn tabCoupon" ng-click="setSelectedTab(3)" ng-class="{'tabActive' : isSelectedTab(3)}">Coupons</div>
+				<div class="tabBtn tabShowcase" ng-click="setSelectedTab(4)" ng-class="{'tabActive' : isSelectedTab(4)}">Showcase</div>
+			</div>
+			<div class="cardContainerFull activityContainer tabContainer" ng-show="isSelectedTab(1)">
+
+				<div class="cardContent activityContent"
+				ng-repeat="activity in activities | limitTo:activityDisplayLimit" 
+				ng-class="decideActivityClass(activity)">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img ng-src="{{storeData.get('logo')._url}}" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">{{storeData.get('name')}}</span><span class="postInline"> {{activity.get('inline_content')}}</span><span class="postCoupon" ng-show="{{activity.get('coupon_id')}}">{{activity.get('coupon_id').get('coupon_name')}}</span><span class="postProduct" ng-show="{{activity.get('product_id')}}">{{activity.get('product_id').get('name')}}</span><span class="postService" ng-show="{{activity.get('service_id')}}">{{activity.get('service_id').get('name')}}</span><br/>
+							<span class="postUserTimeStamp">{{activity.createdAt | postDate}}</span>
+						</div>
+					</div><div class="userActivityPostImgContainer" 
+					ng-show="{{activity.get('activity_image')}}">
+					<img class="userActivityPostImg" ng-src="{{activity.get('activity_image')._url}}">
+					</div><div class="userActivityPostContent" ng-show="{{activity.get('activity_type')}} == 23"><span class="userActivityPostTitle">{{activity.get('activity_title')}}</span><span class="userActivityPostDetails">{{activity.get('activity_content')}}</span>
+					<div class="userActivityActions">
+						<img class="postUpvoteIcon" src="img/pop3.png">
+						<span class="postUpvoteCount postActionBtnText">{{activity.get('liked_by').length}}</span>
+						<span class="postUpvoteBtn postActionBtnText" ng-click="toggleActivityLike(activity)">{{activity.likeButton}}</span>
+						<img class="postCommentIcon" src="img/pop4.png">
+						<span class="postCommentCount postActionBtnText">{{activity.get('comment_ids').length}}</span>
+						<span class="postCommentBtn postActionBtnText">Comment</span>
+						<span class="postShareBtn postActionBtnText">Share</span>
+						<span class="postReadMoreBtn postActionBtnText">More</span>
+					</div>
+					</div>
+				</div>
+				<div class="cardContent activityContent followForMoreContent"
+				ng-show="!isFollowing">
+					Follow this Store to get more Posts and Offers <span class="followForMoreBtn">Follow</span>
+				</div>
+			</div>
+			<div class="cardContainerFull reviewContainer tabContainer" ng-show="isSelectedTab(2)">
+				<div class="cardContent reviewContainerInner">
+					<textarea class="reviewTextArea" placeholder="Add your Review about the store Here.." ng-model="newReview"></textarea>
+					<div class="addReviewBtn" ng-click="addReviewToStore()">Publish Review</div>
+				</div>
+
+				<div class="cardContent reviewContent" ng-repeat="review in reviews | limitTo: reviewDisplayLimit">
+					<div class="postHeader">
+						<div class="userImgContainer">
+							<img ng-src="{{review.get('user_id').get('profile_image')._url}}" class="adjustImg">
+						</div>
+						<div class="postUserActivity">
+							<span class="postUsername">{{review.get('user_id').get('name')}}</span><br/>
+							<span class="postUserReviewCount">{{review.get('user_id').get('review_ids').length | reviewCount}}</span>
+							<span class="postUserFollowerCount">{{review.get('user_id').get('followers').length | followerCount}}</span>
+						</div>
+						<div class="userFollowBtn" ng-hide="review.get('user_id').following || review.get('user_id').isCurrentUser" ng-click="followUser(review.get('user_id'))">Follow</div>
+					</div>
+					<div class="userReviewText">{{review.get('review')}}</div>
+				</div>
+				<div class="loadMoreBtn" ng-show="reviewCount - reviewDisplayLimit > 0">{{reviewCount - reviewDisplayLimit}} More</div>
+			</div>
+			<div class="cardContainerFull couponsContainer tabContainer" ng-show="isSelectedTab(3)">
+				<div class="cardContent">
+
+					<p class="cardHeader">Coupons Feed for I love Kapda</p>
+				</div>
+			</div>
+			<div class="cardContainerFull showcaseContainer tabContainer" ng-show="isSelectedTab(4)">
+				<div class="cardContent">
+					<p class="cardHeader">Showcase Feed for I love Kapda</p>
+				</div>
+			</div>
+		</div>
+	</div>
