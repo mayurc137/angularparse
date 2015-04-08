@@ -2302,7 +2302,8 @@ phonecatServices.factory('Phone', ['$q',
                         }, function(message) {
                             console.log(message);
                             deferred.resolve(activity);
-                        });
+                        }
+                    );
                 },
                 error: function(error, message) {
                     console.log(message);
@@ -2353,7 +2354,16 @@ phonecatServices.factory('Phone', ['$q',
             activity.decrement("activity_likes");
             activity.save(null, {
                 success: function(activity) {
-                    dislikePostActivity(user, activity, store);
+                    var promise = dislikePostActivity(user, activity, store);
+                    promise.then(
+                        function(result) {
+                            console.log("Success");
+                            deferred.resolve(activity);
+                        }, function(message) {
+                            console.log(message);
+                            deferred.resolve(activity);
+                        }
+                    );
                 },
                 error: function(error, message) {
                     console.log(message);
