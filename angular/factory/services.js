@@ -1652,8 +1652,10 @@ phonecatServices.factory('Phone', ['$q',
                             promise.then(
                                 function(result) {
                                     console.log("Success");
+                                    deferred.resolve(store);
                                 }, function(message) {
                                     console.log(message);
+                                    deferred.resolve(store);
                                 });
                         },
                         error: function(error, message) {
