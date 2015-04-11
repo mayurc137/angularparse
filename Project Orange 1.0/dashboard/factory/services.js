@@ -5,6 +5,11 @@ parseServices.factory('ParseFactory', ['$q',
 
         var factory = {};
 
+        factory.init = function() {
+            Parse.initialize("ZaHk6NzbXLus8EmO0DetfsigR3I2zi4O9D8u5iIG", "kqu6hlxW83BqIeaOBuEgaFr1wyOZ6kNO9VxO5f89");
+        }
+
+
         factory.getCurrentUser = function() {
             var currentUser = Parse.User.current();
             return currentUser;
@@ -63,12 +68,13 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
-        factory.getActivityByStore = function(store) {
+        factory.getGeneralActivityByStore = function(store) {
 
             var deferred = $q.defer();
 
             var query = new Parse.Query("Activity");
             query.equalTo("store_id", store);
+            query.equalTo("activity_type", 23);
             query.include("comment_ids");
             query.include("comment_ids.user_id");
             query.include("user_id");

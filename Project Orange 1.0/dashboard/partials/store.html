@@ -177,65 +177,38 @@
 			<div class="addPostBtn">Publish Post</div>
 		</div>
 	</div>
+
 	<div class="cardContainerFull allActivityContainer">
-		<div class="cardContent activityContent postTypeGeneralImageText">
+
+		<div class="cardContent activityContent"
+		ng-repeat="activity in activities | limitTo:activityDisplayLimit" 
+		ng-class="decideActivityClass(activity)">
 			<div class="postHeader">
 				<div class="userImgContainer">
-					<img src="img/img8.jpg" class="adjustImg">
+					<img ng-src="{{store.get('logo')._url}}" class="adjustImg">
 				</div>
 				<div class="postUserActivity">
-					<span class="postUsername">I Love Kapda</span><br/>
-					<span class="postUserTimeStamp">Today</span>
+					<span class="postUsername">{{store.get('name')}}</span><span class="postInline"> {{activity.get('inline_content')}}</span><span class="postCoupon" ng-show="{{activity.get('coupon_id')}}">{{activity.get('coupon_id').get('coupon_name')}}</span><span class="postProduct" ng-show="{{activity.get('product_id')}}">{{activity.get('product_id').get('name')}}</span><span class="postService" ng-show="{{activity.get('service_id')}}">{{activity.get('service_id').get('name')}}</span><br/>
+					<span class="postUserTimeStamp">{{activity.createdAt | postDate}}</span>
 				</div>
-			</div><div class="userActivityPostImgContainer">
-			<img class="userActivityPostImg" src="img/back3.jpg">
-		</div><div class="userActivityPostContent"><span class="userActivityPostTitle">New Arrivals at the Koregaon Park Store Check</span><span class="userActivityPostDetails">The wine choices are great and also love that they have different glasses for different wines ! Bang on with the fine dining etiquettes. Love that they serve you some bread and a cold soup to begin your meal with.</span>
-		<div class="userActivityActions">
-			<img class="postUpvoteIcon" src="img/pop3.png">
-			<span class="postUpvoteCount postActionBtnText">200</span>
-			<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-			<img class="postCommentIcon" src="img/pop4.png">
-			<span class="postCommentCount postActionBtnText">20</span>
-			<span class="postCommentBtn postActionBtnText">Comment</span>
-			<span class="postShareBtn postActionBtnText">Share</span>
-			<span class="postReadMoreBtn postActionBtnText">More</span>
+			</div>
+			<div class="userActivityPostImgContainer" 
+			ng-show="{{activity.get('activity_image')}}">
+				<img class="userActivityPostImg" ng-src="{{activity.get('activity_image')._url}}">
+			</div><div class="userActivityPostContent" ng-show="{{activity.get('activity_type')}} == 23"><span class="userActivityPostTitle">{{activity.get('activity_title')}}</span><span class="userActivityPostDetails">{{activity.get('activity_content')}}</span>
+				<div class="userActivityActions">
+					<img class="postUpvoteIcon" src="img/pop3.png">
+					<span class="postUpvoteCount postActionBtnText">{{activity.get('liked_by').length}}</span>
+					<img class="postCommentIcon" src="img/pop4.png">
+					<span class="postCommentCount postActionBtnText">{{activity.get('comment_ids').length}}</span>
+				</div>
+			</div>
+			<div class="postAnalytics">
+				<span class="engagementCount"><span class="countHighlight">{{activity.get('engage_count')}}</span> People Engaged</span>
+				<div class="boostPostBtn">Promote Post</div>
+			</div>
 		</div>
 	</div>
-	<div class="postAnalytics">
-		<span class="engagementCount"><span class="countHighlight">2203</span> People Engaged</span>
-		<div class="boostPostBtn">Promote Post</div>
-	</div>
-</div>
-<div class="cardContent activityContent postTypeGeneralImageText">
-	<div class="postHeader">
-		<div class="userImgContainer">
-			<img src="img/img8.jpg" class="adjustImg">
-		</div>
-		<div class="postUserActivity">
-			<span class="postUsername">I Love Kapda</span><br/>
-			<span class="postUserTimeStamp">Today</span>
-		</div>
-	</div><div class="userActivityPostImgContainer">
-	<img class="userActivityPostImg" src="img/back3.jpg">
-</div><div class="userActivityPostContent"><span class="userActivityPostTitle">New Arrivals at the Koregaon Park Store Check</span><span class="userActivityPostDetails">The wine choices are great and also love that they have different glasses for different wines ! Bang on with the fine dining etiquettes. Love that they serve you some bread and a cold soup to begin your meal with.</span>
-<div class="userActivityActions">
-	<img class="postUpvoteIcon" src="img/pop3.png">
-	<span class="postUpvoteCount postActionBtnText">200</span>
-	<span class="postUpvoteBtn postActionBtnText">Upvote</span>
-	<img class="postCommentIcon" src="img/pop4.png">
-	<span class="postCommentCount postActionBtnText">20</span>
-	<span class="postCommentBtn postActionBtnText">Comment</span>
-	<span class="postShareBtn postActionBtnText">Share</span>
-	<span class="postReadMoreBtn postActionBtnText">More</span>
-</div>
-</div>
-<div class="postAnalytics">
-	<span class="engagementCount"><span class="countHighlight">903</span> People Engaged</span>
-	<div class="boostPostBtn">Promote Post</div>
-</div>
-</div>
-
-</div>
 </div>
 <div class="infoContainer dashboardContainer">
 	<div class="cardContainerFull basicDetails">

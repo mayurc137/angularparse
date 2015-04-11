@@ -5,7 +5,7 @@ app.config(['$routeProvider',
     function($routeProvider) {
 
         $routeProvider.
-        when('/@:storeId', {
+        when('/id/:storeId', {
             templateUrl: 'partials/store.html',
             controller: 'dashboardCtrl'
         }).
