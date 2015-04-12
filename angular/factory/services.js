@@ -2172,6 +2172,8 @@ phonecatServices.factory('Phone', ['$q',
 			coupon.set("expiry_date", couponDetails.expiry_date);
 			coupon.set("start_date", couponDetails.start_date);
 			coupon.set("active", true);
+			coupon.set("coupon_category", couponDetails.category);
+
 
 			coupon.save(null, {
 				success: function (coupon) {
