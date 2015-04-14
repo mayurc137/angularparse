@@ -2914,6 +2914,103 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 		}
 
+		factory.addMetaData = function (store) {
+
+			var deferred = $q.defer();
+
+			var metadata = [];
+
+			var address = store.get("address");
+			address = address.replace(/[^a-zA-Z0-9 ]/g, "");
+			address = address.split(" ");
+			metadata.push.apply(metadata, address);
+
+			var locality_name = store.get("locality").get("locality_name");
+			metadata.push(locality_name);
+
+			var category = store.get("primary_category").get("categoryName");
+			metadata.push(category);
+
+			var description = store.get("description");
+			description = description.replace(/[^a-zA-Z0-9 ]/g, "");
+			description = description.split(" ");
+			metadata.push.apply(metadata, description);
+
+			var tags = store.get("tags");
+			for (var i = 0; i < tags.length; i++) {
+				var tag = tags[i].get("tag_description").replace(/[^a-zA-Z0-9 ]/g, "");
+				tag = tag.split(" ");
+				metadata.push.apply(metadata, tag);
+			}
+
+			Parse.Cloud.run('lemmatize', {
+				meta: metadata
+			}, {
+				success: function (result) {
+
+					var store_name = store.get("name");
+					store_name = store_name.replace(/[^a-zA-Z0-9 ]/g, "");
+					store_name = store_name.toLowerCase();
+					store_name = store_name.split(" ");
+					var store_handle = store.get("store_handle");
+					store.set("metadata", result);
+					store.addUnique("metadata", store_handle);
+					for (var i = 0; i < store_name.length; i++) {
+						store.addUnique("metadata", store_name[i]);
+					}
+
+					console.log(store.get("metadata"));
+
+					store.save(null, {
+						success: function (store) {
+							console.log("Success");
+							deferred.resolve(store);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error) {
+					console.log(error);
+					deferred.reject(error);
+				}
+			});
+
+			return deferred.promise;
+		}
+
+		factory.queryMetaData = function (search) {
+
+			var deferred = $q.defer();
+
+			Parse.Cloud.run('lemmatize', {
+				meta: search
+			}, {
+				success: function (result) {
+					//console.log(result);
+					var query = new Parse.Query("Stores");
+					query.containedIn("metadata", result);
+
+					query.find({
+						success: function (stores) {
+							deferred.resolve(stores);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+
+			return deferred.promise;
+		}
+
 
 		return factory;
 
