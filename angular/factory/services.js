@@ -3011,6 +3011,26 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 		}
 
+		factory.getLocality = function () {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Locality");
+
+			query.find({
+				success: function (localities) {
+					console.log(localities);
+					deferred.resolve(localities);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
 
 		return factory;
 
