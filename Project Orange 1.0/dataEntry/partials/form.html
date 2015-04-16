@@ -1,0 +1,151 @@
+<div id = "mainDiv">
+	<form novalidate name="storeForm" ng-submit="storeForm.$valid && saveStore()">
+		<label for="storeHandle">Store Handle*</label>
+		<input id="storeHandle" name="storeHandle" type = "text" required="required" ng-model="store.storeHandle">
+		<input type = "button" value="Fetch Store Details" ng-click="getStoreDetails()" ng-show="formAction == 'edit'">
+		<input type = "button" value="Check Availability" ng-click="checkAvailability()">
+
+		<br/>
+		<label for="ownerName">Owner Name*</label>
+		<input id="ownerName" name="ownerName" type = "text" required="required" ng-model="storeOwner.name">
+		
+		<br/>
+		<label for="ownerEmail">Owner Email*</label>
+		<input id="ownerEmail" name="ownerEmail" type = "email" required="required" ng-model="storeOwner.email">
+
+		<br/>
+		<label for="ownerPhone">Owner Phone*</label>
+		<input id="ownerPhone" name="ownerPhone" type = "phone" required="required" ng-model="storeOwner.phone" pattern="[0-9]{10,11}">
+
+		<br/>
+		<label for="storeID">Store ID*</label>
+		<input id="storeID" type = "text" disabled ng-model="store.storeID">
+		
+		<br/>
+		<label for="storeName">Store Name*</label>
+		<input id="storeName" name="storeName" type = "text" required="required" ng-model="store.name">
+		
+		<br/>
+		<label for="storeAddress">Address*</label>
+		<input id="storeAddress" name="storeAddress" type = "text" required="required" ng-model="store.address">
+	
+		<br/>
+		<label for="description">Description*</label><br/>
+		<textarea id="description" name="description" required="required" ng-model="store.description"></textarea>
+		
+		<br/>
+		<label for="storeEmail">Store Email*</label>
+		<input id="storeEmail" name="storeEmail" type = "email" required="required" ng-model="store.email">
+		
+		<br/>
+		<label for="state">State*</label>
+		<select ng-model="selectedState">
+			<option ng-repeat="state in states" value="{{state}}">{{state}}</option>
+		</select>
+
+		<br/>
+		<label for="city">City*</label>
+		<select ng-model="selectedCity" ng-change="cityChange()">
+			<option ng-repeat="city in cities | filter: selectedState" value="{{city.name}}">{{city.name}}</option>
+		</select>
+
+		<br/>
+		<label for="locality">Locality*</label>
+		<select ng-model="selectedLocality">
+			<option ng-repeat="locality in dupLocalities" value="{{$index}}">{{locality.get('locality_name')}}</option>
+		</select>
+		
+		<br/>
+		<label for="primaryPhone">Primary Phone*</label>
+		<input id="primaryPhone" name="primaryPhone" type = "phone" required="required" ng-model="store.primaryPhone">
+		
+		<br/>
+		<label for="secPhone">Secondary Phone</label>
+		<input id="secPhone" type = "phone" ng-model="store.secPhone">
+		
+		<br/>
+		<label for="website">Website*</label>
+		<input id="website" name="website" type = "url" required="required" ng-model="store.website">
+
+		<p>Primary Category</p>
+		<div ng-repeat="category in categories" class="categoryContainer" ng-class="{activeCat: category.id == selectedCategory.id}" ng-click="setSelectedCategory(category)">
+			<img ng-src="img/cat/dark/{{category.get('image_link')}}" class="tagImg" ng-hide="category.id == selectedCategory.id">
+			<img ng-src="img/cat/light/{{category.get('image_link')}}" class="tagImg" ng-show="category.id == selectedCategory.id">
+			<p class="categoryTitle">{{category.get('categoryName')}}</p>
+		</div>
+		<br/>
+
+		<p class="cardHeader">Known For</p>
+		<div ng-repeat="category in categories">
+			<p class="tagHeader">{{category.get('categoryName')}}</p>
+			<div class="tagDivider"></div>
+			<div ng-repeat="tag in tags | filter: category.get('categoryName')" class="tagContainer hnd1" ng-class="{activeTag: tag.selected}" ng-click="toggleTag(tag)">
+				<div class="imgtagged">
+					<img ng-src="img/tag/hnd/{{tag.get('tag_image')}}" class="imgtaggedimg">
+				</div>
+				<p class="tagTitle">{{tag.get('tag_description')}}</p>
+			</div>
+		</div>
+		
+
+		
+		<br/>
+		<label for="twitter">Twitter Link</label>
+		<input id="twitter" type="text" ng-model="store.twitterLink">
+		
+		<br/>
+		<label for="facebook">Facebook Link</label>
+		<input id="facebook" type = "url" ng-model="store.facebookLink">
+		
+		<br/>
+		<label for="sale">Major Sale</label>
+		<input id="sale" type = "text"  ng-model="store.majorSale">
+		
+		<br/>
+		<label for="startTime">Start Time</label>
+		<input id="startTime" type = "time" ng-model="store.startTime">
+		
+		<br/>
+		<label for="endTime">End Time</label>
+		<input id="endTime" type = "time"  ng-model="store.endTime">
+		
+		<br/>
+		<label>Working Days</label><br/>
+		<div ng-repeat="day in weekDays" class="tagContainer hnd1" ng-class="{activeTag: day.selected}" ng-click="toggleDay(day)">
+			<p class="tagTitle">{{day.name}}</p>
+		</div>
+		
+		<br/>
+		<label for="onlineStore">Online Store Link</label>
+		<input id="onlineStore" name="onlineStore" type = "url" ng-model="store.onlineStore">
+		
+		<br/>
+		<label for="onlineStore">Payment Options</label>
+		<select ng-model="selectedPayment" required="required">
+			<option ng-repeat="payment in paymentOptions" value="{{payment}}">{{payment}}</option>
+		</select>
+		<br/>
+
+		<p>Logo*</p>
+		<input type = "file" name="logoUpload" required="required"
+		onchange="angular.element(this).scope().storeLogoChanged(this.files)">
+	  	<div ng-click="updateLogoDisplay()">Preview Logo</div>
+	  	<img ng-src="{{logo}}" width="100px">
+
+	  	<p>Banner Image*</p>
+		<input type = "file" name="bannerUpload" required="required"
+		onchange="angular.element(this).scope().storeBannerChanged(this.files)">
+	  	<div ng-click="updateBannerDisplay()">Preview Banner</div>
+	  	<img ng-src="{{banner}}" width="100px">
+	  	
+
+	  	<p>GeoLocation</p>
+	  	<label for="latitude">Latitude*</label>
+	  	<input type="text" id="latitude" name="latitude" required="required" ng-model="store.latitude">
+	  	<label for="longitude">Longitude*</label>
+	  	<input type="text" id="longitude" name="longitude" required="required" ng-model="store.longitude">
+
+	  	<input type="submit" value="Save Store" ng-show="storeForm.$valid">
+	</form>
+</div>
+
