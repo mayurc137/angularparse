@@ -258,6 +258,28 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 		}
 
+		factory.checkStoreHandleAvailablility = function (storeHandle) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query("Stores");
+			query.equalTo("store_handle", storeHandle);
+
+			query.find({
+				success: function (store) {
+					if (store.length == 0)
+						deferred.resolve(true);
+					else
+						deferred.resolve(false);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
 
 		factory.storeReg = function (userDetails) {
 
