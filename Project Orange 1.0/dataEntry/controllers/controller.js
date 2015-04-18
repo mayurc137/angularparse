@@ -1,7 +1,7 @@
 var appControllers = angular.module('dataEntryControllers', []);
 
-appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
-    function($scope, ParseFactory, $routeScope, $routeParams, $route) {
+appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
+    function($q, $scope, ParseFactory, $routeScope, $routeParams, $route) {
 
         ParseFactory.init();
 
@@ -34,6 +34,9 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         $scope.store.selectedPayment = "Cash",
         $scope.store.selectedCategory = null,
         $scope.store.locality = null;
+
+        $scope.storeHandleAvailable = true;
+        $scope.ownerEmailAvailable = true;
 
         $scope.storeOwner = {};
         $scope.storeOwner.name = "",
@@ -279,106 +282,152 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
 
         $scope.checkStoreHandleAvailability = function() {
 
-            $route.reload();
+            var deferred = $q.defer();
 
             ParseFactory.checkStoreHandleAvailablility($scope.store.storeHandle).then(
                 function(result) {
-                    if (result == true) {
-                        //Display message saying available
+
+                    if (result == null) {
+                        $scope.storeHandleAvailable = true;
                         console.log("available");
+                        deferred.resolve(true);
                     } else {
-                        //Display message saying unavailable
-                        console.log("unavailable");
+                        if ($scope.formAction == "create") {
+                            //StoreHandle is not available
+                            $scope.storeHandleAvailable = false;
+                            console.log("unavailable");
+                            deferred.reject("Store Handle unavailable");
+                        } else {
+                            if ($scope.store.storeID == result.id) {
+                                //Current Store has been fetched hence allow it
+                                $scope.storeHandleAvailable = true;
+                                console.log("available");
+                                deferred.resolve(true);
+                            } else {
+                                //Another Store has the same handle
+                                $scope.storeHandleAvailable = false;
+                                console.log("unavailable");
+                                deferred.reject("Store Handle unavailable");
+                            }
+                        }
                     }
+
                 }, function(message) {
                     console.log(message);
+                    alert("Unable to connect. Try Again in sometime");
+                    deferred.reject(message);
                 }
             );
+
+            return deferred.promise;
         }
 
-        $scope.refreshStore = function() {
-            $scope.store = {};
-            $scope.store.storeHandle = "";
-            $scope.store.storeID = "",
-            $scope.store.name = "",
-            $scope.store.address = "",
-            $scope.store.description = "",
-            $scope.store.email = "",
-            $scope.store.primaryPhone = "",
-            $scope.store.secPhone = "",
-            $scope.store.website = "",
-            $scope.store.twitterLink = "",
-            $scope.store.facebookLink = "",
-            $scope.store.majorSale = "",
-            $scope.store.startTime = null,
-            $scope.store.endTime = null,
-            $scope.store.onlineStore = "",
-            $scope.store.latitude = "",
-            $scope.store.logoImage = null,
-            $scope.store.bannerImage = null,
-            $scope.store.longitude = "",
-            $scope.store.selectedTags = [],
-            $scope.store.workingDays = [],
-            $scope.store.selectedPayment = "Cash",
-            $scope.store.selectedCategory = null,
-            $scope.store.locality = null;
+        $scope.checkEmailUnique = function() {
+            var deferred = $q.defer();
 
-            $scope.logo = "";
-            $scope.logoSrc = "";
+            ParseFactory.checkStoreOwnerEmailAvailablility($scope.storeOwner.email).then(
+                function(result) {
 
-            $scope.banner = "";
-            $scope.bannerSrc = "";
+                    if (result == null) {
+                        $scope.ownerEmailAvailable = true;
+                        console.log("available");
+                        deferred.resolve(true);
+                    } else {
+                        if ($scope.formAction == "create") {
+                            $scope.ownerEmailAvailable = false;
+                            console.log("unavailable");
+                            deferred.reject("Email associated with another account");
+                        } else {
+                            if (result.store_id.id == $scope.store.storeID) {
+                                //Current Store has been fetched hence allow it
+                                $scope.ownerEmailAvailable = true;
+                                console.log("available");
+                                deferred.resolve(true);
+                            } else {
+                                //Another Store has the same handle
+                                $scope.ownerEmailAvailable = false;
+                                console.log("unavailable");
+                                deferred.reject("Email associated with another account");
+                            }
+                        }
+                    }
+
+                }, function(message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            );
+            return deferred.promise;
         }
 
-        $scope.refreshStoreOwner = function() {
-            $scope.storeOwner = {};
-            $scope.storeOwner.name = "",
-            $scope.storeOwner.email = "",
-            $scope.storeOwner.phone = "";
+        $scope.checkParameters = function() {
+            var deferred = $q.defer();
+
+            $scope.checkStoreHandleAvailability().then(
+                function(result) {
+
+                    $scope.checkEmailUnique().then(
+                        function(result) {
+                            deferred.resolve(true);
+                        }, function(message) {
+                            deferred.reject(false);
+                        }
+                    );
+
+                }, function(message) {
+                    deferred.reject(false);
+                }
+            );
+
+            return deferred.promise;
         }
 
         $scope.saveStore = function() {
 
             $scope.store.locality = $scope.dupLocalities[$scope.selectedLocality];
 
-            console.log($scope.store.logoImage);
+            $scope.checkParameters().then(
+                function(success) {
 
-            if ($scope.formAction == "edit") {
+                    if ($scope.formAction == "edit") {
 
-            } else {
-                if ($scope.store.logoImage == null) {
-                    alert("The Store Logo needs to be uploaded");
-                } else {
-                    //Store Logo not uploaded, display message
-                    //check if store handle is available
-                    ParseFactory.checkStoreHandleAvailablility($scope.store.storeHandle).then(
-                        function(result) {
-                            if (result == true) {
-                                ParseFactory.createStore($scope.store).then(
-                                    function(store) {
-                                        console.log("Store Created");
-                                        console.log(store);
+                    } else {
 
-                                        //Update Store Owner Profile
+                        //Creating New Store
+                        if ($scope.store.logoImage == null) {
+                            //Store Logo not uploaded, display message
+                            alert("The Store Logo needs to be uploaded");
+                        } else {
 
+                            ParseFactory.createStore($scope.store).then(
+                                function(store) {
+                                    console.log("Store Created");
+                                    console.log(store);
 
-                                        $route.reload();
+                                    $scope.storeOwner.store_id = store.id;
+                                    ParseFactory.storeReg($scope.storeOwner).then(
+                                        function(user) {
+                                            console.log("Successfully Registered Store");
+                                            $route.reload();
+                                        }, function(message) {
+                                            console.log(message);
+                                            alert("Error Creating User.\nContact System Admin");
+                                        }
+                                    );
 
-                                    }, function(message) {
-                                        console.log(message);
-                                    }
-                                );
-                            } else {
-                                //Display message saying unavailable
-                                alert("The Store Handle is inavailable");
-                            }
-                        }, function(message) {
-                            console.log(message);
+                                }, function(message) {
+                                    console.log(message);
+                                }
+                            );
+
                         }
-                    );
 
+                    }
+
+                }, function(error) {
+                    console.log("Parameters are wrong");
                 }
-            }
+            );
 
             console.log($scope.store);
             console.log($scope.storeOwner);

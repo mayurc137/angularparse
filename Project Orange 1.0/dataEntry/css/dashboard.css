@@ -1143,4 +1143,55 @@ td {
   border-color: red;
 }
 
+input.formButton{
+  padding: 5px;
+  font-size: 12px;
+  text-transform: uppercase;
+  background: white;
+  border: 1px solid #512DA8;
+  color: #512DA8;
+  vertical-align: middle;
+  margin: 6px 2px;
+  box-sizing: border-box;
+  -webkit-transition: all .3s ease-out; /* Safari */
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  transition: all .3s ease-out;
+}
+
+input.formButton:hover{
+  background: #512DA8;
+  color: white;
+}
+
+input[type="submit"]{
+    position: relative;
+    left: 100%;
+    margin-left: -142px;
+    padding: 7px 15px;
+    font-size: 15px;
+}
+
+.dayContainer {
+  position: relative;
+  width: 140px;
+  text-align: center;
+  border-radius: 3px;
+  border: 1px solid rgba(33, 33, 33, 0.1);
+  height: 35px;
+  display: inline-block;
+  margin: 0px 10px 10px 0px;
+  overflow: hidden; }
+
+.dayContainer:hover {
+  color: #7323DC;
+  cursor: pointer; 
+}
+
+.formError {
+  color: red;
+  margin: 5px 0;
+  font-size: 15px;
+}
+
 /*# sourceMappingURL=dashboard.css.map */
