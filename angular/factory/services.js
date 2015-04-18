@@ -307,22 +307,21 @@ phonecatServices.factory('Phone', ['$q',
 
 			var deferred = $q.defer();
 
-			var user = new Parse.User();
-			user.set("username", userDetails.email);
-			user.set("password", userDetails.password);
-			user.set("email", userDetails.email);
+			function storeReg(userDetails) {
 
-			// other fields can be set just like with Parse.Object
-			user.set("is_store", true);
-
-			user.signUp(null, {
-				success: function (user) {
-					deferred.resolve(user);
-				},
-				error: function (error, message) {
-					deferred.reject(message);
-				}
-			});
+				Parse.Cloud.run('storeSignUp', {
+					userDetails: userDetails
+				}, {
+					success: function (result) {
+						console.log(result);
+						deferred.resolve(result);
+					},
+					error: function (error) {
+						console.log(error);
+						deferred.reject(error);
+					}
+				});
+			}
 
 			return deferred.promise;
 		}
