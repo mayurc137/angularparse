@@ -3,7 +3,7 @@
 		<label for="storeHandle">Store Handle*</label>
 		<input id="storeHandle" name="storeHandle" type = "text" required="required" ng-model="store.storeHandle">
 		<input type = "button" value="Fetch Store Details" ng-click="getStoreDetails()" ng-show="formAction == 'edit'">
-		<input type = "button" value="Check Availability" ng-click="checkAvailability()">
+		<input type = "button" value="Check Availability" ng-click="checkStoreHandleAvailability()">
 
 		<br/>
 		<label for="ownerName">Owner Name*</label>
@@ -17,9 +17,10 @@
 		<label for="ownerPhone">Owner Phone*</label>
 		<input id="ownerPhone" name="ownerPhone" type = "phone" required="required" ng-model="storeOwner.phone" pattern="[0-9]{10,11}">
 
-		<br/>
-		<label for="storeID">Store ID*</label>
-		<input id="storeID" type = "text" disabled ng-model="store.storeID">
+		<div ng-show="formAaction == 'edit'">
+			<label for="storeID">Store ID*</label>
+			<input id="storeID" type = "text" disabled ng-model="store.storeID">
+		</div>
 		
 		<br/>
 		<label for="storeName">Store Name*</label>
@@ -57,20 +58,20 @@
 		
 		<br/>
 		<label for="primaryPhone">Primary Phone*</label>
-		<input id="primaryPhone" name="primaryPhone" type = "phone" required="required" ng-model="store.primaryPhone">
+		<input id="primaryPhone" name="primaryPhone" type = "phone" required="required" ng-model="store.primaryPhone" pattern="[0-9]{10,11}">
 		
 		<br/>
 		<label for="secPhone">Secondary Phone</label>
-		<input id="secPhone" type = "phone" ng-model="store.secPhone">
+		<input id="secPhone" type = "phone" ng-model="store.secPhone" pattern="[0-9]{10,11}">
 		
 		<br/>
-		<label for="website">Website*</label>
-		<input id="website" name="website" type = "url" required="required" ng-model="store.website">
+		<label for="website">Website</label>
+		<input id="website" name="website" type = "url" ng-model="store.website">
 
 		<p>Primary Category</p>
-		<div ng-repeat="category in categories" class="categoryContainer" ng-class="{activeCat: category.id == selectedCategory.id}" ng-click="setSelectedCategory(category)">
-			<img ng-src="img/cat/dark/{{category.get('image_link')}}" class="tagImg" ng-hide="category.id == selectedCategory.id">
-			<img ng-src="img/cat/light/{{category.get('image_link')}}" class="tagImg" ng-show="category.id == selectedCategory.id">
+		<div ng-repeat="category in categories" class="categoryContainer" ng-class="{activeCat: category.id == store.selectedCategory.id}" ng-click="setSelectedCategory(category)">
+			<img ng-src="img/cat/dark/{{category.get('image_link')}}" class="tagImg" ng-hide="category.id == store.selectedCategory.id">
+			<img ng-src="img/cat/light/{{category.get('image_link')}}" class="tagImg" ng-show="category.id == store.selectedCategory.id">
 			<p class="categoryTitle">{{category.get('categoryName')}}</p>
 		</div>
 		<br/>
@@ -91,7 +92,7 @@
 		
 		<br/>
 		<label for="twitter">Twitter Link</label>
-		<input id="twitter" type="text" ng-model="store.twitterLink">
+		<input id="twitter" type="url" ng-model="store.twitterLink">
 		
 		<br/>
 		<label for="facebook">Facebook Link</label>
@@ -121,7 +122,7 @@
 		
 		<br/>
 		<label for="onlineStore">Payment Options</label>
-		<select ng-model="selectedPayment" required="required">
+		<select ng-model="store.selectedPayment" required="required">
 			<option ng-repeat="payment in paymentOptions" value="{{payment}}">{{payment}}</option>
 		</select>
 		<br/>
@@ -132,8 +133,8 @@
 	  	<div ng-click="updateLogoDisplay()">Preview Logo</div>
 	  	<img ng-src="{{logo}}" width="100px">
 
-	  	<p>Banner Image*</p>
-		<input type = "file" name="bannerUpload" required="required"
+	  	<p>Banner Image</p>
+		<input type = "file" name="bannerUpload"
 		onchange="angular.element(this).scope().storeBannerChanged(this.files)">
 	  	<div ng-click="updateBannerDisplay()">Preview Banner</div>
 	  	<img ng-src="{{banner}}" width="100px">

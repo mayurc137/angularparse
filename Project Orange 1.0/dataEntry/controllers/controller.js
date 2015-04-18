@@ -1,7 +1,7 @@
 var appControllers = angular.module('dataEntryControllers', []);
 
-appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '$routeParams',
-    function($scope, ParseFactory, $routeScope, $routeParams) {
+appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
+    function($scope, ParseFactory, $routeScope, $routeParams, $route) {
 
         ParseFactory.init();
 
@@ -22,16 +22,23 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         $scope.store.twitterLink = "",
         $scope.store.facebookLink = "",
         $scope.store.majorSale = "",
-        $scope.store.startTime = "",
-        $scope.store.endTime = "",
+        $scope.store.startTime = null,
+        $scope.store.endTime = null,
         $scope.store.onlineStore = "",
         $scope.store.latitude = "",
-        $scope.store.longitude = "";
+        $scope.store.logoImage = null,
+        $scope.store.bannerImage = null,
+        $scope.store.longitude = "",
+        $scope.store.selectedTags = [],
+        $scope.store.workingDays = [],
+        $scope.store.selectedPayment = "Cash",
+        $scope.store.selectedCategory = null,
+        $scope.store.locality = null;
 
         $scope.storeOwner = {};
         $scope.storeOwner.name = "",
-        $scope.storeOwneremail = "",
-        $scope.storeOwnerphone = ""
+        $scope.storeOwner.email = "",
+        $scope.storeOwner.phone = "";
 
 
         $scope.storeData = {};
@@ -44,18 +51,12 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         $scope.selectedState = null;
         $scope.selectedCity = null;
         $scope.selectedLocality = null;
-        $scope.selectedCategory = null;
 
-        $scope.logoImage = null;
         $scope.logo = "";
         $scope.logoSrc = "";
 
-        $scope.bannerImage = null;
         $scope.banner = "";
         $scope.bannerSrc = "";
-
-        $scope.selectedTags = [];
-        $scope.workingDays = [];
 
         $scope.weekDays = [{
             name: "Sunday",
@@ -87,7 +88,6 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         };
 
         $scope.paymentOptions = ["Cash", "Cash and Card"];
-        $scope.selectedPayment = "Cash";
 
         ParseFactory.getLocality().then(
             function(localities) {
@@ -101,7 +101,7 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         ParseFactory.getCategories().then(
             function(categories) {
                 $scope.categories = categories;
-                $scope.selectedCategory = categories[0];
+                $scope.store.selectedCategory = categories[0];
             }, function(message) {
                 console.log(message);
             }
@@ -117,20 +117,13 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
             }
         );
 
-        /* Image Uploader Stuff Starts Here */
-
-        /* Image Uploader Code Ends Here */
-
-        $scope.checkAvailability = function() {
-            //Add code to check StoreHandle Availability Here
-        }
-
         $scope.storeLogoChanged = function(files) {
             console.log(files);
-            $scope.logoImage = files[0];
-            if ($scope.acceptedTypes[$scope.logoImage.type] !== true) {
+            $scope.store.logoImage = files[0];
+
+            if ($scope.acceptedTypes[$scope.store.logoImage.type] !== true) {
                 alert("Invalid File Type For Logo Image");
-                $scope.logoImage = null;
+                $scope.store.logoImage = null;
             } else {
 
                 var reader = new FileReader();
@@ -138,9 +131,10 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
                     $scope.logoSrc = event.target.result;
                 };
 
-                reader.readAsDataURL($scope.logoImage);
-
+                reader.readAsDataURL($scope.store.logoImage);
             }
+
+            console.log($scope.store.logoImage);
         }
 
         $scope.updateLogoDisplay = function() {
@@ -149,16 +143,16 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
 
         $scope.storeBannerChanged = function(files) {
             console.log(files);
-            $scope.bannerImage = files[0];
-            if ($scope.acceptedTypes[$scope.bannerImage.type] !== true) {
+            $scope.store.bannerImage = files[0];
+            if ($scope.acceptedTypes[$scope.store.bannerImage.type] !== true) {
                 alert("Invalid File Type For Banner Image");
-                $scope.bannerImage = null;
+                $scope.store.bannerImage = null;
             } else {
                 var reader = new FileReader();
                 reader.onload = function(event) {
                     $scope.bannerSrc = event.target.result;
                 };
-                reader.readAsDataURL($scope.bannerImage);
+                reader.readAsDataURL($scope.store.bannerImage);
             }
         }
 
@@ -242,45 +236,150 @@ appControllers.controller('formCtrl', ['$scope', 'ParseFactory', '$rootScope', '
         }
 
         $scope.setSelectedCategory = function(category) {
-            $scope.selectedCategory = category;
+            $scope.store.selectedCategory = category;
         }
 
         $scope.toggleTag = function(tag) {
+
+            //Check that the number of tags is less than the limit;
+
             if (tag.selected) {
                 //Remove From List of Selected
                 tag.selected = false;
-                for (var i = 0; i < $scope.selectedTags.length; i++) {
-                    if (tag.id == $scope.selectedTags[i].id) {
-                        $scope.selectedTags.splice(i, 1);
+                for (var i = 0; i < $scope.store.selectedTags.length; i++) {
+                    if (tag.id == $scope.store.selectedTags[i].id) {
+                        $scope.store.selectedTags.splice(i, 1);
                         break;
                     }
                 }
 
-                console.log($scope.selectedTags);
+                console.log($scope.store.selectedTags);
 
             } else {
                 //Add to list of selected
                 tag.selected = true;
-                $scope.selectedTags.push(tag);
+                $scope.store.selectedTags.push(tag);
 
-                console.log($scope.selectedTags);
+                console.log($scope.store.selectedTags);
             }
         }
 
         $scope.toggleDay = function(day) {
             if (day.selected) {
                 day.selected = false;
-                var index = $scope.workingDays.indexOf(day.name);
-                $scope.workingDays.splice(index, 1);
+                var index = $scope.store.workingDays.indexOf(day.name);
+                $scope.store.workingDays.splice(index, 1);
             } else {
                 day.selected = true;
-                $scope.workingDays.push(day.name);
+                $scope.store.workingDays.push(day.name);
             }
 
-            console.log($scope.workingDays);
+            console.log($scope.store.workingDays);
+        }
+
+        $scope.checkStoreHandleAvailability = function() {
+
+            $route.reload();
+
+            ParseFactory.checkStoreHandleAvailablility($scope.store.storeHandle).then(
+                function(result) {
+                    if (result == true) {
+                        //Display message saying available
+                        console.log("available");
+                    } else {
+                        //Display message saying unavailable
+                        console.log("unavailable");
+                    }
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.refreshStore = function() {
+            $scope.store = {};
+            $scope.store.storeHandle = "";
+            $scope.store.storeID = "",
+            $scope.store.name = "",
+            $scope.store.address = "",
+            $scope.store.description = "",
+            $scope.store.email = "",
+            $scope.store.primaryPhone = "",
+            $scope.store.secPhone = "",
+            $scope.store.website = "",
+            $scope.store.twitterLink = "",
+            $scope.store.facebookLink = "",
+            $scope.store.majorSale = "",
+            $scope.store.startTime = null,
+            $scope.store.endTime = null,
+            $scope.store.onlineStore = "",
+            $scope.store.latitude = "",
+            $scope.store.logoImage = null,
+            $scope.store.bannerImage = null,
+            $scope.store.longitude = "",
+            $scope.store.selectedTags = [],
+            $scope.store.workingDays = [],
+            $scope.store.selectedPayment = "Cash",
+            $scope.store.selectedCategory = null,
+            $scope.store.locality = null;
+
+            $scope.logo = "";
+            $scope.logoSrc = "";
+
+            $scope.banner = "";
+            $scope.bannerSrc = "";
+        }
+
+        $scope.refreshStoreOwner = function() {
+            $scope.storeOwner = {};
+            $scope.storeOwner.name = "",
+            $scope.storeOwner.email = "",
+            $scope.storeOwner.phone = "";
         }
 
         $scope.saveStore = function() {
+
+            $scope.store.locality = $scope.dupLocalities[$scope.selectedLocality];
+
+            console.log($scope.store.logoImage);
+
+            if ($scope.formAction == "edit") {
+
+            } else {
+                if ($scope.store.logoImage == null) {
+                    alert("The Store Logo needs to be uploaded");
+                } else {
+                    //Store Logo not uploaded, display message
+                    //check if store handle is available
+                    ParseFactory.checkStoreHandleAvailablility($scope.store.storeHandle).then(
+                        function(result) {
+                            if (result == true) {
+                                ParseFactory.createStore($scope.store).then(
+                                    function(store) {
+                                        console.log("Store Created");
+                                        console.log(store);
+
+                                        //Update Store Owner Profile
+
+
+                                        $route.reload();
+
+                                    }, function(message) {
+                                        console.log(message);
+                                    }
+                                );
+                            } else {
+                                //Display message saying unavailable
+                                alert("The Store Handle is inavailable");
+                            }
+                        }, function(message) {
+                            console.log(message);
+                        }
+                    );
+
+                }
+            }
+
             console.log($scope.store);
             console.log($scope.storeOwner);
         }
