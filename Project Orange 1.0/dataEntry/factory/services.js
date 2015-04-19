@@ -47,7 +47,28 @@ parseServices.factory('ParseFactory', ['$q',
             });
 
             return deferred.promise;
-        };
+        }
+
+        factory.getStoreOwner = function(store) {
+
+            var deferred = $q.defer();
+
+            var query = new Parse.Query(Parse.User);
+            query.equalTo("store_id", store);
+            query.equalTo("is_store", true);
+            query.find({
+                success: function(user) {
+                    console.log(user);
+                    deferred.resolve(user[0]);
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
 
         factory.fetchGalleryOfStore = function(store) {
 
@@ -155,6 +176,7 @@ parseServices.factory('ParseFactory', ['$q',
             store.set("twitter_link", storeDetails.twitterLink);
             store.set("website_link", storeDetails.website);
             store.set("working_days", storeDetails.workingDays);
+            store.set("dirty_bit", false);
 
             store.set("followers", []);
             store.set("products", []);
@@ -211,73 +233,6 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
-        factory.addMetaData = function(store) {
-
-            var deferred = $q.defer();
-
-            var metadata = [];
-
-            var address = store.get("address");
-            address = address.replace(/[^a-zA-Z0-9 ]/g, "");
-            address = address.split(" ");
-            metadata.push.apply(metadata, address);
-
-            var locality_name = store.get("locality").get("locality_name");
-            metadata.push(locality_name);
-
-            var category = store.get("primary_category").get("categoryName");
-            metadata.push(category);
-
-            var description = store.get("description");
-            description = description.replace(/[^a-zA-Z0-9 ]/g, "");
-            description = description.split(" ");
-            metadata.push.apply(metadata, description);
-
-            var tags = store.get("tags");
-            for (var i = 0; i < tags.length; i++) {
-                var tag = tags[i].get("tag_description").replace(/[^a-zA-Z0-9 ]/g, "");
-                tag = tag.split(" ");
-                metadata.push.apply(metadata, tag);
-            }
-
-            Parse.Cloud.run('lemmatize', {
-                meta: metadata
-            }, {
-                success: function(result) {
-
-                    var store_name = store.get("name");
-                    store_name = store_name.replace(/[^a-zA-Z0-9 ]/g, "");
-                    store_name = store_name.toLowerCase();
-                    store_name = store_name.split(" ");
-                    var store_handle = store.get("store_handle");
-                    store.set("metadata", result);
-                    store.addUnique("metadata", store_handle);
-                    for (var i = 0; i < store_name.length; i++) {
-                        store.addUnique("metadata", store_name[i]);
-                    }
-
-                    console.log(store.get("metadata"));
-
-                    store.save(null, {
-                        success: function(store) {
-                            console.log("Success");
-                            deferred.resolve(store);
-                        },
-                        error: function(error, message) {
-                            console.log(message);
-                            deferred.reject(message);
-                        }
-                    });
-                },
-                error: function(error) {
-                    console.log(error);
-                    deferred.reject(error);
-                }
-            });
-
-            return deferred.promise;
-        }
-
         factory.storeReg = function(userDetails) {
 
             var deferred = $q.defer();
@@ -306,6 +261,122 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.addDetailsToStore = function(store, storeDetails, logoImageChange, bannerImageChange) {
+
+            var deferred = $q.defer();
+
+            var point = new Parse.GeoPoint({
+                latitude: parseFloat(storeDetails.latitude),
+                longitude: parseFloat(storeDetails.longitude)
+            });
+
+            store.set("address", storeDetails.address);
+            store.set("description", storeDetails.description);
+            store.set("email", storeDetails.email);
+            store.set("end_time", storeDetails.endTime);
+            store.set("facebook_link", storeDetails.facebook_link);
+            store.set("geolocation", point);
+            store.set("locality", storeDetails.locality);
+            store.set("major_sale", storeDetails.majorSale);
+            store.set("name", storeDetails.name);
+            store.set("online_store_link", storeDetails.onlineStore);
+            store.set('phone', []);
+            store.addUnique("phone", storeDetails.primaryPhone);
+            store.addUnique("phone", storeDetails.secPhone);
+            store.set("primary_category", storeDetails.selectedCategory);
+            store.set('payment_type', []);
+            store.addUnique("payment_type", storeDetails.selectedPayment);
+            store.set("tags", storeDetails.selectedTags);
+            store.set("start_time", storeDetails.startTime);
+            store.set("store_handle", storeDetails.storeHandle);
+            store.set("twitter_link", storeDetails.twitterLink);
+            store.set("website_link", storeDetails.website);
+            store.set("working_days", storeDetails.workingDays);
+            store.set("dirty_bit", false);
+
+            if (logoImageChange && bannerImageChange) {
+
+                var logofile = storeDetails.logoImage;
+                var parseFile2 = new Parse.File(logofile.name, logofile);
+
+                parseFile2.save().then(function() {
+                    store.set("logo", parseFile2);
+                    var file = storeDetails.bannerImage;
+                    var parseFile = new Parse.File(file.name, file);
+                    parseFile.save().then(function() {
+                        store.set("banner_image", parseFile);
+                        store.save(null, {
+                            success: function(store) {
+                                console.log(store);
+                                deferred.resolve(store);
+                            },
+                            error: function(error, message) {
+                                console.log(message);
+                                deferred.reject(message);
+                            }
+                        });
+                    }, function(error) {
+                        console.log(error);
+                        deferred.reject(error);
+                    });
+                }, function(error) {
+                    console.log(error);
+                });
+
+            } else if (logoImageChange) {
+                var logofile = storeDetails.logoImage;
+                var parseFile = new Parse.File(logofile.name, logofile);
+
+                parseFile.save().then(function() {
+                    store.set("logo", parseFile);
+                    store.save(null, {
+                        success: function(store) {
+                            console.log(store);
+                            deferred.resolve(store);
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                }, function(error) {
+                    console.log(error);
+                });
+            } else if (bannerImageChange) {
+                var file = storeDetails.bannerImage;
+                var parseFile = new Parse.File(file.name, file);
+                parseFile.save().then(function() {
+                    store.set("banner_image", parseFile);
+                    store.save(null, {
+                        success: function(store) {
+                            console.log(store);
+                            deferred.resolve(store);
+                        },
+                        error: function(error, message) {
+                            console.log(message);
+                            deferred.reject(message);
+                        }
+                    });
+                }, function(error) {
+                    console.log(error);
+                    deferred.reject(error);
+                });
+            } else {
+                store.save(null, {
+                    success: function(store) {
+                        console.log(store);
+                        deferred.resolve(store);
+                    },
+                    error: function(error, message) {
+                        console.log(message);
+                        deferred.reject(message);
+                    }
+                });
+            }
+
+            return deferred.promise;
+        }
+
         factory.editStoreOwner = function(user, ownerDetails) {
 
             var deferred = $q.defer();
@@ -316,7 +387,7 @@ parseServices.factory('ParseFactory', ['$q',
             }, {
                 success: function(result) {
                     console.log(result);
-                    deferred.resolve(object);;
+                    deferred.resolve(result);;
                 },
                 error: function(error) {
                     console.log(error);
@@ -367,47 +438,6 @@ parseServices.factory('ParseFactory', ['$q',
                     deferred.reject(message);
                 }
             });
-
-            return deferred.promise;
-        }
-
-        factory.addDetailsToStore = function(store, storeDetails, category, tags) {
-
-            var deferred = $q.defer();
-
-            if (storeDetails.logo.files.length > 0) {
-
-                var logo = storeDetails.logo.files[0];
-                var parseFile = new Parse.File(logo.name, logo);
-                parseFile.save().then(function() {
-
-                    store.set("address", storeDetails.address);
-                    store.set("description", storeDetails.description);
-                    store.set("email", storeDetails.email);
-                    store.set("logo", parseFile);
-                    store.set("name", storeDetails.name);
-                    store.set("phone", storeDetails.phone);
-                    store.set("store_handle", storeDetails.store_handle);
-                    store.set("website_link", storeDetails.website_link);
-                    store.set("primary_category", category);
-                    store.set("twitter_link", storeDetails.twitter_link);
-                    store.set("facebook_link", storeDetails.facebook_link);
-                    store.set("tags", tags);
-                    store.save(null, {
-                        success: function(store) {
-                            console.log(object);
-                            deferred.resolve(store);
-                        },
-                        error: function(error, message) {
-                            console.log(error);
-                            deferred.reject(message);
-                        }
-                    });
-                });
-            } else {
-                console.log("No logo uploaded");
-                deferred.reject("No logo Image");
-            }
 
             return deferred.promise;
         }

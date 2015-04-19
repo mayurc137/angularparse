@@ -9,6 +9,8 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         $scope.formAction = $routeParams.action;
 
+        $scope.storeData = null;
+        $scope.ownerData = null;
         $scope.store = {};
         $scope.store.storeHandle = "";
         $scope.store.storeID = "",
@@ -20,7 +22,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.store.secPhone = "",
         $scope.store.website = "",
         $scope.store.twitterLink = "",
-        $scope.store.facebookLink = "",
+        $scope.store.facebook_link = "",
         $scope.store.majorSale = "",
         $scope.store.startTime = null,
         $scope.store.endTime = null,
@@ -43,6 +45,8 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.storeOwner.email = "",
         $scope.storeOwner.phone = "";
 
+        $scope.bannerImageChanged = false;
+        $scope.logoImageChanged = false;
 
         $scope.storeData = {};
         $scope.localities = [];
@@ -51,9 +55,10 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.cities = [];
         $scope.categories = [];
         $scope.tags = [];
+        $scope.tagNames = [];
         $scope.selectedState = null;
         $scope.selectedCity = null;
-        $scope.selectedLocality = null;
+        $scope.selectedLocality = 0;
 
         $scope.logo = "";
         $scope.logoSrc = "";
@@ -123,10 +128,12 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.storeLogoChanged = function(files) {
             console.log(files);
             $scope.store.logoImage = files[0];
+            $scope.logoImageChanged = true;
 
             if ($scope.acceptedTypes[$scope.store.logoImage.type] !== true) {
                 alert("Invalid File Type For Logo Image");
                 $scope.store.logoImage = null;
+                $scope.logoImageChanged = false;
             } else {
 
                 var reader = new FileReader();
@@ -147,9 +154,11 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.storeBannerChanged = function(files) {
             console.log(files);
             $scope.store.bannerImage = files[0];
+            $scope.bannerImageChanged = true;
             if ($scope.acceptedTypes[$scope.store.bannerImage.type] !== true) {
                 alert("Invalid File Type For Banner Image");
                 $scope.store.bannerImage = null;
+                $scope.bannerImageChanged = false;
             } else {
                 var reader = new FileReader();
                 reader.onload = function(event) {
@@ -164,13 +173,115 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         }
 
         $scope.getStoreDetails = function() {
-            ParseFactory.getStoreByHandle($scope.store.storeHandle).then(
-                function(storeData) {
-                    console.log(storeData);
-                }, function(error) {
-                    console.log(error);
-                }
-            );
+
+            if ($scope.store.storeHandle != "") {
+                ParseFactory.getStoreByHandle($scope.store.storeHandle).then(
+                    function(storeObject) {
+
+                        if (storeObject) {
+
+                            $scope.storeData = storeObject;
+                            ParseFactory.getStoreOwner($scope.storeData).then(
+                                function(ownerObject) {
+                                    console.log(ownerObject);
+                                    if (ownerObject) {
+                                        $scope.ownerData = ownerObject;
+                                        $scope.setStoreDetails();
+                                    } else {
+                                        alert("No Store Owner Details! Contact Admin");
+                                    }
+
+                                }, function(message) {
+                                    console.log(message)
+                                }
+                            );
+                        } else {
+                            alert("Store Does Not Exist");
+                        }
+
+                    }, function(error) {
+                        console.log(error);
+                    }
+                );
+            }
+
+        }
+
+        $scope.setStoreDetails = function() {
+            $scope.store.storeHandle = $scope.storeData.get('store_handle');
+            $scope.store.storeID = $scope.storeData.id;
+            $scope.store.name = $scope.storeData.get('name');
+            $scope.store.address = $scope.storeData.get('address');
+            $scope.store.description = $scope.storeData.get('description');
+            $scope.store.email = $scope.storeData.get('email');
+
+            var phoneNumbers = $scope.storeData.get('phone');
+            if (phoneNumbers) {
+                if (phoneNumbers.length > 0)
+                    $scope.store.primaryPhone = phoneNumbers[0];
+                if (phoneNumbers.length == 2)
+                    $scope.store.secPhone = phoneNumbers[1];
+            }
+
+            $scope.store.website = $scope.storeData.get('website_link');
+            $scope.store.twitterLink = $scope.storeData.get('twitter_link');
+            $scope.store.facebook_link = $scope.storeData.get('facebook_link');
+            $scope.store.majorSale = $scope.storeData.get('major_sale');
+            $scope.store.startTime = $scope.storeData.get('start_time');
+            $scope.store.endTime = $scope.storeData.get('end_time');
+            $scope.store.onlineStore = $scope.storeData.get('online_store_link');
+
+            var geoLocation = $scope.storeData.get('geolocation');
+
+            $scope.store.latitude = geoLocation.latitude;
+            $scope.store.longitude = geoLocation.longitude;
+            $scope.store.logoImage = $scope.storeData.get('logo');
+            console.log($scope.store.logoImage);
+            $scope.store.bannerImage = $scope.storeData.get('banner_image');
+
+            $scope.store.selectedTags = $scope.storeData.get('tags');
+            $scope.store.workingDays = $scope.storeData.get('working_days');
+            var paymentType = $scope.storeData.get('payment_type');
+            if (paymentType && paymentType.length > 0)
+                $scope.store.selectedPayment = paymentType[0];
+            $scope.store.selectedCategory = $scope.storeData.get('primary_category');
+            $scope.store.locality = $scope.storeData.get('locality');
+
+            $scope.storeOwner.name = $scope.ownerData.get('name');
+            $scope.storeOwner.email = $scope.ownerData.get('email');
+            $scope.storeOwner.phone = $scope.ownerData.get('phone');
+
+            console.log($scope.store);
+            console.log($scope.storeOwner);
+
+            $scope.setLocality();
+            $scope.setWorkingDays();
+            $scope.setActiveTags();
+        }
+
+        $scope.setLocality = function() {
+            $scope.selectedState = $scope.store.locality.get('state');
+            $scope.selectedCity = $scope.store.locality.get('city');
+            $scope.cityChange();
+        }
+
+        $scope.setWorkingDays = function() {
+            var length = $scope.store.workingDays;
+            for (var i = 0; i < $scope.weekDays.length; i++) {
+
+                var index = $scope.store.workingDays.indexOf($scope.weekDays[i].name);
+
+                if (index != -1)
+                    $scope.weekDays[i].selected = true;
+            }
+        }
+
+        $scope.setActiveTags = function() {
+            for (var i = 0; i < $scope.store.selectedTags.length; i++) {
+                var index = $scope.tagNames.indexOf($scope.store.selectedTags[i].get('tag_description'));
+                $scope.tags[index].selected = true;
+            }
+
         }
 
         $scope.getUniqueCities = function() {
@@ -219,12 +330,30 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.cityChange = function() {
 
             $scope.dupLocalities = [];
+            $scope.selectedLocality = 0;
+            var j = 0;
+            var index = -1;
             for (var i = 0; i < $scope.localities.length; i++) {
                 if ($scope.localities[i].get('city') == $scope.selectedCity) {
                     $scope.dupLocalities.push($scope.localities[i]);
+
+                    if ($scope.store.locality) {
+                        if ($scope.store.locality.id == $scope.localities[i].id) {
+                            index = j;
+                        }
+                    }
+                    j++;
                 }
             }
-            $scope.selectedLocality = 0;
+
+            if (index != -1) {
+                var temp = $scope.dupLocalities[index];
+                $scope.dupLocalities[index] = $scope.dupLocalities[0];
+                $scope.dupLocalities[0] = temp;
+            }
+
+            console.log($scope.selectedLocality);
+
         }
 
         $scope.assignTagsCategories = function() {
@@ -233,6 +362,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                 $scope.tags[i].category = $scope.tags[i].get('tag_category').get('categoryName');
                 $scope.tags[i].selected = false;
                 $scope.tags[i].name = $scope.tags[i].get('tag_description');
+                $scope.tagNames.push($scope.tags[i].get('tag_description'));
             }
 
             console.log($scope.tags);
@@ -338,7 +468,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                             console.log("unavailable");
                             deferred.reject("Email associated with another account");
                         } else {
-                            if (result.store_id.id == $scope.store.storeID) {
+                            if (result.get('store_id').id == $scope.store.storeID) {
                                 //Current Store has been fetched hence allow it
                                 $scope.ownerEmailAvailable = true;
                                 console.log("available");
@@ -391,6 +521,28 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
                     if ($scope.formAction == "edit") {
 
+                        if ($scope.storeData == null) {
+                            alert("Specified Store Does Not Exist. Contact System Admin");
+                        } else {
+                            ParseFactory.addDetailsToStore($scope.storeData, $scope.store,
+                                $scope.logoImageChanged, $scope.bannerImageChanged).then(
+                                function(storeObject) {
+                                    console.log(storeObject);
+                                    ParseFactory.editStoreOwner($scope.ownerData, $scope.storeOwner).then(
+                                        function(user) {
+                                            console.log(user);
+                                            alert("Successfully Edited Store");
+                                            $route.reload();
+                                        }, function(message) {
+                                            console.log(message);
+                                        }
+                                    );
+                                }, function(message) {
+                                    console.log(message);
+                                }
+                            );
+                        }
+
                     } else {
 
                         //Creating New Store
@@ -408,6 +560,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                                     ParseFactory.storeReg($scope.storeOwner).then(
                                         function(user) {
                                             console.log("Successfully Registered Store");
+                                            alert("Successfully Registered Store");
                                             $route.reload();
                                         }, function(message) {
                                             console.log(message);

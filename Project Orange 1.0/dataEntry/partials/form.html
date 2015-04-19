@@ -62,9 +62,8 @@
 					</select>
 				</div><div class="inputBoxContainer">
 					<p class="inputBoxHeader">Store Logo</p><span class="requiredLabel">*</span>
-					<input type = "file" class="inputBox" name="logoUpload" required="required"
+					<input type = "file" class="inputBox" name="logoUpload"
 		onchange="angular.element(this).scope().storeLogoChanged(this.files)">
-					<p class="formError" ng-show="(storeForm.$submitted || storeForm.logoUpload.$touched) && ($scope.store.logoImage == null)">Invalid Logo Image</p>
 				</div><div class="inputBoxContainer">
 					<p class="inputBoxHeader">Banner Image</p>
 					<input type = "file" class="inputBox" name="bannerUpload"
