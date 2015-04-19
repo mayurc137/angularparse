@@ -865,6 +865,7 @@ phonecatServices.factory('Phone', ['$q',
             store.set("twitter_link", storeDetails.twitterLink);
             store.set("website_link", storeDetails.website);
             store.set("working_days", storeDetails.workingDays);
+            store.set("dirty_bit", false);
 
             store.set("followers", []);
             store.set("products", []);
