@@ -1,6 +1,6 @@
 var phonecatServices = angular.module('phonecatServices', ['parse-angular']);
 
-phonecatServices.factory('Phone', ['$q', << << << < HEAD
+phonecatServices.factory('Phone', ['$q',
 
     function($q) {
 
