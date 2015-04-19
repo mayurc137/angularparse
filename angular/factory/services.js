@@ -388,6 +388,26 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 		}
 
+		factory.getStoreOwner = function (store) {
+
+			var deferred = $q.defer();
+
+			var query = new Parse.Query(Parse.User);
+			query.equalTo("store_id", store.id);
+			query.find({
+				success: function (user) {
+					console.log(user);
+					deferred.resolve(user[0]);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
 		//Pass the userID
 		factory.getStoreDataByStoreHandle = function (handle) {
 
