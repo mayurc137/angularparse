@@ -24,6 +24,12 @@ appFilters.filter('commentCount', function() {
     };
 });
 
+appFilters.filter('imageCount', function() {
+    return function(input) {
+        return input + (input == 1 ? " image" : " images");
+    };
+});
+
 appFilters.filter('postDate', ['$filter',
     function($filter) {
         var dateFilter = $filter('date');

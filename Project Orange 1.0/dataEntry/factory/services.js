@@ -442,6 +442,76 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.fetchGalleryOfStore = function(store) {
+
+            var deferred = $q.defer();
+            var query = new Parse.Query("Gallery");
+            query.equalTo("store_id", store);
+            query.descending("createdAt");
+            query.find({
+                success: function(gallery) {
+                    deferred.resolve(gallery);
+                },
+                error: function(error, message) {
+                    console.log(error);
+                    deferred.reject(message);
+                }
+            });
+            return deferred.promise;
+        }
+
+        factory.addStoreImageToGallery = function(store, file) {
+
+            var deferred = $q.defer();
+
+            var Gallery = Parse.Object.extend("Gallery");
+            var picture = new Gallery();
+
+            var parseFile = new Parse.File(file.name, file);
+
+            parseFile.save().then(function() {
+                console.log("Saved");
+                picture.set("image", parseFile);
+                picture.set("store_id", store);
+                picture.save(null, {
+
+                    success: function(picture) {
+                        console.log("Added to Database");
+                        deferred.resolve(picture);
+                    },
+                    error: function(error, message) {
+                        console.log("Error in adding to Database");
+                        deferred.reject(message);
+                    }
+                });
+            }, function(error, message) {
+                console.log(error);
+                deferred.reject(message);
+            });
+
+            return deferred.promise;
+        }
+
+        factory.removeStoreImageFromGallery = function(store, image) {
+
+            var deferred = $q.defer();
+
+            if (image.get("store_id").id == store.id) {
+                image.destroy({
+                    success: function(image) {
+                        console.log(image);
+                        deferred.resolve(true);
+                    },
+                    error: function(error, message) {
+                        console.log(message);
+                        deferred.reject(message);
+                    }
+                });
+            }
+
+            return deferred.promise;
+        }
+
         return factory;
     }
 

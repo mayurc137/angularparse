@@ -5,7 +5,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Store Page";
+        $routeScope.pageTitle = "Store Info";
 
         $scope.formAction = $routeParams.action;
 
@@ -587,4 +587,180 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         }
 
     }
+]);
+
+
+appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
+    function($q, $scope, ParseFactory, $routeScope, $routeParams, $route) {
+
+        ParseFactory.init();
+
+        $routeScope.pageTitle = "Store Gallery";
+
+        $scope.storeHandle = "";
+        $scope.store = {};
+        $scope.gallery = [];
+        $scope.invalidStore = false;
+        $scope.imageCount = 0;
+        $scope.files = [];
+
+        $scope.multiselect = false;
+        $scope.selectAll = false;
+        $scope.imagesToDelete = [];
+
+        $scope.acceptedTypes = {
+            'image/png': true,
+            'image/jpeg': true,
+            'image/gif': true
+        };
+
+        $scope.uploadImages = function(files) {
+
+            for (var i = 0; i < files.length; i++) {
+                $scope.files.push(files[i]);
+                $scope.imageCount++;
+            }
+
+            $scope.$apply();
+
+        }
+
+        $scope.getStoreDetails = function() {
+
+            if ($scope.storeHandle != "") {
+                ParseFactory.getStoreByHandle($scope.storeHandle).then(
+                    function(storeObject) {
+
+                        if (storeObject) {
+                            $scope.store = storeObject;
+                            $scope.invalidStore = false;
+                            console.log($scope.store);
+                            $scope.getGalleryImages();
+                        } else {
+                            $scope.invalidStore = true;
+                        }
+
+                    }, function(error) {
+                        $scope.invalidStore = true;
+                        console.log(error);
+                    }
+                );
+            } else {
+                $scope.invalidStore = true;
+                alert("Store Does Not Exist");
+            }
+        }
+
+        $scope.getGalleryImages = function() {
+            ParseFactory.fetchGalleryOfStore($scope.store).then(
+                function(gallery) {
+                    console.log(gallery);
+                    $scope.gallery = gallery;
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.clearSelection = function() {
+            $scope.files = [];
+            $scope.imageCount = 0;
+        }
+
+        $scope.uploadToGallery = function() {
+
+            if ($scope.store != null) {
+                angular.forEach($scope.files, function(file) {
+
+                    ParseFactory.addStoreImageToGallery($scope.store, file).then(
+                        function(picture) {
+                            $scope.imageCount--;
+                            $scope.gallery.push(picture);
+
+                        }, function(message) {
+                            console.log(message);
+                        }
+                    );
+
+                });
+
+                $scope.files = [];
+
+            } else {
+                alert("Store must be selected first");
+            }
+        }
+
+        $scope.toggleMultiSelect = function() {
+            $scope.selectAll = false;
+
+            if ($scope.multiselect == true) {
+                $scope.multiselect = false;
+            } else {
+                $scope.multiselect = true;
+            }
+        }
+
+        $scope.toggleImageSelect = function(position) {
+
+            console.log(position);
+
+            var index = $scope.imagesToDelete.indexOf(position);
+
+            if (index == -1) {
+                $scope.imagesToDelete.push(position);
+                $scope.gallery[position].selected = true;
+            } else {
+                $scope.imagesToDelete.splice(index, 1);
+                $scope.gallery[position].selected = false;
+            }
+        }
+
+        $scope.deletePictures = function() {
+            $scope.imagesToDelete.sort(function(a, b) {
+                return b - a
+            });
+
+            for (var i = 0; i < $scope.imagesToDelete.length; i++) {
+
+                var index = $scope.imagesToDelete[i];
+
+                ParseFactory.removeStoreImageFromGallery($scope.store,
+                    $scope.gallery[index]).then(
+                    function(success) {
+                        $scope.gallery.splice(index, 1);
+                    }, function(message) {
+                        console.log(message);
+                    }
+                );
+            }
+
+            console.log($scope.imagesToDelete);
+            $scope.imagesToDelete = [];
+
+        }
+
+        $scope.toggleAllPictures = function() {
+            $scope.multiselect = false;
+
+            if ($scope.selectAll == true) {
+
+                $scope.selectAll = false;
+                $scope.imagesToDelete = [];
+                for (var i = 0; i < $scope.gallery.length; i++) {
+                    $scope.gallery[i].selected = false;
+                }
+
+            } else {
+                $scope.selectAll = true;
+                $scope.imagesToDelete = [];
+                for (var i = 0; i < $scope.gallery.length; i++) {
+                    $scope.gallery[i].selected = true;
+                    $scope.imagesToDelete.push(i);
+                }
+            }
+        }
+
+    }
+
 ]);
