@@ -36,9 +36,57 @@ appFilters.filter('postDate', ['$filter',
                 date.getDate() == currentDate.getDate()) {
                 return "Today at " + dateFilter(input, 'h:mma');
             } else {
-                return dateFilter(input, 'dd/mm/yyyy') + ' at ' + dateFilter(input, 'h:mma');
+                return dateFilter(input, 'dd/MM/yyyy') + ' at ' + dateFilter(input, 'h:mma');
             }
 
         }
     }
 ]);
+
+appFilters.filter('daysLeftCount', function() {
+    return function(input) {
+
+        //Get 1 day in milliseconds
+        var one_day = 1000 * 60 * 60 * 24;
+
+        var currentDate = new Date();
+
+        // Convert both dates to milliseconds
+        var date1_ms = currentDate.getTime();
+        var date2_ms = input.getTime();
+
+        // Calculate the difference in milliseconds
+        var difference_ms = date2_ms - date1_ms;
+
+        var daysLeft = Math.round(difference_ms / one_day);
+        // Convert back to days and return
+        return (daysLeft < 0 ? 0 : daysLeft);
+    };
+});
+
+appFilters.filter('daysLeft', function() {
+    return function(input) {
+
+        //Get 1 day in milliseconds
+        var one_day = 1000 * 60 * 60 * 24;
+
+        var currentDate = new Date();
+
+        // Convert both dates to milliseconds
+        var date1_ms = currentDate.getTime();
+        var date2_ms = input.getTime();
+
+        // Calculate the difference in milliseconds
+        var difference_ms = date2_ms - date1_ms;
+
+        var daysLeft = Math.round(difference_ms / one_day);
+        // Convert back to days and return
+        return (daysLeft == 1 ? "Day Left" : "Days Left");
+    };
+});
+
+appFilters.filter('claimsLeft', function() {
+    return function(input) {
+        return (input == 1 ? " Claim Left" : " Claims Left");
+    };
+});

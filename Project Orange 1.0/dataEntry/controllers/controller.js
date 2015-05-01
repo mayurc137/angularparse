@@ -761,6 +761,8 @@ appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$root
             }
         }
 
+
+
     }
 
 ]);

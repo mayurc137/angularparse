@@ -36,7 +36,7 @@ appFilters.filter('postDate', ['$filter',
                 date.getDate() == currentDate.getDate()) {
                 return "Today at " + dateFilter(input, 'h:mma');
             } else {
-                return dateFilter(input, 'dd/mm/yyyy') + ' at ' + dateFilter(input, 'h:mma');
+                return dateFilter(input, 'dd/MM/yyyy') + ' at ' + dateFilter(input, 'h:mma');
             }
 
         }
