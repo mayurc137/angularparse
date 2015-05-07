@@ -38,7 +38,7 @@
 				<p class="shopTitleContent">{{storeData.get('name')}}</p>
 			</div>
 			
-			<img ng-src="{{storeData.get('primary_category').get('image_link')}}" class="shopCatImg">
+			<img ng-src="img/cat/light/{{storeData.get('primary_category').get('image_link')}}" class="shopCatImg">
 		</div>
 	</div>
 	<div class="emptySpace"></div>
@@ -107,7 +107,7 @@
 					<p class="cardHeader">Known For</p>
 
 					<div class="popularElement" ng-repeat="tag in storeTags | limitTo: tagDisplayLimit">
-						<img class="popularElementImg" ng-src="{{tag.get('tag_image')}}"><p class="popularElementTitle">{{tag.get('tag_description')}}</p>
+						<img class="popularElementImg" ng-src="img/tag/hnd/{{tag.get('tag_image')}}"><p class="popularElementTitle">{{tag.get('tag_description')}}</p>
 					</div><div class="morePopular" ng-show="storeTags.length - tagDisplayLimit > 0">+ MORE</div>
 				</div>
 			</div>

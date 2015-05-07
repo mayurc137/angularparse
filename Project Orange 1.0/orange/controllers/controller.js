@@ -148,11 +148,14 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
         }
 
         $scope.checkIfReviewed = function() {
-            var storeId = $scope.storeData.id;
-            var storesReviewed = $scope.currentUser.get('stores_reviewed');
-            var index = storesReviewed.indexOf(storeId);
-            if (index != -1)
-                $scope.hasReviewed = true;
+            if ($scope.currentUser) {
+                var storeId = $scope.storeData.id;
+                var storesReviewed = $scope.currentUser.get('stores_reviewed');
+                var index = storesReviewed.indexOf(storeId);
+                if (index != -1)
+                    $scope.hasReviewed = true;
+            }
+
         }
 
         $scope.checkUpvoted = function(store) {
@@ -243,6 +246,7 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                     //Iterate through each review
                     for (var i = 0; i < $scope.reviewCount; i++) {
                         var userConcerned = $scope.reviews[i].get('user_id');
+                        console.log(userConcerned);
 
                         userConcerned.following = false;
                         userConcerned.isCurrentUser = false;
@@ -403,6 +407,13 @@ appControllers.controller('storeCtrl', ['$scope', 'ParseFactory', '$routeParams'
                 function(user) {
                     $scope.currentUser = user;
 
+                    ParseFactory.mailChimpListAdd(user).then(
+                        function(result) {
+                            console.log(result);
+                        }, function(error) {
+                            console.log(error);
+                        }
+                    );
                     //Needed on store Page
                     if ($scope.storeData != null) {
                         $scope.checkUpvoted($scope.storeData);
