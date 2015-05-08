@@ -173,11 +173,15 @@ parseServices.factory('ParseFactory', ['$q',
                             currentUser.set("collections", []);
                             currentUser.set("stores_upvoted", []);
                             currentUser.set("collections_favorited", []);
-                            currentUser.set("user_following", []);
-                            currentUser.set("user_followed", []);
+                            currentUser.set("followers", []);
+                            currentUser.set("users_followed", []);
                             currentUser.set("stores_followed", []);
+                            currentUser.set("stores_reviewed", []);
                             currentUser.set("coupons_redeemed", []);
+                            currentUser.set("coupons_claimed", []);
                             currentUser.set("review_ids", []);
+                            currentUser.set("messages", []);
+                            currentUser.set("is_store", false);
                             currentUser.save(null, {
 
                                 success: function(user) {
