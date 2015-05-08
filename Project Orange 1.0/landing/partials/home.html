@@ -122,19 +122,19 @@
 					<span class="userFeatureSubHeader">Follow stores, upvote collections and be a part of an awesome community!</span>
 				</div>
 			</div>
-			<div class="userSignInline">
+			<div class="userSignInline" ng-hide="userSignedUp">
 				<div class="extraLarge"></div>
 				<span class="userSignInlineMessage">Sign Up for Beta Now to get Early Access</span><br/>
 				<div class="extraLarge"></div>
 				<span class="signUpFacebook" ng-click="handleLogin()">Sign Up With Facebook</span>
 			</div>
-			<div class="userSignInlineComplete">
+			<div class="userSignInlineComplete" ng-show="userSignedUp">
 				<div class="extraLarge"></div>
 				<span class="userSignInlineMessage">Thanks for Signing Up for Beta! We will get back to you soon!</span><br/>
 				<div class="extra"></div>
 				<span class="userSignInlineSubMessage">Meanwhile let your Friends know about Klassy</span><br/>
 				<div class="extraLarge"></div>
-				<span class="shareFacebook">Share</span><span class="shareTwitter">Tweet</span>
+				<span class="shareFacebook" ng-click="shareToFb()">Share</span><span class="shareTwitter">Tweet</span>
 			</div>
 		</div><div class="phoneImgContainer">
 			<img class="phoneImg" src="img/phone.png">
@@ -203,22 +203,26 @@
 		</div>
 		<div class="extraLarge"></div>
 		<div class="storeSignInline">
-				<div class="storeIncomplete">
+				<div class="storeIncomplete" ng-hide="storeSignedUp">
 					<div class="extraLarge"></div>
 					<span class="storeSignInlineMessage">Register Now to List your Business</span><br/>
 					<div class="extraLarge"></div>
-					<div class="storeInputContainer">
-						<input class="storeInput" placeholder="City" value="Pune">
-					</div><div class="storeInputContainer">
-						<input class="storeInput" placeholder="Name *">
-					</div><div class="lineBreak"><br/></div><div class="storeInputContainer">
-						<input class="storeInput" placeholder="Business Name *">
-					</div><div class="storeInputContainer">
-						<input class="storeInput" placeholder="Phone Number *">
-					</div>
-					<div class="callBack"><span class="callBackBtn">Call me Back</span><img src="img/preloader/purple.gif" class="callBackLoading"></div>
+					<form novalidate name="storeForm" ng-submit="storeForm.$valid && storeRequest()">
+						<div class="storeInputContainer">
+							<select ng-model="store.city" class="storeInput">
+								<option ng-repeat="city in cities" value="{{city}}">{{city}}</option>
+							</select>
+						</div><div class="storeInputContainer">
+							<input class="storeInput" placeholder="Name *" name="ownerName" type = "text" required="required" ng-model="store.ownerName">
+						</div><div class="lineBreak"><br/></div><div class="storeInputContainer">
+							<input class="storeInput" placeholder="Business Name *" name="storeName" type = "text" required="required" ng-model="store.storeName">
+						</div><div class="storeInputContainer">
+							<input class="storeInput" placeholder="Phone Number *" name="phoneNumber" type = "phone" required="required" ng-model="store.phone" pattern="[0-9]{10,11}">
+						</div>
+						<div class="callBack"><input type="submit" class="callBackBtn" value="Call me Back"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
+					</form>
 				</div>
-				<div class="storeComplete">
+				<div class="storeComplete" ng-show="storeSignedUp">
 					<div class="extraLarge"></div>
 					<span class="storeSignInlineMessage">Thanks for Registering with us!</span><br/><br/>
 					<span class="storeSignInlineSubMessage">Our Data Collection Team will contact you soon!<br/> For any further queries drop us a email at <a href="">business@klassy.in</a></span><br/>

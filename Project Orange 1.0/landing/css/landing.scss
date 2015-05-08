@@ -403,7 +403,7 @@ body{
 	position:relative;
 	border-top:1px solid rgba(white,0.1);
 	margin:0px 7%;
-	display:none;
+	
 }
 .userSignInlineMessage{
 	color:white;
@@ -507,7 +507,7 @@ body{
 	display:block;
 }
 .storeComplete{
-	display:none;
+	
 }
 .storeSignInlineMessage{
 	color:$hash21;
@@ -549,6 +549,14 @@ body{
 	@include backColor(white);
 	font-size:18px;
 }
+
+.storeInput.ng-invalid.ng-dirty{
+	border-bottom: 2px solid red; 
+}
+.storeInput.ng-invalid.ng-touched{
+	border-bottom: 2px solid red; 
+}
+
 .storeInput:focus{
 	border-bottom: 2px solid $primary;
 }
@@ -568,6 +576,8 @@ body{
 	padding:8px 15px;
 	font-family:$bold;
 	border-radius:300px;
+	color: white;
+	outline: 0 !important;
 	@include backColor($primary);
 	border:1px solid $primary;
 }
@@ -582,6 +592,8 @@ body{
 	font-family:$bold;
 	border-radius:300px;
 	color:$primary;
+	outline: 0 !important;
+	border: none;
 	@include backColor(white);
 }
 .callBackLoading{
@@ -684,7 +696,7 @@ a{
 	padding-bottom:50px;
 }
 .withoutLine{
-	border:none !important;
+	border:none;
 }
 .whiteBorder{
 	border:1px solid rgba(white,0.1);

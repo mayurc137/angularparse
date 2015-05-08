@@ -59,6 +59,16 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.shareToFb = function(url) {
+            FB.ui({
+                method: 'share_open_graph',
+                action_type: 'og.likes',
+                action_properties: JSON.stringify({
+                    object: url,
+                })
+            }, function(response) {});
+        }
+
         factory.getCurrentUser = function() {
             var currentUser = Parse.User.current();
             return currentUser;
@@ -198,48 +208,18 @@ parseServices.factory('ParseFactory', ['$q',
         }
 
         /* user Signup Ends Here */
-
-        factory.storeReg = function(userDetails) {
-
+        factory.createStoreRequest = function(storeDetails) {
             var deferred = $q.defer();
 
-            var email = userDetails.email;
-            var phone = userDetails.phone;
-            var name = userDetails.name;
-            var store_id = userDetails.store_id;
-
-            Parse.Cloud.run('storeSignUp', {
-                email: email,
-                phone: phone,
-                name: name,
-                store_id: store_id
-            }, {
-                success: function(result) {
-                    console.log(result);
-                    deferred.resolve(result);
-                },
-                error: function(error) {
-                    console.log(error);
-                    deferred.reject(error);
-                }
-            });
-
-            return deferred.promise;
-        }
-
-        factory.checkStoreOwnerEmailAvailablility = function(email) {
-
-            var deferred = $q.defer();
-
-            var query = new Parse.Query(Parse.User);
-            query.equalTo("email", email);
-
-            query.find({
-                success: function(users) {
-                    if (users.length == 0)
-                        deferred.resolve(null);
-                    else
-                        deferred.resolve(users[0]);
+            var Request = Parse.Object.extend("Request");
+            var requestObject = new Request();
+            requestObject.set("name", storeDetails.ownerName);
+            requestObject.set("business_name", storeDetails.storeName);
+            requestObject.set("phone", storeDetails.phone);
+            requestObject.set("city", storeDetails.city);
+            requestObject.save(null, {
+                success: function(request) {
+                    deferred.resolve(request);
                 },
                 error: function(error, message) {
                     deferred.reject(message);
