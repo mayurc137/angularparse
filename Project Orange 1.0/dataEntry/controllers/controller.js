@@ -555,34 +555,29 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                     } else {
 
                         //Creating New Store
-                        if ($scope.store.logoImage == null) {
-                            //Store Logo not uploaded, display message
-                            alert("The Store Logo needs to be uploaded");
-                        } else {
+                        ParseFactory.createStore($scope.store).then(
+                            function(store) {
+                                console.log("Store Created");
+                                console.log(store);
 
-                            ParseFactory.createStore($scope.store).then(
-                                function(store) {
-                                    console.log("Store Created");
-                                    console.log(store);
+                                $scope.storeOwner.store_id = store.id;
+                                ParseFactory.storeReg($scope.storeOwner).then(
+                                    function(user) {
+                                        console.log("Successfully Registered Store");
+                                        alert("Successfully Registered Store");
+                                        $route.reload();
+                                    }, function(message) {
+                                        console.log(message);
+                                        alert("Error Creating User.\nContact System Admin");
+                                    }
+                                );
 
-                                    $scope.storeOwner.store_id = store.id;
-                                    ParseFactory.storeReg($scope.storeOwner).then(
-                                        function(user) {
-                                            console.log("Successfully Registered Store");
-                                            alert("Successfully Registered Store");
-                                            $route.reload();
-                                        }, function(message) {
-                                            console.log(message);
-                                            alert("Error Creating User.\nContact System Admin");
-                                        }
-                                    );
+                            }, function(message) {
+                                console.log(message);
+                            }
+                        );
 
-                                }, function(message) {
-                                    console.log(message);
-                                }
-                            );
 
-                        }
 
                     }
 

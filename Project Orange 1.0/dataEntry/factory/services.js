@@ -185,13 +185,49 @@ parseServices.factory('ParseFactory', ['$q',
             store.set("collections", []);
             store.set("review_ids", []);
 
-            var logofile = storeDetails.logoImage;
-            var parseFile2 = new Parse.File(logofile.name, logofile);
-            parseFile2.save().then(
-                function() {
+            if (storeDetails.logoImage == null) {
+
+                if (storeDetails.bannerImage != null) {
+
+                    var file = storeDetails.bannerImage;
+                    var parseFile = new Parse.File(file.name, file);
+                    parseFile.save().then(function() {
+                        store.set("banner_image", parseFile);
+                        store.save(null, {
+                            success: function(store) {
+                                console.log(store);
+                                deferred.resolve(store);
+                            },
+                            error: function(error, message) {
+                                console.log(message);
+                                deferred.reject(message);
+                            }
+                        });
+                    }, function(error) {
+                        console.log(error);
+                        deferred.reject(error);
+                    });
+
+                } else {
+
+                    store.save(null, {
+                        success: function(store) {
+                            deferred.resolve(store);
+                        },
+                        error: function(error, message) {
+                            deferred.reject(message);
+                        }
+                    });
+
+                }
+
+            } else {
+
+                var logofile = storeDetails.logoImage;
+                var parseFile2 = new Parse.File(logofile.name, logofile);
+                parseFile2.save().then(function() {
 
                     store.set("logo", parseFile2);
-
 
                     if (storeDetails.bannerImage != null) {
 
@@ -229,6 +265,7 @@ parseServices.factory('ParseFactory', ['$q',
                 }, function(error) {
                     deferred.reject(error);
                 });
+            }
 
             return deferred.promise;
         }
