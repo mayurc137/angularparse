@@ -1193,6 +1193,11 @@ input[type="submit"]{
   margin: 5px 0;
   font-size: 15px;
 }
+.formSuccess {
+  color: #27ae60;
+  margin: 5px 0;
+  font-size: 15px;
+}
 
 .galleryMain{
   width: 720px;

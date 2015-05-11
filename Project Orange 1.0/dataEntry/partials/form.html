@@ -17,6 +17,7 @@
 					<input class="inputBox" id="storeHandle" name="storeHandle" type = "text" required="required" ng-model="store.storeHandle" pattern="[a-zA-Z0-9]+">
 					<p class="formError" ng-show="(storeForm.$submitted || storeForm.storeHandle.$touched) && storeForm.storeHandle.$error.required">Invalid Store Handle</p>
 					<p class="formError" ng-hide="storeHandleAvailable">Handle Unavailable</p>
+					<p class="formSuccess" ng-show="storeHandleAvailable && availabilityChecked">Handle Available</p>
 				</div><div class="inputBoxContainer withButton">
 					<br/>
 					<input type = "button" class="formButton" value="Fetch Store Details" ng-click="getStoreDetails()" ng-show="formAction == 'edit'">

@@ -37,6 +37,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.store.selectedCategory = null,
         $scope.store.locality = null;
 
+        $scope.availabilityChecked = false;
         $scope.storeHandleAvailable = true;
         $scope.ownerEmailAvailable = true;
 
@@ -173,6 +174,8 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         }
 
         $scope.getStoreDetails = function() {
+
+            $scope.store.storeHandle = $scope.store.storeHandle.toLowerCase();
 
             if ($scope.store.storeHandle != "") {
                 ParseFactory.getStoreByHandle($scope.store.storeHandle).then(
@@ -412,7 +415,11 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         $scope.checkStoreHandleAvailability = function() {
 
+            $scope.store.storeHandle = $scope.store.storeHandle.toLowerCase();
+
             var deferred = $q.defer();
+
+            $scope.availabilityChecked = true;
 
             ParseFactory.checkStoreHandleAvailablility($scope.store.storeHandle).then(
                 function(result) {
@@ -515,6 +522,8 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         $scope.saveStore = function() {
 
             $scope.store.locality = $scope.dupLocalities[$scope.selectedLocality];
+
+            $scope.store.storeHandle = $scope.store.storeHandle.toLowerCase();
 
             $scope.checkParameters().then(
                 function(success) {
