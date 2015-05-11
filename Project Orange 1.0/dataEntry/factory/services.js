@@ -93,8 +93,8 @@ parseServices.factory('ParseFactory', ['$q',
             var deferred = $q.defer();
 
             var query = new Parse.Query("Locality");
-            query.ascending("city");
             query.ascending("locality_name");
+
 
             query.find({
                 success: function(localities) {

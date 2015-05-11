@@ -293,34 +293,30 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             var lastReadState = $scope.localities[0].get("state");
             var lastReadCity = $scope.localities[0].get("city");
 
+            var tempCities = [];
+
             $scope.states.push(lastReadState);
             city.name = $scope.localities[0].get("city");
             city.state = lastReadState;
             $scope.cities.push(city);
+
+            tempCities.push($scope.localities[0].get("city"));
 
             $scope.selectedState = city.state;
             $scope.selectedCity = city.name;
 
             for (var i = 1; i < $scope.localities.length; i++) {
 
-                if ($scope.localities[i].get('city') == lastReadCity)
-                    continue;
+                if ($scope.states.indexOf($scope.localities[i].get('state')) == -1) {
+                    $scope.states.push($scope.localities[i].get('state'));
+                }
 
-                if ($scope.localities[i].get('state') == lastReadState) {
+                if (tempCities.indexOf($scope.localities[i].get('city')) == -1) {
                     var city = {};
                     city.name = $scope.localities[i].get('city');
-                    city.state = lastReadState;
-                    lastReadCity = city.name;
+                    city.state = $scope.localities[i].get('state');
                     $scope.cities.push(city);
-
-                } else {
-                    lastReadState = $scope.localities[i].get('state');
-                    var city = {};
-                    city.name = $scope.localities[i].get('city');
-                    city.state = lastReadState;
-                    lastReadCity = city.name;
-                    $scope.cities.push(city);
-                    $scope.states.push(lastReadState);
+                    tempCities.push($scope.localities[i].get("city"));
                 }
             }
 
