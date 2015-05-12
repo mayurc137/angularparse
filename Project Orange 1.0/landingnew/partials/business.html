@@ -1,0 +1,125 @@
+<div class="headerBeta">
+	<div class="wrapper">
+		<div class="navBar">
+			<div class="klassy">
+				<a href="about"><span class="navBarBtn">About</span></a>
+				<a href="http://klassy.in/blog" target="_blank"><span class="navBarBtn">Blog</span></a>
+				<a href="/"><img class="appName" src="img/logo/logo-hd.png"></a>
+				<a href="contact"><span class="navBarBtn">Contact</span></a>
+				<a href="faq"><span class="navBarBtn">Faq</span></a>
+			</div>
+			<div class="klassyMobile">
+				<a href="/"><img class="appNameMobile" src="img/logo/logo-hd.png"><br/></a>
+				<a href="about"><span class="navBarBtnMobile">About</span></a>
+				<a href="http://klassy.in/blog" target="_blank"><span class="navBarBtnMobile">Blog</span></a>
+				<a href="contact"><span class="navBarBtnMobile">Contact</span></a>
+				<a href="faq"><span class="navBarBtnMobile">Faq</span></a>
+			</div>
+		</div>
+		<div class="sectionHeader white">List your Business</div>
+		<div class="sectionSubHeader lightWhite">Drop your details below, and we'll get back to you!</div>
+		<div class="storeSignInline withoutLine">
+			<div class="storeIncomplete" ng-hide="storeSignedUp">
+				<form novalidate name="storeForm" ng-submit="storeForm.$valid && storeRequest()">
+					<div class="storeInputContainer">
+						<select ng-model="store.city" class="storeInput withoutLine">
+							<option ng-repeat="city in cities" value="{{city}}">{{city}}</option>
+						</select>
+					</div><div class="storeInputContainer">
+						<input class="storeInput withoutLine" placeholder="Name *" name="ownerName" type = "text" required="required" ng-model="store.ownerName">
+					</div><div class="lineBreak"><br/></div><div class="storeInputContainer">
+						<input class="storeInput withoutLine" placeholder="Business Name *" name="storeName" type = "text" required="required" ng-model="store.storeName">
+					</div><div class="storeInputContainer">
+						<input class="storeInput withoutLine" placeholder="Phone Number *" name="phoneNumber" type = "phone" required="required" ng-model="store.phone" pattern="[0-9]{10,11}">
+					</div>
+					<div class="callBack"><input type="submit" class="callBackBtnWhite" value="Call me Back"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
+				</form>
+			</div>
+			<div class="storeComplete" ng-show="storeSignedUp">
+				<div class="extraLarge"></div>
+				<span class="storeSignInlineMessage white">Thanks for Registering with us!</span><br/><br/>
+				<span class="storeSignInlineSubMessage white">Our Data Collection Team will contact you soon!<br/> For any further queries drop us a email at <a href="" class="white">business@klassy.in</a></span><br/>
+				<div class="extraLarge"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="section storeSection">
+	<div class="wrapper">
+		<div class="sectionHeader">Why list your business with us?</div>
+		<div class="sectionSubHeader">You get more customers, boosted sales, an online presence and cost-free marketing. All for Free. It's a win-win, don't miss out - give it a go.</div>
+		<div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/1.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">Complete Control</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">View and manage your complete profile through the Dashboard web and mobile applications.</span>
+				</div>
+		</div><div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/2.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">In Depth Analytics</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">Get view statistics, track your reach and get to know your customers better through our analytics tools.</span>
+				</div>
+		</div><div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/4.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">Brand Visibility</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">By listing with us, your brand is getting more visibility, reach and exposure. We help your brand grow.</span>
+				</div>
+		</div><div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/6.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">Free of Charge</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">Registering and listing with us is completely FREE. We'll set everything up for you, no hassle involved.</span>
+				</div>
+		</div><div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/5.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">Customer Engagement</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">Engage with customers in various ways on our platform and get users to 'follow' and 'upvote' your brand.</span>
+				</div>
+		</div><div class="storeFeature">
+				<div class="storeFeaturerImgContainer">
+					<img class="storeFeatureImg" src="img/business/3.png">
+				</div><div class="storeFeatureDetail">
+					<span class="storeFeatureHeader">Increased Footfall</span><br/>
+					<div class="extra"></div>
+					<span class="storeFeatureSubHeader">We help you drive traction to your store. Your online presence here increases your offline sales and growth.</span>
+				</div>
+		</div>
+		<div class="extraLarge"></div>
+	</div>
+</div>
+<footer>
+	<div class="wrapper">
+		<div class="footerContainer social">
+			<img src="img/social/facebook.png" class="socialIcon">
+			<img src="img/social/twitter.png" class="socialIcon">
+			<img src="img/social/linkedin.png" class="socialIcon">
+			<img src="img/social/crunchbase.png" class="socialIcon">
+			<img src="img/social/angellist.png" class="socialIcon">
+		</div>
+		<div class="lineBreak"><br/></div>
+		<div class="footerContainer links">
+			<a href="http://klassy.in/blog" target="_blank"><span class="blogLink footerLink">Blog</span></a>
+			<a href="about"><span class="aboutLink footerLink">About</span></a>
+			<a href="contact"><span class="contactLink footerLink">Contact</span></a>
+			<a href="faq"><span class="faqLink footerLink">Faq</span></a>
+		</div>
+		<div class="lineBreak"><br/></div>
+		<div class="footerContainer copyright">
+			<img class="footerIcon" src="img/logo/logo-purple.png"><br/>
+			<span class="copyText">Copyright  &copy;  2015</span>
+		</div>
+	</div>
+</footer>
