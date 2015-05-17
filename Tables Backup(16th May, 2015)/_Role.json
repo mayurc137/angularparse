@@ -1,0 +1,13 @@
+{ "results": [
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            }
+        },
+        "createdAt": "2015-05-11T07:21:59.856Z",
+        "name": "Administrator",
+        "objectId": "QVpFfM93PK",
+        "updatedAt": "2015-05-11T07:21:59.856Z"
+    }
+] }

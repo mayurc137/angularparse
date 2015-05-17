@@ -1,0 +1,51 @@
+{ "results": [
+	{
+        "categoryName": "Clothing",
+        "createdAt": "2015-05-01T10:05:04.255Z",
+        "image_link": "clothing.png",
+        "objectId": "dmHLEMqeDq",
+        "updatedAt": "2015-05-01T10:05:12.383Z"
+    },
+	{
+        "categoryName": "Footwear",
+        "createdAt": "2015-05-01T10:05:21.175Z",
+        "image_link": "footwear.png",
+        "objectId": "L27xZWN9X3",
+        "updatedAt": "2015-05-01T10:05:33.699Z"
+    },
+	{
+        "categoryName": "Accessories",
+        "createdAt": "2015-05-01T10:05:41.548Z",
+        "image_link": "accessories.png",
+        "objectId": "mTymhU0Rv0",
+        "updatedAt": "2015-05-01T10:32:09.717Z"
+    },
+	{
+        "categoryName": "Sports \u0026 Fitness",
+        "createdAt": "2015-05-01T10:05:54.927Z",
+        "image_link": "sportsnfitness.png",
+        "objectId": "h7qvSmomiy",
+        "updatedAt": "2015-05-01T10:05:59.227Z"
+    },
+	{
+        "categoryName": "Beauty \u0026 Cosmetics",
+        "createdAt": "2015-05-01T10:06:06.040Z",
+        "image_link": "beautyncosmetics.png",
+        "objectId": "QypGnXVG7u",
+        "updatedAt": "2015-05-01T10:06:10.076Z"
+    },
+	{
+        "categoryName": "Home \u0026 Decor",
+        "createdAt": "2015-05-01T10:06:16.471Z",
+        "image_link": "homendecor.png",
+        "objectId": "Dc16WYwqb7",
+        "updatedAt": "2015-05-01T10:06:20.389Z"
+    },
+	{
+        "categoryName": "General",
+        "createdAt": "2015-05-01T10:06:30.156Z",
+        "image_link": "general.png",
+        "objectId": "IPBlWJ89FY",
+        "updatedAt": "2015-05-01T10:06:34.180Z"
+    }
+] }

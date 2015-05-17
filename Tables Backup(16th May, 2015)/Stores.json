@@ -1,0 +1,114 @@
+{ "results": [
+	{
+        "address": "Nandadeep, 12/B, Sahajeevan Society, Bhosale Nagar, Off. Ganeshkhind Road, Pune - 411007",
+        "collections": [],
+        "createdAt": "2015-05-11T19:30:09.078Z",
+        "description": "Create a Look that is right for you!!",
+        "dirty_bit": true,
+        "email": "Kshameeka@gmail.com",
+        "end_time": {
+            "__type": "Date",
+            "iso": "1970-01-01T14:00:00.000Z"
+        },
+        "facebook_link": "",
+        "followers": [],
+        "geolocation": {
+            "__type": "GeoPoint",
+            "latitude": 18.544141,
+            "longitude": 73.833811
+        },
+        "locality": {
+            "__type": "Pointer",
+            "className": "Locality",
+            "objectId": "82Y1Whtghj"
+        },
+        "logo": {
+            "__type": "File",
+            "name": "tfss-365b164d-ec37-4bd4-9b4b-eb3be9cf6f9c-528774_10151349075015547_499526609_n.jpg",
+            "url": "http://files.parsetfss.com/8f2aba50-2225-4190-8cc2-d612dd4e433d/tfss-365b164d-ec37-4bd4-9b4b-eb3be9cf6f9c-528774_10151349075015547_499526609_n.jpg"
+        },
+        "major_sale": "",
+        "metadata": [
+            "nandadeep",
+            "12b",
+            "sahajeevan",
+            "society",
+            "bhosale",
+            "nagar",
+            "ganeshkhind",
+            "road",
+            "pune",
+            "411007",
+            "beauty",
+            "cosmetics",
+            "create",
+            "look",
+            "right",
+            "make",
+            "skin",
+            "care",
+            "hair",
+            "womens",
+            "salon",
+            "karramelsalon",
+            "karramel"
+        ],
+        "name": "Karramel",
+        "objectId": "4FueRaCXZY",
+        "online_store_link": "",
+        "payment_type": [
+            "Cash"
+        ],
+        "phone": [
+            "9130652878"
+        ],
+        "primary_category": {
+            "__type": "Pointer",
+            "className": "Categories",
+            "objectId": "WLoLs4n6kF"
+        },
+        "products": [],
+        "review_ids": [],
+        "services": [],
+        "start_time": {
+            "__type": "Date",
+            "iso": "1970-01-01T05:00:00.000Z"
+        },
+        "store_handle": "karramelsalon",
+        "tags": [
+            {
+                "__type": "Pointer",
+                "className": "Tags",
+                "objectId": "LQaZO621LX"
+            },
+            {
+                "__type": "Pointer",
+                "className": "Tags",
+                "objectId": "VixPIV5LqM"
+            },
+            {
+                "__type": "Pointer",
+                "className": "Tags",
+                "objectId": "qqCABnlXHZ"
+            },
+            {
+                "__type": "Pointer",
+                "className": "Tags",
+                "objectId": "jozZlKm8VV"
+            }
+        ],
+        "twitter_link": "",
+        "updatedAt": "2015-05-16T14:59:20.604Z",
+        "upvoted_by": [],
+        "website_link": "",
+        "working_days": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Saturday",
+            "Friday",
+            "Thursday",
+            "Sunday"
+        ]
+    }
+] }
