@@ -3459,6 +3459,7 @@ phonecatServices.factory('Phone', ['$q',
         }
 
         factory.getStoreAdmin = function(store) {
+            var deferred = $q.defer();
             var query = new Parse.Query("Users");
             query.containedIn("store_ids", store);
             query.equalTo('is_store', true);
@@ -3473,9 +3474,12 @@ phonecatServices.factory('Phone', ['$q',
                     deferred.reject(message);
                 }
             });
+
+            return deferred.promise;
         }
 
         factory.getStoreManager = function(store) {
+            var deferred = $q.defer();
             var query = new Parse.Query("Users");
             query.containedIn("store_ids", store);
             query.equalTo('is_store', true);
@@ -3490,7 +3494,9 @@ phonecatServices.factory('Phone', ['$q',
                     deferred.reject(message);
                 }
             });
+            return deferred.promise;
         }
+
 
 
         return factory;
