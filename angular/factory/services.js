@@ -84,7 +84,6 @@ phonecatServices.factory('Phone', ['$q',
 			});
 
 			return deferred.promise;
-
 		}
 
 		factory.getUserData = function () {
@@ -205,7 +204,6 @@ phonecatServices.factory('Phone', ['$q',
 			});
 
 			return deferred.promise;
-
 		}
 
 		//Set user Data
@@ -234,7 +232,6 @@ phonecatServices.factory('Phone', ['$q',
 			});
 
 			return deferred.promise;
-
 		}
 
 		factory.checkUsernameAvailablility = function (username) {
@@ -308,21 +305,39 @@ phonecatServices.factory('Phone', ['$q',
 
 			var deferred = $q.defer();
 
-			function storeReg(userDetails) {
+			var useremail = userDetails.useremail;
+			var userphone = userDetails.userphone;
+			var username = userDetails.username;
+			var owneremail = userDetails.owneremail;
+			var ownerphone = userDetails.ownerphone;
+			var ownername = userDetails.ownername;
+			var store_id = userDetails.store_id;
+			var store_handle = userDetails.store_handle;
+			var is_owner = userDetails.is_owner;
+			var owner = userDetails.owner;
 
-				Parse.Cloud.run('storeSignUp', {
-					userDetails: userDetails
-				}, {
-					success: function (result) {
-						console.log(result);
-						deferred.resolve(result);
-					},
-					error: function (error) {
-						console.log(error);
-						deferred.reject(error);
-					}
-				});
-			}
+			Parse.Cloud.run('storeSignUp', {
+
+				is_owner: is_owner,
+				ownerId: owner.id,
+				owneremail: owneremail,
+				useremail: useremail,
+				ownerphone: ownerphone,
+				userphone: userphone,
+				ownername: ownername,
+				username: username,
+				store_id: store_id,
+				store_handle: store_handle
+			}, {
+				success: function (result) {
+					console.log(result);
+					deferred.resolve(result);
+				},
+				error: function (error) {
+					console.log(error);
+					deferred.reject(error);
+				}
+			});
 
 			return deferred.promise;
 		}
@@ -560,32 +575,52 @@ phonecatServices.factory('Phone', ['$q',
 
 			var Gallery = Parse.Object.extend("Gallery");
 			var picture = new Gallery();
-			if (image.files.length > 0) {
-				var file = image.files[0];
-				var parseFile = new Parse.File(file.name, file);
 
-				parseFile.save().then(function () {
-					console.log("Saved");
-					picture.set("image", parseFile);
-					picture.set("product_id", product);
-					picture.save(null, {
+			picture.set("image", image);
+			picture.set("product_id", product);
+			picture.save(null, {
 
-						success: function (picture) {
-							console.log("Added to Database");
-							deferred.resolve(true);
-						},
-						error: function (error, message) {
-							console.log("Error in adding to Database");
-							deferred.reject(message);
-						}
-					});
-				}, function (error, message) {
-					console.log(error);
+				success: function (picture) {
+					console.log("Added to Database");
+					deferred.resolve(picture);
+				},
+				error: function (error, message) {
+					console.log("Error in adding to Database");
 					deferred.reject(message);
-				});
-			}
-			return deferred.promise;
+				}
+			});
 
+			return deferred.promise;
+		}
+
+		factory.addGalleryToProduct = function (product, galleryArray) {
+			var deferred = $q.defer();
+			product.set("gallery_ids", galleryArray);
+			product.save(null, {
+				success: function (product) {
+					deferred.resolve(product);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
+		factory.addGalleryToService = function (service, galleryArray) {
+			var deferred = $q.defer();
+			service.set("gallery_ids", galleryArray);
+			service.save(null, {
+				success: function (service) {
+					deferred.resolve(service);
+				},
+				error: function (error, message) {
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
 		}
 
 
@@ -595,30 +630,21 @@ phonecatServices.factory('Phone', ['$q',
 
 			var Gallery = Parse.Object.extend("Gallery");
 			var picture = new Gallery();
-			if (image.files.length > 0) {
-				var file = image.files[0];
-				var parseFile = new Parse.File(file.name, file);
+			picture.set("image", parseFile);
+			picture.set("service_id", service);
+			picture.save(null, {
 
-				parseFile.save().then(function () {
-					console.log("Saved");
-					picture.set("image", parseFile);
-					picture.set("service_id", service);
-					picture.save(null, {
-
-						success: function (picture) {
-							console.log("Added to Database");
-							deferred.resolve(true);
-						},
-						error: function (error, message) {
-							console.log("Error in adding to Database");
-							deferred.reject(message);
-						}
-					});
-				}, function (error, message) {
-					console.log(error);
+				success: function (picture) {
+					console.log("Added to Database");
+					deferred.resolve(true);
+				},
+				error: function (error, message) {
+					console.log("Error in adding to Database");
 					deferred.reject(message);
-				});
-			}
+				}
+			});
+
+
 
 			return deferred.promise;
 
@@ -1414,51 +1440,49 @@ phonecatServices.factory('Phone', ['$q',
 
 			var deferred = $q.defer();
 
-			if (serviceDetails.image.files.length > 0) {
+			if (serviceDetails.image) {
 
-				var picture = serviceDetails.image.files[0];
-				var parseFile = new Parse.File(picture.name, picture);
-				parseFile.save().then(function () {
-					var Service = Parse.Object.extend("Services");
-					var service = new Service();
-					service.set("cprice", serviceDetails.cprice);
-					service.set("description", serviceDetails.description);
-					service.set("image", parseFile);
-					service.set("is_sale", serviceDetails.is_sale);
-					service.set("is_visible", serviceDetails.is_visible);
-					service.set("name", serviceDetails.name);
-					service.set("sprice", serviceDetails.sprice);
-					service.set("store_id", store);
+				var Service = Parse.Object.extend("Services");
+				var service = new Service();
+				service.set("cprice", serviceDetails.cprice);
+				service.set("description", serviceDetails.description);
+				service.set("image", image);
+				service.set("is_sale", serviceDetails.is_sale);
+				service.set("is_visible", serviceDetails.is_visible);
+				service.set("name", serviceDetails.name);
+				service.set("sprice", serviceDetails.sprice);
+				service.set("store_id", store);
+				service.set("changed", serviceDetails.changed);
 
-					service.save(null, {
-						success: function (service) {
-							console.log("Added To services");
-							store.addUnique("services", service);
-							store.save(null, {
-								success: function (store) {
-									console.log("Added to Store");
-									var promise = createServicePost(store, service);
-									promise.then(
-										function (result) {
-											console.log("Success");
-											deferred.resolve(store);
-										}, function (message) {
-											console.log(message);
-											deferred.resolve(store);
-										});
-								},
-								error: function (error, message) {
-									console.log(message);
-									deferred.reject(message);
-								}
-							});
 
-						},
-						error: function (error, message) {
-							console.log(message);
-							deferred.reject(message);
-						}
-					});
+				service.save(null, {
+					success: function (service) {
+						console.log("Added To services");
+						store.addUnique("services", service);
+						store.save(null, {
+							success: function (store) {
+								console.log("Added to Store");
+								var promise = createServicePost(store, service);
+								promise.then(
+									function (result) {
+										console.log("Success");
+										deferred.resolve(store);
+									}, function (message) {
+										console.log(message);
+										deferred.resolve(store);
+									});
+							},
+							error: function (error, message) {
+								console.log(message);
+								deferred.reject(message);
+							}
+						});
+
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
 				});
 
 			} else {
@@ -1471,6 +1495,8 @@ phonecatServices.factory('Phone', ['$q',
 				service.set("name", serviceDetails.name);
 				service.set("sprice", serviceDetails.sprice);
 				service.set("store_id", store);
+				service.set("changed", serviceDetails.changed);
+
 
 				service.save(null, {
 					success: function (service) {
@@ -1538,69 +1564,88 @@ phonecatServices.factory('Phone', ['$q',
 			return deferred.promise;
 		}
 
+		factory.saveImage = function (image) {
+
+			var deferred = $q.defer();
+
+			var picture = image.files[0];
+			var parseFile = new Parse.File(picture.name, picture);
+			parseFile.save(null, {
+				success: function (image) {
+					deferred.resolve(image);
+				},
+				error: function (error, message) {
+					console.log(message);
+					deferred.reject(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
 		//pass the product object with the product details
 		factory.addProduct = function (store, productDetails) {
 
 			var deferred = $q.defer();
 
-			if (productDetails.image.files.length > 0) {
+			if (productDetails.image) {
 
-				var picture = productDetails.image.files[0];
-				var parseFile = new Parse.File(picture.name, picture);
-				parseFile.save().then(function () {
-					var Product = Parse.Object.extend("Products");
-					var product = new Product();
-					product.set("cprice", productDetails.cprice);
-					product.set("description", productDetails.description);
-					product.set("image", parseFile);
-					product.set("is_sale", productDetails.is_sale);
-					product.set("is_visible", productDetails.is_visible);
-					product.set("name", productDetails.name);
-					product.set("sprice", productDetails.sprice);
-					product.set("store_id", store);
+				var Product = Parse.Object.extend("Products");
+				var product = new Product();
+				product.set("cprice", productDetails.cprice);
+				product.set("description", productDetails.description);
+				product.set("image", image);
+				product.set("is_sale", productDetails.is_sale);
+				product.set("is_visible", productDetails.is_visible);
+				product.set("name", productDetails.name);
+				product.set("sprice", productDetails.sprice);
+				product.set("store_id", store);
+				product.set("gallery_ids", []);
+				product.set("changed", productDetails.changed);
 
-					product.save(null, {
-						success: function (product) {
-							console.log(object);
-							store.addUnique("products", object);
-							store.save(null, {
-								success: function (store) {
-									var promise = createProductPost(store, product);
-									promise.then(
-										function (result) {
-											console.log("Success");
-											deferred.resolve(store);
-										}, function (message) {
-											console.log(message);
-											deferred.resolve(store);
-										});
-									console.log("Added to Store");
-								},
-								error: function (error, message) {
-									console.log(message);
-									deferred.reject(message);
-								}
-							});
+				product.save(null, {
+					success: function (product) {
+						console.log(object);
+						store.addUnique("products", object);
+						store.save(null, {
+							success: function (store) {
+								var promise = createProductPost(store, product);
+								promise.then(
+									function (result) {
+										console.log("Success");
+										deferred.resolve(store);
+									}, function (message) {
+										console.log(message);
+										deferred.resolve(store);
+									});
+								console.log("Added to Store");
+							},
+							error: function (error, message) {
+								console.log(message);
+								deferred.reject(message);
+							}
+						});
 
-						},
-						error: function (error, message) {
-							console.log(error);
-							deferred.reject(message);
-						}
-					});
+					},
+					error: function (error, message) {
+						console.log(error);
+						deferred.reject(message);
+					}
 				});
+
 
 			} else {
 				var Product = Parse.Object.extend("Products");
 				var product = new Product();
 				product.set("cprice", productDetails.cprice);
 				product.set("description", productDetails.description);
-				product.set("image", parseFile);
 				product.set("is_sale", productDetails.is_sale);
 				product.set("is_visible", productDetails.is_visible);
 				product.set("name", productDetails.name);
 				product.set("sprice", productDetails.sprice);
 				product.set("store_id", store);
+				product.set("changed", productDetails.changed);
+
 
 				product.save(null, {
 					success: function (product) {
@@ -1640,30 +1685,28 @@ phonecatServices.factory('Phone', ['$q',
 
 			var deferred = $q.defer();
 
-			if (productDetails.image.files.length > 0) {
+			if (productDetails.image) {
 
-				var picture = productDetails.image.files[0];
-				var parseFile = new Parse.File(picture.name, picture);
-				parseFile.save().then(function () {
-					product.set("cprice", productDetails.cprice);
-					product.set("description", productDetails.description);
-					product.set("image", parseFile);
-					product.set("is_sale", productDetails.is_sale);
-					product.set("is_visible", productDetails.is_visible);
-					product.set("name", productDetails.name);
-					product.set("sprice", productDetails.sprice);
-					product.set("store_id", store);
+				product.set("cprice", productDetails.cprice);
+				product.set("description", productDetails.description);
+				product.set("image", image);
+				product.set("is_sale", productDetails.is_sale);
+				product.set("is_visible", productDetails.is_visible);
+				product.set("name", productDetails.name);
+				product.set("sprice", productDetails.sprice);
+				product.set("store_id", store);
+				product.set("changed", productDetails.changed);
 
-					product.save(null, {
-						success: function (object) {
-							console.log(object);
-							deferred.resolve(true);
-						},
-						error: function (error, message) {
-							console.log(message);
-							deferred.reject(message);
-						}
-					});
+
+				product.save(null, {
+					success: function (object) {
+						console.log(object);
+						deferred.resolve(true);
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
 				});
 
 			} else {
@@ -1675,8 +1718,66 @@ phonecatServices.factory('Phone', ['$q',
 				product.set("name", productDetails.name);
 				product.set("sprice", productDetails.sprice);
 				product.set("store_id", store);
+				product.set("changed", productDetails.changed);
+
 
 				product.save(null, {
+					success: function (object) {
+						console.log(object);
+						deferred.resolve(true);
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
+				});
+
+			}
+
+			return deferred.promise;
+		}
+
+		factory.editService = function (service, serviceDetails) {
+
+			var deferred = $q.defer();
+
+			if (serviceDetails.image) {
+
+				service.set("cprice", serviceDetails.cprice);
+				service.set("description", serviceDetails.description);
+				service.set("image", image);
+				service.set("is_sale", serviceDetails.is_sale);
+				service.set("is_visible", serviceDetails.is_visible);
+				service.set("name", serviceDetails.name);
+				service.set("sprice", serviceDetails.sprice);
+				service.set("store_id", store);
+				service.set("changed", serviceDetails.changed);
+
+
+				service.save(null, {
+					success: function (object) {
+						console.log(object);
+						deferred.resolve(true);
+					},
+					error: function (error, message) {
+						console.log(message);
+						deferred.reject(message);
+					}
+				});
+
+			} else {
+
+				service.set("cprice", serviceDetails.cprice);
+				service.set("description", serviceDetails.description);
+				service.set("is_sale", serviceDetails.is_sale);
+				service.set("is_visible", serviceDetails.is_visible);
+				service.set("name", serviceDetails.name);
+				service.set("sprice", serviceDetails.sprice);
+				service.set("store_id", store);
+				service.set("changed", serviceDetails.changed);
+
+
+				service.save(null, {
 					success: function (object) {
 						console.log(object);
 						deferred.resolve(true);
@@ -1703,6 +1804,32 @@ phonecatServices.factory('Phone', ['$q',
 						success: function (product) {
 							console.log("Deleted");
 							deferred.resolve(product);
+						},
+						error: function (error, message) {
+							console.log(message);
+							deferred.reject(message);
+						}
+					});
+				},
+				error: function (error, message) {
+					console.log(message);
+				}
+			});
+
+			return deferred.promise;
+		}
+
+		factory.deleteService = function (store, service) {
+
+			var deferred = $q.defer();
+
+			store.remove("services", service);
+			store.save(null, {
+				success: function (store) {
+					service.destroy({
+						success: function (service) {
+							console.log("Deleted");
+							deferred.resolve(service);
 						},
 						error: function (error, message) {
 							console.log(message);
