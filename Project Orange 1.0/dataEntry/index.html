@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html ng-app="dataEntry">
 <head>
-	<title ng-bind="pageTitle + ' | DATA ENTRY'"></title>
+	<title ng-bind="seo.pageTitle + ' | DATA ENTRY'"></title>
 	<base href="/angular/dataEntry/">
+
+	<meta name="title" content="{{seo.pageTitle}}">
+   	<meta name="description" content="{{seo.description}}">
+    <meta name="keywords" content="{{seo.keywords}}">
+
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/dashboard.css">
 	<script type="text/javascript" src="js/jquery.js"></script>

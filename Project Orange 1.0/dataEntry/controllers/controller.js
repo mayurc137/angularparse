@@ -5,7 +5,10 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Store Info";
+        $routeScope.seo = {};
+        $routeScope.seo.pageTitle = "Store Info";
+        $routeScope.seo.description = "Description of the page";
+        $routeScope.seo.keywords = "keyword1,keyword2";
 
         $scope.formAction = $routeParams.action;
 
@@ -39,12 +42,6 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         $scope.availabilityChecked = false;
         $scope.storeHandleAvailable = true;
-        $scope.ownerEmailAvailable = true;
-
-        $scope.storeOwner = {};
-        $scope.storeOwner.name = "",
-        $scope.storeOwner.email = "",
-        $scope.storeOwner.phone = "";
 
         $scope.bannerImageChanged = false;
         $scope.logoImageChanged = false;
@@ -66,6 +63,26 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         $scope.banner = "";
         $scope.bannerSrc = "";
+
+        $scope.adminPresent = false;
+        $scope.managerPresent = false;
+        $scope.newAdminPresent = false;
+        $scope.adminBtnText = "Add Admin";
+        $scope.managerBtnText = "Add Manager";
+        $scope.ownerEmailAvailable = true;
+        $scope.adminEmailAvailable = true;
+
+        $scope.administrators = [];
+
+        $scope.admin = {};
+        $scope.admin.name = "",
+        $scope.admin.email = "",
+        $scope.admin.phone = "";
+
+        $scope.storeOwner = {};
+        $scope.storeOwner.name = "",
+        $scope.storeOwner.email = "",
+        $scope.storeOwner.phone = "";
 
         $scope.weekDays = [{
             name: "Sunday",
@@ -126,6 +143,18 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             }
         );
 
+        ParseFactory.fetchAllAdmins().then(
+            function(admins) {
+                $scope.administrators = admins;
+                if ($scope.administrators.length == 0) {
+                    $scope.newAdmin();
+                }
+                console.log($scope.administrators);
+            }, function(message) {
+                console.log(message);
+            }
+        );
+
         $scope.storeLogoChanged = function(files) {
             console.log(files);
             $scope.store.logoImage = files[0];
@@ -173,6 +202,45 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             $scope.banner = $scope.bannerSrc;
         }
 
+
+        $scope.toggleAdminActive = function() {
+            if ($scope.adminPresent) {
+                $scope.adminPresent = false;
+                $scope.adminBtnText = "Add Admin";
+                $scope.newAdminPresent = false;
+                $scope.admin = {};
+            } else {
+                $scope.adminPresent = true;
+                $scope.adminBtnText = "No Admin";
+            }
+        }
+
+        $scope.toggleManagerActive = function() {
+            if ($scope.managerPresent) {
+                $scope.managerPresent = false;
+                $scope.managerBtnText = "Add Manager";
+                $scope.storeOwner = {};
+            } else {
+                $scope.managerPresent = true;
+                $scope.managerBtnText = "No Manager";
+            }
+        }
+
+        $scope.newAdmin = function() {
+            $scope.newAdminPresent = true;
+            $scope.admin = {};
+        }
+
+        $scope.adminChange = function() {
+            if ($scope.admin) {
+                $scope.admin.name = $scope.admin.get('name');
+                $scope.admin.email = $scope.admin.get('email');
+                $scope.admin.phone = $scope.admin.get('phone');
+
+                $scope.$apply();
+            }
+        }
+
         $scope.getStoreDetails = function() {
 
             $scope.store.storeHandle = $scope.store.storeHandle.toLowerCase();
@@ -184,20 +252,10 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                         if (storeObject) {
 
                             $scope.storeData = storeObject;
-                            ParseFactory.getStoreOwner($scope.storeData).then(
-                                function(ownerObject) {
-                                    console.log(ownerObject);
-                                    if (ownerObject) {
-                                        $scope.ownerData = ownerObject;
-                                        $scope.setStoreDetails();
-                                    } else {
-                                        alert("No Store Owner Details! Contact Admin");
-                                    }
+                            $scope.getStoreAdmin();
+                            //$scope.getStoreManager();
+                            $scope.setStoreDetails();
 
-                                }, function(message) {
-                                    console.log(message)
-                                }
-                            );
                         } else {
                             alert("Store Does Not Exist");
                         }
@@ -208,6 +266,26 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                 );
             }
 
+        }
+
+        $scope.getStoreAdmin = function() {
+            ParseFactory.getStoreAdmin($scope.storeData).then(
+                function(admin) {
+                    console.log(admin);
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.getStoreManager = function() {
+            ParseFactory.getStoreManager($scope.storeData).then(
+                function(manager) {
+                    console.log(manager);
+                }, function(message) {
+                    console.log(message);
+                }
+            );
         }
 
         $scope.setStoreDetails = function() {
@@ -250,12 +328,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             $scope.store.selectedCategory = $scope.storeData.get('primary_category');
             $scope.store.locality = $scope.storeData.get('locality');
 
-            $scope.storeOwner.name = $scope.ownerData.get('name');
-            $scope.storeOwner.email = $scope.ownerData.get('email');
-            $scope.storeOwner.phone = $scope.ownerData.get('phone');
-
             console.log($scope.store);
-            console.log($scope.storeOwner);
 
             $scope.setLocality();
             $scope.setWorkingDays();
@@ -455,10 +528,49 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             return deferred.promise;
         }
 
-        $scope.checkEmailUnique = function() {
+        $scope.checkAdminEmailUnique = function() {
             var deferred = $q.defer();
 
-            ParseFactory.checkStoreOwnerEmailAvailablility($scope.storeOwner.email).then(
+            ParseFactory.checkEmailAvailablility($scope.admin.email).then(
+                function(result) {
+
+                    if (result == null) {
+                        $scope.adminEmailAvailable = true;
+                        console.log("available");
+                        deferred.resolve(true);
+                    } else {
+
+                        if ($scope.newAdminPresent) {
+                            $scope.adminEmailAvailable = false;
+                            console.log("unavailable");
+                            alert("Admin with Given email Already Exists");
+                            deferred.reject("Email associated with another account");
+                        } else {
+                            if ($scope.admin.id == result.id) {
+                                $scope.adminEmailAvailable = true;
+                                console.log("available");
+                                deferred.resolve(true);
+                            } else {
+                                $scope.adminEmailAvailable = false;
+                                console.log("unavailable");
+                                alert("Given email Belongs to another Admin");
+                                deferred.reject("Email associated with another account");
+                            }
+                        }
+                    }
+
+                }, function(message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            );
+            return deferred.promise;
+        }
+
+        $scope.checkManagerEmailUnique = function() {
+            var deferred = $q.defer();
+
+            ParseFactory.checkEmailAvailablility($scope.storeOwner.email).then(
                 function(result) {
 
                     if (result == null) {
@@ -471,7 +583,14 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                             console.log("unavailable");
                             deferred.reject("Email associated with another account");
                         } else {
-                            if (result.get('store_id').id == $scope.store.storeID) {
+
+                            if (result.get('is_admin') == true) {
+                                $scope.ownerEmailAvailable = false;
+                                console.log("unavailable");
+                                deferred.reject("Email associated with another account");
+                            }
+
+                            if (result.get('store_ids').length == 1 && result.get('store_ids')[0].id == $scope.store.storeID) {
                                 //Current Store has been fetched hence allow it
                                 $scope.ownerEmailAvailable = true;
                                 console.log("available");
@@ -482,6 +601,7 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                                 console.log("unavailable");
                                 deferred.reject("Email associated with another account");
                             }
+
                         }
                     }
 
@@ -499,13 +619,44 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             $scope.checkStoreHandleAvailability().then(
                 function(result) {
 
-                    $scope.checkEmailUnique().then(
-                        function(result) {
-                            deferred.resolve(true);
-                        }, function(message) {
+                    if ($scope.adminPresent && $scope.managerPresent) {
+
+                        if ($scope.admin.email == $scope.storeOwner.email) {
+                            console.log("Admin and Manager email cannot be the same");
                             deferred.reject(false);
                         }
-                    );
+
+                        $scope.checkAdminEmailUnique().then(
+                            function(result) {
+                                $scope.checkManagerEmailUnique().then(
+                                    function(success) {
+                                        deferred.resolve(true);
+                                    }, function(message) {
+                                        deferred.reject(false);
+                                    }
+                                );
+
+                            }, function(message) {
+                                deferred.reject(false);
+                            }
+                        );
+                    } else if ($scope.adminPresent) {
+                        $scope.checkAdminEmailUnique().then(
+                            function(result) {
+                                deferred.resolve(true);
+                            }, function(message) {
+                                deferred.reject(false);
+                            }
+                        );
+                    } else {
+                        $scope.checkManagerEmailUnique().then(
+                            function(success) {
+                                deferred.resolve(true);
+                            }, function(message) {
+                                deferred.reject(false);
+                            }
+                        );
+                    }
 
                 }, function(message) {
                     deferred.reject(false);
@@ -515,12 +666,135 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
             return deferred.promise;
         }
 
+        $scope.createStore = function() {
+            //Creating New Store
+            ParseFactory.createStore($scope.store).then(
+                function(store) {
+                    console.log("Store Created");
+                    console.log(store);
+
+                    $scope.storeOwner.store_id = store.id;
+                    $scope.admin.store_id = store.id;
+
+                    if (adminPresent && managerPresent) {
+                        $scope.createAdmin().then(
+                            function(admin) {
+                                $scope.createManager().then(
+                                    function(manager) {
+                                        console.log("Successfully Registered Store");
+                                        alert("Successfully Registered Store");
+                                        $route.reload();
+                                    }, function(message) {
+                                        console.log(message);
+                                        alert("Error Creating User.\nContact System Admin");
+                                    }
+                                );
+
+                            }, function(message) {
+                                console.log(message);
+                                alert("Error Creating User.\nContact System Admin");
+                            }
+                        );
+                    } else if (adminPresent) {
+                        $scope.createAdmin().then(
+                            function(admin) {
+                                console.log("Successfully Registered Store");
+                                alert("Successfully Registered Store");
+                                $route.reload();
+                            }, function(message) {
+                                console.log(message);
+                                alert("Error Creating User.\nContact System Admin");
+                            }
+                        );
+                    } else {
+                        $scope.createManager().then(
+                            function(manager) {
+                                console.log("Successfully Registered Store");
+                                alert("Successfully Registered Store");
+                                $route.reload();
+                            }, function(message) {
+                                console.log(message);
+                                alert("Error Creating User.\nContact System Admin");
+                            }
+                        );
+                    }
+
+                }, function(message) {
+                    console.log(message);
+                }
+            );
+        }
+
+        $scope.createAdmin = function() {
+            var deferred = $q.defer();
+
+            return deferred.promise;
+        }
+
+        $scope.createManager = function() {
+            var deferred = $q.defer();
+
+            return deferred.promise;
+        }
+
+        $scope.editStore = function() {
+            if ($scope.storeData == null) {
+                alert("Specified Store Does Not Exist. Contact System Admin");
+            } else {
+                ParseFactory.addDetailsToStore($scope.storeData, $scope.store,
+                    $scope.logoImageChanged, $scope.bannerImageChanged).then(
+                    function(storeObject) {
+                        console.log(storeObject);
+                        ParseFactory.editStoreOwner($scope.ownerData, $scope.storeOwner).then(
+                            function(user) {
+                                console.log(user);
+                                alert("Successfully Edited Store");
+                                $route.reload();
+                            }, function(message) {
+                                console.log(message);
+                            }
+                        );
+                    }, function(message) {
+                        console.log(message);
+                    }
+                );
+            }
+        }
+
         $scope.saveStore = function() {
+
+            console.log($scope.store);
+            console.log($scope.storeOwner);
+            console.log($scope.admin);
+
+            //Check if manager and admin email are the same
 
             $scope.store.locality = $scope.dupLocalities[$scope.selectedLocality];
 
             $scope.store.storeHandle = $scope.store.storeHandle.toLowerCase();
 
+            if ($scope.adminPresent || $scope.managerPresent) {
+                $scope.checkParameters().then(
+                    function(success) {
+                        if ($scope.formAction == "edit") {
+                            $scope.editStore();
+                        } else {
+                            $scope.createStore();
+                        }
+                    }, function(message) {
+                        console.log("Parameters are wrong");
+                    }
+                );
+
+            } else {
+                alert("You must add an Administrator or a Manager");
+            }
+
+
+
+
+            /*
+        
             $scope.checkParameters().then(
                 function(success) {
 
@@ -582,8 +856,11 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                 }
             );
 
+
+
             console.log($scope.store);
             console.log($scope.storeOwner);
+            */
         }
 
     }
@@ -595,7 +872,10 @@ appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$root
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Store Gallery";
+        $routeScope.seo = {};
+        $routeScope.seo.pageTitle = "Store Gallery";
+        $routeScope.seo.description = "Gallery of the page";
+        $routeScope.seo.keywords = "keyword1,keyword2";
 
         $scope.storeHandle = "";
         $scope.store = {};

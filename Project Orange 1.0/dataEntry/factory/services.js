@@ -70,6 +70,67 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
+        factory.fetchAllAdmins = function() {
+            var deferred = $q.defer();
+
+            var query = new Parse.Query("Users");
+            query.equalTo('is_admin', true);
+
+            query.find({
+                success: function(admins) {
+                    deferred.resolve(admins);
+                },
+                error: function(error, message) {
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.getStoreAdmin = function(store) {
+            var deferred = $q.defer();
+
+            var ids = [];
+            ids.push(store);
+
+            var query = new Parse.Query("Users");
+            query.containedIn("store_ids", ids);
+            query.equalTo('is_store', true);
+            query.equalTo('is_admin', true);
+
+            query.find({
+                success: function(admin) {
+                    deferred.resolve(admin);
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.getStoreManager = function(store) {
+            var deferred = $q.defer();
+            var query = new Parse.Query("Users");
+            query.containedIn("store_ids", store);
+            query.equalTo('is_store', true);
+            query.equalTo('is_admin', false);
+
+            query.find({
+                success: function(admin) {
+                    deferred.resolve(admin);
+                },
+                error: function(error, message) {
+                    console.log(message);
+                    deferred.reject(message);
+                }
+            });
+            return deferred.promise;
+        }
+
         factory.fetchGalleryOfStore = function(store) {
 
             var deferred = $q.defer();
@@ -436,7 +497,8 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
-        factory.checkStoreOwnerEmailAvailablility = function(email) {
+
+        factory.checkEmailAvailablility = function(email) {
 
             var deferred = $q.defer();
 

@@ -1,11 +1,11 @@
 var appControllers = angular.module('landingPageControllers', []);
 
 appControllers.controller('homeCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy - discover and engage with local stores and service providers";
+        $rootScope.pageTitle = "Klassy - discover and engage with local stores and service providers";
 
         $scope.currentUser = ParseFactory.getCurrentUser();
 
@@ -14,6 +14,8 @@ appControllers.controller('homeCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
         $scope.store = {};
         $scope.store.city = "Pune";
+
+        $scope.signUpSuccess = "Thanks for Signing Up for Beta! We will get back to you soon!";
 
         $scope.cities = ["Pune", "Mumbai", "Delhi", "Bangalore", "Chennai"];
 
@@ -30,6 +32,7 @@ appControllers.controller('homeCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                         console.log("new user");
                     } else {
                         /* Previous User has returned, logOut ad display already signed up message*/
+                        $scope.signUpSuccess = "You are already signed up for Beta! We will get back to you soon!";
                         $scope.userSignedUp = true;
                         console.log("Previous User");
                     }
@@ -119,11 +122,11 @@ appControllers.controller('homeCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 
 
 appControllers.controller('businessCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy for Business";
+        $rootScope.pageTitle = "Klassy for Business";
 
         $scope.storeSignedUp = false;
 
@@ -156,15 +159,17 @@ appControllers.controller('businessCtrl', ['$q', '$scope', 'ParseFactory', '$roo
 ]);
 
 appControllers.controller('betaCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy - Beta Joining Page";
+        $rootScope.pageTitle = "Klassy - Beta Joining Page";
 
         $scope.currentUser = ParseFactory.getCurrentUser();
 
         $scope.userSignedUp = false;
+
+        $scope.signUpSuccess = "Thanks for Signing Up for Beta! We will get back to you soon!";
 
         if ($scope.currentUser) {
             ParseFactory.logOut();
@@ -179,6 +184,7 @@ appControllers.controller('betaCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
                         console.log("new user");
                     } else {
                         /* Previous User has returned, logOut ad display already signed up message*/
+                        $scope.signUpSuccess = "You are already signed up for Beta! We will get back to you soon!";
                         $scope.userSignedUp = true;
                         console.log("Previous User");
                     }
@@ -246,11 +252,11 @@ appControllers.controller('betaCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 ]);
 
 appControllers.controller('aboutCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy | About";
+        $rootScope.pageTitle = "Klassy | About";
 
     }
 ]);
@@ -259,21 +265,21 @@ appControllers.controller('aboutCtrl', ['$q', '$scope', 'ParseFactory', '$rootSc
 
 
 appControllers.controller('contactCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy | Contact";
+        $rootScope.pageTitle = "Klassy | Contact";
 
     }
 ]);
 
 appControllers.controller('faqCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route',
-    function($q, $scope, ParseFactory, $routeScope, $route) {
+    function($q, $scope, ParseFactory, $rootScope, $route) {
 
         ParseFactory.init();
 
-        $routeScope.pageTitle = "Klassy | FAQ";
+        $rootScope.pageTitle = "Klassy | FAQ";
 
     }
 ]);

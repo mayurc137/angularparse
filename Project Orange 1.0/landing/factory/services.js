@@ -61,11 +61,9 @@ parseServices.factory('ParseFactory', ['$q',
 
         factory.shareToFb = function(url) {
             FB.ui({
-                method: 'share_open_graph',
-                action_type: 'og.likes',
-                action_properties: JSON.stringify({
-                    object: url,
-                })
+                method: 'feed',
+                link: 'https://www.klassy.in',
+                caption: 'Klassy - discover and engage with local lifestyle stores and service providers',
             }, function(response) {});
         }
 
@@ -193,7 +191,28 @@ parseServices.factory('ParseFactory', ['$q',
             var deferred = $q.defer();
 
             Parse.Cloud.run('mailchimp', {
+                userId: user.id
+            }, {
+                success: function(result) {
+                    console.log(result);
+                    deferred.resolve(true);
+                },
+                error: function(error, message) {
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        //This function is when we are giving the email and not retreiving from user object
+        factory.mailChimpListAddUserEmail = function(user, email) {
+
+            var deferred = $q.defer();
+
+            Parse.Cloud.run('mailchimpAdd', {
                 userId: user.id,
+                email: email
             }, {
                 success: function(result) {
                     console.log(result);

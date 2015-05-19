@@ -123,20 +123,56 @@
 		<div class="cardContainerFull ownerDetails">
 			<div class="cardContent inputCard">
 				<p class="cardHeader">Owner/Manager Details</p>
+
+				<p class="formError" ng-hide="managerPresent || adminPresent">You must add an Administrator or a Manager</p>
+
 				<div class="inputBoxContainer">
-					<p class="inputBoxHeader">Name</p><span class="requiredLabel">*</span>
-					<input id="ownerName" class="inputBox" name="ownerName" type = "text" required="required" ng-model="storeOwner.name">
-					<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerName.$touched) && storeForm.ownerName.$error.required">Invalid Name</p>	
-				</div><div class="inputBoxContainer">
-					<p class="inputBoxHeader">Email Id</p><span class="requiredLabel">*</span>
-					<input id="ownerEmail" class="inputBox" name="ownerEmail" type = "email" required="required" ng-model="storeOwner.email">
-					<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerEmail.$touched) && storeForm.ownerEmail.$error.required">Invalid Email</p>
-					<p class="formError" ng-hide="ownerEmailAvailable">Email Already Registered.</p>
-				</div><div class="inputBoxContainer ">
-					<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
-					<input id="ownerPhone" class="inputBox" name="ownerPhone" type = "phone" required="required" ng-model="storeOwner.phone" pattern="[0-9]{10,11}">
-					<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerPhone.$touched) && storeForm.ownerPhone.$error.required">Invalid Phone Number</p>
+					<input type = "button" class="formButton" value="{{adminBtnText}}" ng-click="toggleAdminActive()">
+					<input type = "button" class="formButton" value="{{managerBtnText}}" ng-click="toggleManagerActive()">
 				</div>
+
+				<div ng-show="adminPresent">
+					<div class="inputBoxContainer" ng-hide="newAdminPresent">
+						<p class="inputBoxHeader">Admin Username</p><span class="requiredLabel">*</span>
+						<select ng-model="admin" class="inputBox" ng-change="adminChange()">
+							<option ng-repeat="user in administrators" value="{{user}}">{{user.get('username')}}</option>
+						</select>
+					</div><div class="inputBoxContainer withButton" ng-hide="newAdminPresent">
+						</br>
+						<input type = "button" class="formButton" value="Create New" ng-click="newAdmin()" ng-required="adminPresent">
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Admin Name</p><span class="requiredLabel">*</span>
+						<input id="adminName" class="inputBox" name="adminName" type = "text" ng-model="admin.name" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminName.$touched) && storeForm.adminName.$error.required">Admin Name Required</p>
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Email Id</p><span class="requiredLabel">*</span>
+						<input id="adminEmail" class="inputBox" name="adminEmail" type = "email" ng-model="admin.email" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminEmail.$touched) && storeForm.adminEmail.$error.required">Invalid Email</p>
+						<p class="formError" ng-hide="adminEmailAvailable">Email Already Registered.</p>
+					</div><div class="inputBoxContainer ">
+						<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
+						<input id="adminPhone" class="inputBox" name="adminPhone" type = "phone" ng-model="admin.phone" pattern="[0-9]{10,11}" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminPhone.$touched) && storeForm.adminPhone.$error.required">Invalid Phone Number</p>
+					</div>
+				</div>
+
+				<div ng-show="managerPresent">
+					<div class="inputBoxContainer">
+						<p class="inputBoxHeader">Manager Name</p><span class="requiredLabel">*</span>
+						<input id="ownerName" class="inputBox" name="ownerName" type = "text" ng-model="storeOwner.name" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerName.$touched) && storeForm.ownerName.$error.required">Manager Name Required</p>
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Email Id</p><span class="requiredLabel">*</span>
+						<input id="ownerEmail" class="inputBox" name="ownerEmail" type = "email" ng-model="storeOwner.email" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerEmail.$touched) && storeForm.ownerEmail.$error.required">Invalid Email</p>
+						<p class="formError" ng-hide="ownerEmailAvailable">Email Already Registered By Another.</p>
+					</div><div class="inputBoxContainer ">
+						<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
+						<input id="ownerPhone" class="inputBox" name="ownerPhone" type = "phone" ng-model="storeOwner.phone" pattern="[0-9]{10,11}" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerPhone.$touched) && storeForm.ownerPhone.$error.required">Invalid Phone Number</p>
+					</div>
+				</div>
+
 			</div>
 		</div>
 		<div class="cardContainerFull catDetails">

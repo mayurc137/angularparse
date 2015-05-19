@@ -24,11 +24,11 @@
 		</div>
 		<div class="userSignInlineComplete withoutLine" ng-show="userSignedUp">
 			<div class="extraLarge"></div>
-			<span class="userSignInlineMessage">Thanks for Signing Up for Beta! We will get back to you soon!</span><br/>
+			<span class="userSignInlineMessage white">{{signUpSuccess}}</span><br/>
 			<div class="extra"></div>
-			<span class="userSignInlineSubMessage">Meanwhile let your Friends know about Klassy</span><br/>
+			<span class="userSignInlineSubMessage white">Meanwhile let your Friends know about Klassy</span><br/>
 			<div class="extraLarge"></div>
-			<span class="shareFacebook" ng-click="shareToFb()">Share</span><span class="shareTwitter">Tweet</span>
+			<span class="shareFacebook" ng-click="shareToFb()">Share</span><a class="twitter-share-button" href="https://twitter.com/share" data-related="twitterdev" data-text="Klassy - Discover and engage with local stores and service providers. Check It Out:" data-url="http://klassy.in" data-hashtags="klassy" data-size="large" data-count="none">Tweet</a>
 		</div>
 	</div>
 </div>
@@ -128,3 +128,8 @@
 		</div>
 	</div>
 </footer>
+<script type="text/javascript">
+	$(document).ready(function () {
+	    window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+  	});
+</script>
