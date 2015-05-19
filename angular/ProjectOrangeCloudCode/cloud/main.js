@@ -189,7 +189,7 @@ Parse.Cloud.define("storeSignUpAdmin", function(request, response) {
     var name = request.params.name;
 
     var user = new Parse.User();
-    user.set("username", store_handle);
+    user.set("username", username);
     user.set("password", retVal);
     user.set("email", email);
 
@@ -197,7 +197,7 @@ Parse.Cloud.define("storeSignUpAdmin", function(request, response) {
     user.set("is_store", true);
     user.set("is_admin", true);
     user.set("phone", phone);
-    user.set("name", username);
+    user.set("name", name);
 
     var query = new Parse.Query("Stores");
     query.get(store_id, {
@@ -249,7 +249,7 @@ Parse.Cloud.define("storeSignUpManager", function(request, response) {
     var name = request.params.name;
 
     var user = new Parse.User();
-    user.set("username", store_handle);
+    user.set("username", username);
     user.set("password", retVal);
     user.set("email", email);
 
@@ -257,7 +257,7 @@ Parse.Cloud.define("storeSignUpManager", function(request, response) {
     user.set("is_store", true);
     user.set("is_admin", false);
     user.set("phone", phone);
-    user.set("name", username);
+    user.set("name", name);
 
     var query = new Parse.Query("Stores");
     query.get(store_id, {
