@@ -73,7 +73,7 @@ parseServices.factory('ParseFactory', ['$q',
         factory.fetchAllAdmins = function() {
             var deferred = $q.defer();
 
-            var query = new Parse.Query("Users");
+            var query = new Parse.Query(Parse.User);
             query.equalTo('is_admin', true);
 
             query.find({
@@ -94,7 +94,7 @@ parseServices.factory('ParseFactory', ['$q',
             var ids = [];
             ids.push(store);
 
-            var query = new Parse.Query("Users");
+            var query = new Parse.Query(Parse.User);
             query.containedIn("store_ids", ids);
             query.equalTo('is_store', true);
             query.equalTo('is_admin', true);
@@ -114,7 +114,7 @@ parseServices.factory('ParseFactory', ['$q',
 
         factory.getStoreManager = function(store) {
             var deferred = $q.defer();
-            var query = new Parse.Query("Users");
+            var query = new Parse.Query(Parse.User);
             query.containedIn("store_ids", store);
             query.equalTo('is_store', true);
             query.equalTo('is_admin', false);
@@ -332,19 +332,22 @@ parseServices.factory('ParseFactory', ['$q',
             return deferred.promise;
         }
 
-        factory.storeReg = function(userDetails) {
+        factory.storeRegAdmin = function(userDetails) {
 
             var deferred = $q.defer();
 
             var email = userDetails.email;
             var phone = userDetails.phone;
             var name = userDetails.name;
+            var username = userDetails.username;
+
             var store_id = userDetails.store_id;
 
-            Parse.Cloud.run('storeSignUp', {
+            Parse.Cloud.run('storeSignUpAdmin', {
                 email: email,
                 phone: phone,
                 name: name,
+                username: username,
                 store_id: store_id
             }, {
                 success: function(result) {
@@ -354,6 +357,79 @@ parseServices.factory('ParseFactory', ['$q',
                 error: function(error) {
                     console.log(error);
                     deferred.reject(error);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.storeRegManager = function(userDetails) {
+
+            var deferred = $q.defer();
+
+            var email = userDetails.email;
+            var phone = userDetails.phone;
+            var name = userDetails.name;
+            var username = userDetails.username;
+
+            var store_id = userDetails.store_id;
+
+            Parse.Cloud.run('storeSignUpManager', {
+                email: email,
+                phone: phone,
+                name: name,
+                username: username,
+                store_id: store_id
+            }, {
+                success: function(result) {
+                    console.log(result);
+                    deferred.resolve(result);
+                },
+                error: function(error) {
+                    console.log(error);
+                    deferred.reject(error);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.editStoreAdmin = function(user, ownerDetails) {
+
+            var deferred = $q.defer();
+
+            Parse.Cloud.run('editStoreAdmin', {
+                user: user.id,
+                ownerDetails: ownerDetails
+            }, {
+                success: function(result) {
+                    console.log(result);
+                    deferred.resolve(result);;
+                },
+                error: function(error) {
+                    console.log(error);
+                    deferred.reject(message);
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        factory.editStoreManager = function(user, ownerDetails) {
+
+            var deferred = $q.defer();
+
+            Parse.Cloud.run('editStoreManager', {
+                user: user.id,
+                ownerDetails: ownerDetails
+            }, {
+                success: function(result) {
+                    console.log(result);
+                    deferred.resolve(result);;
+                },
+                error: function(error) {
+                    console.log(error);
+                    deferred.reject(message);
                 }
             });
 

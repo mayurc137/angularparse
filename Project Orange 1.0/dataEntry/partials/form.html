@@ -134,8 +134,8 @@
 				<div ng-show="adminPresent">
 					<div class="inputBoxContainer" ng-hide="newAdminPresent">
 						<p class="inputBoxHeader">Admin Username</p><span class="requiredLabel">*</span>
-						<select ng-model="admin" class="inputBox" ng-change="adminChange()">
-							<option ng-repeat="user in administrators" value="{{user}}">{{user.get('username')}}</option>
+						<select ng-model="selectedAdmin" class="inputBox" ng-change="adminChange()">
+							<option ng-repeat="user in administrators" value="{{$index}}">{{user.get('username')}}</option>
 						</select>
 					</div><div class="inputBoxContainer withButton" ng-hide="newAdminPresent">
 						</br>
