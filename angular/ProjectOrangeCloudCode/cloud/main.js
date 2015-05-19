@@ -114,7 +114,7 @@ Parse.Cloud.define("unfollowUsers", function (request, response) {
 
 });*/
 
-Parse.Cloud.define("editStoreOwner", function (request, response) {
+Parse.Cloud.define("editStoreAdmin", function (request, response) {
 
 	var query = new Parse.Query(Parse.User);
 	var ownerDetails = request.params.ownerDetails;
@@ -124,13 +124,22 @@ Parse.Cloud.define("editStoreOwner", function (request, response) {
 			user.set("name", ownerDetails.name);
 			user.set("email", ownerDetails.email);
 			user.set("phone", ownerDetails.phone);
+			var query = new Parse.Query("Stores");
+			query.get(ownerDetails.store_id, {
+				success: function (store) {
+					user.addUnique("store_ids", store);
 
-			user.save(null, {
-				useMasterKey: true
-			}).then(function (user) {
-				response.success(user);
-			}, function (error) {
-				response.error(error);
+					user.save(null, {
+						useMasterKey: true
+					}).then(function (user) {
+						response.success(user);
+					}, function (error) {
+						response.error(error.message);
+					});
+				},
+				error: function (error, message) {
+					response.error(message);
+				}
 			});
 		},
 		error: function (error, message) {
@@ -139,51 +148,136 @@ Parse.Cloud.define("editStoreOwner", function (request, response) {
 	});
 });
 
-Parse.Cloud.define("storeSignUp", function (request, response) {
+Parse.Cloud.define("editStoreManager", function (request, response) {
+
+	var query = new Parse.Query(Parse.User);
+	var ownerDetails = request.params.ownerDetails;
+	query.get(request.params.user, {
+		success: function (user) {
+			user.set("username", ownerDetails.username);
+			user.set("name", ownerDetails.name);
+			user.set("email", ownerDetails.email);
+			user.set("phone", ownerDetails.phone);
+			user.save(null, {
+				useMasterKey: true
+			}).then(function (user) {
+				response.success(user);
+			}, function (error) {
+				response.error(error.message);
+			});
+		},
+		error: function (error, message) {
+			response.error(message);
+		}
+	});
+});
+
+Parse.Cloud.define("storeSignUpAdmin", function (request, response) {
 
 	var length = 8,
 		charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
 		retVal = "";
+
 	for (var i = 0, n = charset.length; i < length; ++i) {
 		retVal += charset.charAt(Math.floor(Math.random() * n));
 	}
 
 	var email = request.params.email;
 	var phone = request.params.phone;
-	var name = request.params.name;
+	var username = request.params.username;
 	var store_id = request.params.store_id;
+	var name = request.params.name;
 
 	var user = new Parse.User();
-	user.set("username", email);
+	user.set("username", store_handle);
 	user.set("password", retVal);
 	user.set("email", email);
 
 	// other fields can be set just like with Parse.Object
 	user.set("is_store", true);
+	user.set("is_admin", true);
 	user.set("phone", phone);
-	user.set("name", name);
+	user.set("name", username);
 
 	var query = new Parse.Query("Stores");
 	query.get(store_id, {
 		success: function (store) {
 
-			user.set("store_id", store);
+			user.addUnique("store_ids", store);
 
 			user.signUp(null, {
 				success: function (user) {
 					Parse.User.requestPasswordReset(user.get("email"), {
 						success: function () {
-							// Password reset request was sent successfully
-							response.success(user);
+							response.success(true);
 						},
 						error: function (error) {
-							// Show the error message somewhere
 							console.error("Error: " + error.code + " " + error.message);
+							resonse.error(error.message);
 						}
 					});
 				},
 				error: function (user, error) {
-					// Show the error message somewhere and let the user try again.
+					console.log(error);
+					response.error(error);
+				}
+			});
+		},
+		error: function (error, message) {
+			console.error(message);
+			response.error(message);
+		}
+	});
+});
+
+
+Parse.Cloud.define("storeSignUpManager", function (request, response) {
+
+	var length = 8,
+		charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+		retVal = "";
+
+	for (var i = 0, n = charset.length; i < length; ++i) {
+		retVal += charset.charAt(Math.floor(Math.random() * n));
+	}
+
+
+	var email = request.params.email;
+	var phone = request.params.phone;
+	var username = request.params.username;
+	var store_id = request.params.store_id;
+	var name = request.params.name;
+
+	var user = new Parse.User();
+	user.set("username", store_handle);
+	user.set("password", retVal);
+	user.set("email", email);
+
+	// other fields can be set just like with Parse.Object
+	user.set("is_store", true);
+	user.set("is_admin", false);
+	user.set("phone", phone);
+	user.set("name", username);
+
+	var query = new Parse.Query("Stores");
+	query.get(store_id, {
+		success: function (store) {
+
+			user.addUnique("store_ids", store);
+
+			user.signUp(null, {
+				success: function (user) {
+					Parse.User.requestPasswordReset(user.get("email"), {
+						success: function () {
+							response.success(true);
+						},
+						error: function (error) {
+							console.error("Error: " + error.code + " " + error.message);
+							resonse.error(error.message);
+						}
+					});
+				},
+				error: function (user, error) {
 					console.log(error);
 					response.error(error);
 				}
@@ -614,6 +708,84 @@ Parse.Cloud.afterSave("Services", function (request) {
 	);
 });
 
+Parse.Cloud.beforeDelete("Products", function (request, response) {
+
+	var lemma = require('cloud/lemmatizer.js');
+	var _ = require('underscore');
+
+	var product = request.object;
+	var store = product.get("store_id");
+	var query = new Parse.Query("Stores");
+	query.get(store.id, {
+		success: function (store) {
+			var name = product.get("name");
+			name = name.split(" ");
+
+			var prevMetaData = store.get("product_metadata");
+			console.log(prevMetaData);
+			for (var i = 0; i < name.length; i++) {
+				var index = prevMetaData.indexOf(name[i]);
+				prevMetaData.splice(index, 1);
+				//store.remove("service_metadata", name[i]);
+			}
+
+			var metadata = [];
+			var description = product.get("description");
+			description = description.replace(/[^a-zA-Z0-9 ]/g, "");
+			description = description.split(" ");
+			metadata.push.apply(metadata, description);
+
+			var lemmatizer = new lemma.Lemmatizer();
+
+			var toLowerCase = function (w) {
+				return w.toLowerCase();
+			};
+
+			var words = metadata;
+			words = _.map(words, toLowerCase);
+			var stopWords = ["a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "arent", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "cant", "cannot", "could", "couldnt", "did", "didnt", "do", "does", "doesnt", "doing", "dont", "down", "during", "each", "few", "for", "from", "further", "had", "hadnt", "has", "hasnt", "have", "havent", "having", "he", "hed", "hell", "hes", "her", "here", "heres", "hers", "herself", "him", "himself", "his", "how", "hows", "i", "id", "ill", "im", "ive", "if", "in", "into", "is", "isnt", "it", "its", "its", "itself", "lets", "me", "more", "most", "mustnt", "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "shant", "she", "shed", "shell", "shes", "should", "shouldnt", "so", "some", "such", "than", "that", "thats", "the", "their", "theirs", "them", "themselves", "then", "there", "theres", "these", "they", "theyd", "theyll", "theyre", "theyve", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasnt", "we", "wed", "well", "were", "weve", "were", "werent", "what", "whats", "when", "whens", "where", "wheres", "which", "while", "who", "whos", "whom", "why", "whys", "with", "wont", "would", "wouldnt", "you", "youd", "youll", "youre", "youve", "your", "yours", "yourself", "yourselves"]
+			words = _.filter(words, function (w) {
+				return w.match(/^\w+$/) && !_.contains(stopWords, w);
+			});
+
+			words = _.uniq(words);
+			lemmatizer.initialize().then(
+				function (success) {
+					for (var i = 0; i < words.length; i++) {
+						words[i] = lemmatizer.lemmas(words[i], 'verb')[0][0];
+					}
+
+					for (var i = 0; i < words.length; i++) {
+						var index = prevMetaData.indexOf(words[i]);
+						prevMetaData.splice(index, 1);
+						//store.remove("service_metadata", words[i]);
+					}
+
+					store.set("product_metadata", prevMetaData);
+					store.save(null, {
+						success: function (store) {
+							console.log("Saved");
+						},
+						error: function (error, message) {
+							console.error(message);
+						}
+					});
+
+					response.success();
+
+				}, function (error) {
+					console.error("Got an error " + error.code + " : " + error.message);
+					response.error(error);
+				}
+			);
+		},
+		error: function (error, message) {
+			console.log(message);
+			response.success();
+		}
+	});
+});
+
 Parse.Cloud.beforeDelete("Services", function (request, response) {
 
 	var lemma = require('cloud/lemmatizer.js');
@@ -686,7 +858,8 @@ Parse.Cloud.beforeDelete("Services", function (request, response) {
 			);
 		},
 		error: function (error, message) {
-			response.error(message);
+			console.log(message);
+			response.success();
 		}
 	});
 
@@ -748,4 +921,57 @@ Parse.Cloud.afterSave("Messages", function (request) {
 		}
 	});
 
+});
+
+var mailchimpApiKey = "5d3ea0f5a5eda21f9fce2a97127b9c0e-us10";
+
+Parse.Cloud.define("mailchimp", function (request, response) {
+
+	var userId = request.params.userId;
+
+	var query = new Parse.Query(Parse.User);
+
+	query.get(userId, {
+		success: function (user) {
+			var email = user.get("email");
+			var name = user.get("name").split(' ');
+			var firstName = name[0];
+			var lastName = name[name.length - 1];
+			var mergevars = {
+				FNAME: firstName,
+				LNAME: lastName
+			}
+
+			var mailchimpData = {
+				apikey: mailchimpApiKey,
+				id: "4e7eeef587",
+				email: {
+					email: email
+				},
+				merge_vars: mergevars,
+				double_optin: false
+			}
+
+			var url = "https://us10.api.mailchimp.com/2.0/lists/subscribe.json";
+
+			Parse.Cloud.httpRequest({
+				method: 'POST',
+				url: url,
+				body: JSON.stringify(mailchimpData),
+				success: function (httpResponse) {
+					console.log(httpResponse.text);
+					response.success(true);
+				},
+				error: function (httpResponse) {
+					console.error('Request failed with response code ' + httpResponse.status);
+					console.error(httpResponse.text);
+					response.error(httpResponse.text);
+				}
+			});
+		},
+		error: function (error, message) {
+			console.error(message);
+			response.error(message);
+		}
+	});
 });
