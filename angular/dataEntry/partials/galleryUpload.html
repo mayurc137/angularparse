@@ -1,0 +1,105 @@
+<div class="galleryMain" id="galleryMain">
+
+	<div class="galleryHeader">
+		<div class="inputBoxContainer">
+			<p class="inputBoxHeader">Store Handle</p><span class="requiredLabel">*</span>
+			<input class="inputBox" id="storeHandle" name="storeHandle" type = "text" required="required" ng-model="storeHandle" pattern="[a-zA-Z0-9]+">
+			<p class="formError" ng-show="invalidStore">Invalid Store Handle</p>
+		</div><div class="inputBoxContainer withButton">
+			<br/>
+			<input type = "button" class="formButton" value="Select Store" ng-click="getStoreDetails()">
+		</div>
+	</div>
+
+	<div id="holder">
+		<p>Drop Images Here</p>
+		<p>{{imageCount | imageCount}} selected</p>
+	</div> 
+
+	<div class="buttonContainer" ng-show="imageCount > 0">
+		<input type = "button" class="formButton" value="Upload Images"  ng-click="uploadToGallery()">
+		<input type = "button" class="formButton" value="Clear Selection" ng-click="clearSelection()">
+	</div>
+	
+
+	<p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+
+	<div class="galleryOptions" ng-show="gallery.length > 0">
+		<div class="option" ng-show="selectAll || imagesToDelete.length > 0" ng-click="deletePictures()">
+			Delete
+		</div>
+		<div class="option" ng-class="{active: multiselect}" ng-click="toggleMultiSelect()">
+			Select
+		</div>
+		<div class="option" ng-class="{active: selectAll}" ng-click="toggleAllPictures()">
+			Select All
+		</div>
+	</div>
+
+	<div class="galleryImgContainer" ng-repeat="image in gallery" ng-click="toggleImageSelect($index)">
+		<img class="galleryImg" ng-src="{{image.get('image')._url}}">
+		<div class="tickIcon" ng-show="image.selected">
+			<img src="img/assets/select-light.png" width="20px">
+		</div>
+	</div>
+</div>
+<script>
+	var holder = document.getElementById('holder'),
+    tests = {
+      	filereader: typeof FileReader != 'undefined',
+      	dnd: 'draggable' in document.createElement('span')
+    }, 
+    support = {
+      	filereader: document.getElementById('filereader')
+    },
+    acceptedTypes = {
+      	'image/png': true,
+      	'image/jpeg': true,
+      	'image/gif': true
+    },
+    fileupload = document.getElementById('upload');
+
+	if (tests.dnd) { 
+  		holder.ondragover = function () { return false; };
+  		holder.ondragend = function () { return false; };
+  		holder.ondrop = function (e) {
+    		this.className = '';
+    		e.preventDefault();
+
+    		var files = e.dataTransfer.files
+    		console.log(files);
+    		var i;
+
+    		for (i = 0; i < files.length; i++) {
+    			var file = files[i];
+      			if (tests.filereader === true && acceptedTypes[file.type] === true){
+    				continue;
+  				}else{
+  					alert("Wrong File Type");
+  					break;
+  				}
+    		}
+
+    		if(i == files.length)
+    			angular.element(document.getElementById('galleryMain')).scope().uploadImages(files);
+  		}
+	} else {
+  		fileupload.className = '';
+  		fileupload.querySelector('input').onchange = function () {
+  			var files = this.files
+  			var i;
+    		for (i = 0; i < files.length; i++) {
+    			var file = files[i];
+      			if (tests.filereader === true && acceptedTypes[file.type] === true) {
+    		
+  				}else{
+  					alert("Wrong File Type");
+  					break
+  				}
+    		}
+    		if(i == files.length)
+    			angular.element(document.getElementById('galleryMain')).scope().uploadImages(files);
+  		};
+	}
+</script>
+

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="dataEntry">
+<head>
+	<title ng-bind="seo.pageTitle + ' | DATA ENTRY'"></title>
+	<base href="/angular/dataEntry/">
+
+	<meta name="title" content="{{seo.pageTitle}}">
+   	<meta name="description" content="{{seo.description}}">
+    <meta name="keywords" content="{{seo.keywords}}">
+
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/dashboard.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/angular.js"></script>
+	<script type="text/javascript" src="js/angular-route.js"></script>
+	<script type="text/javascript" src="js/parse-angular.js"></script>
+	<script src="js/parse.js"></script>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<style type="text/css">
+
+	.inputContainer{
+		position: relative;
+		margin:25% auto;
+		width: 40%;
+		top:50%;
+		background: white;
+		border: 1px solid rgba(#212121,0.5);
+		padding: 30px;
+	}
+
+	</style>
+</head> 
+<body>
+	<div ng-view></div>
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="factory/services.js"></script>
+	<script type="text/javascript" src="controllers/controller.js"></script>
+	<script type="text/javascript" src="js/filters.js"></script>
+</body>
+</html>

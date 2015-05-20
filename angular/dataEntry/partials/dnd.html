@@ -1,0 +1,61 @@
+<div id="holder" style="border: 10px dashed #ccc; width: 300px; min-height: 300px; margin: 20px;">
+</div> 
+<p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+<script>
+	var holder = document.getElementById('holder'),
+    tests = {
+      	filereader: typeof FileReader != 'undefined',
+      	dnd: 'draggable' in document.createElement('span')
+    }, 
+    support = {
+      	filereader: document.getElementById('filereader')
+    },
+    acceptedTypes = {
+      	'image/png': true,
+      	'image/jpeg': true,
+      	'image/gif': true
+    },
+    fileupload = document.getElementById('upload');
+
+	if (tests.dnd) { 
+  		holder.ondragover = function () { return false; };
+  		holder.ondragend = function () { return false; };
+  		holder.ondrop = function (e) {
+    		this.className = '';
+    		e.preventDefault();
+
+    		var files = e.dataTransfer.files
+    		console.log(files);
+    		var i;
+    		for (i = 0; i < files.length; i++) {
+    			var file = files[i];
+      			if (tests.filereader === true && acceptedTypes[file.type] === true) {
+    		
+  				}else{
+  					console.log("Wrong Type");
+  					break;
+  				}
+    		}
+
+    		if(i == files.length)
+    			angular.element(document.getElementById('mainDiv')).scope().uploadLogo(files[0]);
+  		}
+	} else {
+  		fileupload.className = 'hidden';
+  		fileupload.querySelector('input').onchange = function () {
+  			var files = this.files
+  			var i;
+    		for (i = 0; i < files.length; i++) {
+    			var file = files[i];
+      			if (tests.filereader === true && acceptedTypes[file.type] === true) {
+    		
+  				}else{
+  					console.log("Wrong Type");
+  					break
+  				}
+    		}
+    		if(i == files.length)
+    			angular.element(document.getElementById('mainDiv')).scope().uploadLogo(files[0]);
+  		};
+	}
+</script>

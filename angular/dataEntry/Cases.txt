@@ -1,0 +1,6 @@
+1. New Admin
+ - admin email already registered
+2. Select Admin From List
+3. Add Manager
+4. Neither Selected
+5. Both Selected

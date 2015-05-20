@@ -1,0 +1,9 @@
+<div class="inputContainer">
+	<form novalidate name="loginForm" ng-submit="loginForm.$valid && DataEntryLogin()">
+		<p>Username</p><span class="requiredLabel">*</span>
+		<input type = "text" ng-model = "user.username" required="required" />
+		<p>Password</p><span class="requiredLabel">*</span>
+		<input type = "text" ng-model = "user.password" required="required" /><br>
+		<input type = "submit" class = "formButton" value="Login" />
+	</form>
+</div>

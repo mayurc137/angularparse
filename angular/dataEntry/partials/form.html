@@ -1,0 +1,208 @@
+<div id = "mainDiv">
+	<form novalidate name="storeForm" ng-submit="storeForm.$valid && saveStore()">
+
+		<div class="cardContainerFull basicDetails">
+			<div class="cardContent inputCard">
+				<a class="galleryBtn" ng-show="formAction == 'edit'" href="galleryUpload">
+					Go To Gallery Page</a>
+				<p class="cardHeader">Basic Details</p>
+				<div class="inputBoxContainer longInput">
+					<p class="inputBoxHeader">Store Name </p><span class="requiredLabel">*</span>
+					<input class="inputBox" name="storeName" type = "text" required="required" ng-model="store.name">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.storeName.$touched) && storeForm.storeName.$error.required">Invalid Store Name</p>
+				    
+				</div>
+				<div class="inputBoxContainer">
+					<p class="inputBoxHeader">Store Handle</p><span class="requiredLabel">*</span>
+					<input class="inputBox" id="storeHandle" name="storeHandle" type = "text" required="required" ng-model="store.storeHandle" pattern="[a-zA-Z0-9]+">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.storeHandle.$touched) && storeForm.storeHandle.$error.required">Invalid Store Handle</p>
+					<p class="formError" ng-hide="storeHandleAvailable">Handle Unavailable</p>
+					<p class="formSuccess" ng-show="storeHandleAvailable && availabilityChecked">Handle Available</p>
+				</div><div class="inputBoxContainer withButton">
+					<br/>
+					<input type = "button" class="formButton" value="Fetch Store Details" ng-click="getStoreDetails()" ng-show="formAction == 'edit'">
+					<input type = "button" class="formButton" value="Check Availability" ng-click="checkStoreHandleAvailability()">
+				</div>
+
+				<div class="inputBoxContainer withTextArea">
+					<p class="inputBoxHeader">Description</p><span class="requiredLabel">*</span>
+					<textarea class="inputBox inputTextArea" id="description" name="description" required="required" ng-model="store.description"></textarea>
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.description.$touched) && storeForm.description.$error.required">Invalid Description</p>
+				</div><div class="inputBoxContainer withTextArea">
+					<p class="inputBoxHeader">Address</p><span class="requiredLabel">*</span>
+					<textarea class="inputBox inputTextArea" id="storeAddress" name="storeAddress" type = "text" required="required" ng-model="store.address"></textarea>
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.storeAddress.$touched) && storeForm.storeAddress.$error.required">Invalid Address</p>
+				</div><div class="inputBoxContainer longInput">
+					<p class="inputBoxHeader">Major Sale</p>
+					<input id="sale" class="inputBox" type = "text"  ng-model="store.majorSale">	
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">Latitude</p><span class="requiredLabel">*</span>
+					<input type="text" id="latitude" class="inputBox" name="latitude" required="required" ng-model="store.latitude">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.latitude.$touched) && storeForm.latitude.$error.required">Invalid Latitude</p>
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">Longitude</p><span class="requiredLabel">*</span>
+					<input type="text" id="longitude" class="inputBox" name="longitude" required="required" ng-model="store.longitude">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.longitude.$touched) && storeForm.longitude.$error.required">Invalid Longitude</p>
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">State</p><span class="requiredLabel">*</span>
+					<select ng-model="selectedState" class="inputBox">
+						<option ng-repeat="state in states" value="{{state}}">{{state}}</option>
+					</select>
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">City</p><span class="requiredLabel">*</span>
+					<select ng-model="selectedCity" ng-change="cityChange()" class="inputBox">
+						<option ng-repeat="city in cities | filter: selectedState" value="{{city.name}}">{{city.name}}</option>
+					</select>
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">Locality</p><span class="requiredLabel">*</span>
+					<select ng-model="selectedLocality" class="inputBox">
+						<option ng-repeat="locality in dupLocalities" value="{{$index}}">{{locality.get('locality_name')}}</option>
+					</select>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Payment Type</p><span class="requiredLabel">*</span>
+					<select ng-model="store.selectedPayment" required="required" class="inputBox ">
+						<option ng-repeat="payment in paymentOptions" value="{{payment}}">{{payment}}</option>
+					</select>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Store Logo</p>
+					<input type = "file" class="inputBox" name="logoUpload"
+		onchange="angular.element(this).scope().storeLogoChanged(this.files)">
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Banner Image</p>
+					<input type = "file" class="inputBox" name="bannerUpload"
+		onchange="angular.element(this).scope().storeBannerChanged(this.files)">
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Opening Time</p>
+					<input id="startTime" class="inputBox " type = "time" ng-model="store.startTime">
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Closing Time</p>
+					<input id="endTime" type = "time" class="inputBox" ng-model="store.endTime">
+				</div><div class="inputBoxContainer longInput">
+					<p class="inputBoxHeader">Working Days</p><br/>
+					<div ng-repeat="day in weekDays" class="dayContainer hnd1" ng-class="{activeTag: day.selected}" ng-click="toggleDay(day)">
+						<p class="tagTitle">{{day.name}}</p>
+					</div>
+				</div>
+			</div>
+		</div>	
+
+		<div class="cardContainerFull contactDetails">
+			<div class="cardContent inputCard">
+				<p class="cardHeader">Contact Details</p>
+				<div class="inputBoxContainer">
+					<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
+					<input id="primaryPhone" class="inputBox" name="primaryPhone" type = "phone" required="required" ng-model="store.primaryPhone" pattern="[0-9]{10,11}">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.primaryPhone.$touched) && storeForm.primaryPhone.$error.required">Invalid Phone No</p>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Alternative Phone No </p>
+					<input id="secPhone" class="inputBox" name="secPhone" type = "phone" ng-model="store.secPhone" pattern="[0-9]{10,11}">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.secPhone.$touched) && storeForm.secPhone.$error.required">Invalid Phone No</p>
+				</div><div class="inputBoxContainer ">
+					<p class="inputBoxHeader">Website</p>
+					<input id="website" class="inputBox" name="website" type = "url" ng-model="store.website">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.website.$touched) && storeForm.website.$error.required">Invalid Website Link</p>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Online Store Link</p>
+					<input id="onlineStore" class="inputBox" name="onlineStore" type = "url" ng-model="store.onlineStore">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.onlineStore.$touched) && storeForm.onlineStore.$error.required">Invalid Online Store Link</p>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Facebook Link</p>
+					<input class="inputBox" name="facebook" id="facebook" type = "url" ng-model="store.facebookLink">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.facebook.$touched) && storeForm.facebook.$error.required">Invalid Facebook Link</p>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Twitter Link</p>
+					<input class="inputBox" name="twitter" id="twitter" type="url" ng-model="store.twitterLink">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.twitter.$touched) && storeForm.twitter.$error.required">Invalid Twitter Link</p>
+				</div><div class="inputBoxContainer">
+					<p class="inputBoxHeader">Store Contact Email</p><span class="requiredLabel">*</span>
+					<input id="storeEmail" class="inputBox" name="storeEmail" type = "email" required="required" ng-model="store.email">
+					<p class="formError" ng-show="(storeForm.$submitted || storeForm.storeEmail.$touched) && storeForm.storeEmail.$error.required">Invalid Email Id</p>
+				</div>
+			</div>
+		</div>	
+		<div class="cardContainerFull ownerDetails">
+			<div class="cardContent inputCard">
+				<p class="cardHeader">Owner/Manager Details</p>
+
+				<p class="formError" ng-hide="managerPresent || adminPresent">You must add an Administrator or a Manager</p>
+
+				<div class="inputBoxContainer">
+					<input type = "button" class="formButton" value="{{adminBtnText}}" ng-click="toggleAdminActive()">
+					<input type = "button" class="formButton" value="{{managerBtnText}}" ng-click="toggleManagerActive()">
+				</div>
+
+				<div ng-show="adminPresent">
+					<div class="inputBoxContainer" ng-hide="newAdminPresent">
+						<p class="inputBoxHeader">Admin Username</p><span class="requiredLabel">*</span>
+						<select ng-model="selectedAdmin" class="inputBox" ng-change="adminChange()">
+							<option ng-repeat="user in administrators" value="{{$index}}">{{user.get('username')}}</option>
+						</select>
+					</div><div class="inputBoxContainer withButton" ng-hide="newAdminPresent">
+						</br>
+						<input type = "button" class="formButton" value="Create New" ng-click="newAdmin()" ng-required="adminPresent">
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Admin Name</p><span class="requiredLabel">*</span>
+						<input id="adminName" class="inputBox" name="adminName" type = "text" ng-model="admin.name" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminName.$touched) && storeForm.adminName.$error.required">Admin Name Required</p>
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Email Id</p><span class="requiredLabel">*</span>
+						<input id="adminEmail" class="inputBox" name="adminEmail" type = "email" ng-model="admin.email" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminEmail.$touched) && storeForm.adminEmail.$error.required">Invalid Email</p>
+						<p class="formError" ng-hide="adminEmailAvailable">Email Already Registered.</p>
+					</div><div class="inputBoxContainer ">
+						<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
+						<input id="adminPhone" class="inputBox" name="adminPhone" type = "phone" ng-model="admin.phone" pattern="[0-9]{10,11}" ng-required="adminPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.adminPhone.$touched) && storeForm.adminPhone.$error.required">Invalid Phone Number</p>
+					</div>
+				</div>
+
+				<div ng-show="managerPresent">
+					<div class="inputBoxContainer">
+						<p class="inputBoxHeader">Manager Name</p><span class="requiredLabel">*</span>
+						<input id="ownerName" class="inputBox" name="ownerName" type = "text" ng-model="storeOwner.name" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerName.$touched) && storeForm.ownerName.$error.required">Manager Name Required</p>
+					</div><div class="inputBoxContainer">
+						<p class="inputBoxHeader">Email Id</p><span class="requiredLabel">*</span>
+						<input id="ownerEmail" class="inputBox" name="ownerEmail" type = "email" ng-model="storeOwner.email" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerEmail.$touched) && storeForm.ownerEmail.$error.required">Invalid Email</p>
+						<p class="formError" ng-hide="ownerEmailAvailable">Email Already Registered By Another.</p>
+					</div><div class="inputBoxContainer ">
+						<p class="inputBoxHeader">Phone No</p><span class="requiredLabel">*</span>
+						<input id="ownerPhone" class="inputBox" name="ownerPhone" type = "phone" ng-model="storeOwner.phone" pattern="[0-9]{10,11}" ng-required="managerPresent">
+						<p class="formError" ng-show="(storeForm.$submitted || storeForm.ownerPhone.$touched) && storeForm.ownerPhone.$error.required">Invalid Phone Number</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="cardContainerFull catDetails">
+			<div class="cardContent inputCard">
+				<p class="cardHeader">Primary Category</p>
+				<div ng-repeat="category in categories" class="categoryContainer" ng-class="{activeCat: category.id == store.selectedCategory.id}" ng-click="setSelectedCategory(category)">
+					<img ng-src="img/cat/dark/{{category.get('image_link')}}" class="tagImg" ng-hide="category.id == store.selectedCategory.id">
+					<img ng-src="img/cat/light/{{category.get('image_link')}}" class="tagImg" ng-show="category.id == store.selectedCategory.id">
+					<p class="categoryTitle">{{category.get('categoryName')}}</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="cardContainerFull tagDetails">
+			<div class="cardContent inputCard">
+				<p class="cardHeader">Known For</p>
+				<div ng-repeat="category in categories">
+					<p class="tagHeader">{{category.get('categoryName')}}</p>
+					<div class="tagDivider"></div>
+					<div ng-repeat="tag in tags | filter: category.get('categoryName')" class="tagContainer hnd1" ng-class="{activeTag: tag.selected}" ng-click="toggleTag(tag)">
+						<div class="imgtagged">
+							<img ng-src="img/tag/hnd/{{tag.get('tag_image')}}" class="imgtaggedimg">
+						</div>
+						<p class="tagTitle">{{tag.get('tag_description')}}</p>
+					</div>
+				</div>
+
+				<input type="submit" name="submitButton" value="Save Store" class="formButton">
+			</div>
+		</div>
+	</form>
+</div>
+
