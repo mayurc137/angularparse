@@ -114,14 +114,17 @@ parseServices.factory('ParseFactory', ['$q',
 
         factory.getStoreManager = function(store) {
             var deferred = $q.defer();
+
+            var ids = [];
+            ids.push(store);
+
             var query = new Parse.Query(Parse.User);
-            query.containedIn("store_ids", store);
-            query.equalTo('is_store', true);
+            query.containedIn("store_ids", ids);
             query.equalTo('is_admin', false);
 
             query.find({
-                success: function(admin) {
-                    deferred.resolve(admin);
+                success: function(manager) {
+                    deferred.resolve(manager);
                 },
                 error: function(error, message) {
                     console.log(message);
@@ -548,27 +551,6 @@ parseServices.factory('ParseFactory', ['$q',
                     }
                 });
             }
-
-            return deferred.promise;
-        }
-
-        factory.editStoreOwner = function(user, ownerDetails) {
-
-            var deferred = $q.defer();
-
-            Parse.Cloud.run('editStoreOwner', {
-                user: user.id,
-                ownerDetails: ownerDetails
-            }, {
-                success: function(result) {
-                    console.log(result);
-                    deferred.resolve(result);;
-                },
-                error: function(error) {
-                    console.log(error);
-                    deferred.reject(message);
-                }
-            });
 
             return deferred.promise;
         }
