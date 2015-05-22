@@ -99,6 +99,7 @@ body{
 	text-align:center;
 	z-index:5;
 	max-width:1200px;
+	overflow:hidden;
 }
 .navBar{
 	position:relative;
@@ -890,8 +891,8 @@ a{
 	and (max-width:1200px){
 
 	.phoneImgContainer{
-		width: 35%;
-
+		width: 30%;
+		height: 600px;
 	}
 	.phoneImgContainerMobile{
 		display: block;
