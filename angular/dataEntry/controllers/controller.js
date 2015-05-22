@@ -1,14 +1,18 @@
 var appControllers = angular.module('dataEntryControllers', []);
 
-appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
-	function ($q, $scope, ParseFactory, $routeScope, $routeParams, $route) {
+appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route', '$location',
+	function ($q, $scope, ParseFactory, $rootScope, $routeParams, $route, $location) {
+
+		if (!sessionStorage.getItem('loggedIn')) {
+			$location.path('login');
+		}
 
 		ParseFactory.init();
 
-		$routeScope.seo = {};
-		$routeScope.seo.pageTitle = "Store Info";
-		$routeScope.seo.description = "Description of the page";
-		$routeScope.seo.keywords = "keyword1,keyword2";
+		$rootScope.seo = {};
+		$rootScope.seo.pageTitle = "Store Info";
+		$rootScope.seo.description = "Description of the page";
+		$rootScope.seo.keywords = "keyword1,keyword2";
 
 		$scope.formAction = $routeParams.action;
 
@@ -851,15 +855,19 @@ appControllers.controller('formCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
 ]);
 
 
-appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
-	function ($q, $scope, ParseFactory, $routeScope, $routeParams, $route) {
+appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$route', '$location',
+	function ($q, $scope, ParseFactory, $rootScope, $route, $location) {
+
+		if (!sessionStorage.getItem('loggedIn')) {
+			$location.path('login');
+		}
 
 		ParseFactory.init();
 
-		$routeScope.seo = {};
-		$routeScope.seo.pageTitle = "Store Gallery";
-		$routeScope.seo.description = "Gallery of the page";
-		$routeScope.seo.keywords = "keyword1,keyword2";
+		$rootScope.seo = {};
+		$rootScope.seo.pageTitle = "Store Gallery";
+		$rootScope.seo.description = "Gallery of the page";
+		$rootScope.seo.keywords = "keyword1,keyword2";
 
 		$scope.storeHandle = "";
 		$scope.store = {};
@@ -1032,21 +1040,22 @@ appControllers.controller('galleryCtrl', ['$q', '$scope', 'ParseFactory', '$root
 ]);
 
 
-appControllers.controller('loginCtrl', ['$q', '$scope', 'ParseFactory', '$rootScope', '$routeParams', '$route',
-	function ($q, $scope, ParseFactory, $routeScope, $routeParams, $route) {
+appControllers.controller('loginCtrl', ['$scope', 'ParseFactory', '$rootScope',
+	function ($scope, ParseFactory, $rootScope) {
 
 		ParseFactory.init();
 
-		$routeScope.seo = {};
-		$routeScope.seo.pageTitle = "Store Info";
-		$routeScope.seo.description = "Description of the page";
-		$routeScope.seo.keywords = "keyword1,keyword2";
-
-		$scope.formAction = $routeParams.action;
+		$rootScope.seo = {};
+		$rootScope.seo.pageTitle = "Store Info";
+		$rootScope.seo.description = "Description of the page";
+		$rootScope.seo.keywords = "keyword1,keyword2";
 
 		$scope.user = {};
 		$scope.user.username = "";
 		$scope.user.password = "";
+
+		$scope.invalidInput = false;
+		$scope.popupVisible = false;
 
 		$scope.DataEntryLogin = function () {
 			console.log($scope.user);
@@ -1055,11 +1064,17 @@ appControllers.controller('loginCtrl', ['$q', '$scope', 'ParseFactory', '$rootSc
 					//console.log(success);
 					if (success == false) {
 						console.log("Error User Not Present");
+						$scope.invalidInput = true;
 					} else if (success == true) {
 						console.log("Logged In");
+						$scope.invalidInput = false;
+						$scope.popupVisible = true;
+						sessionStorage.setItem("username", $scope.user.username);
+						sessionStorage.setItem("loggedIn", true);
 					}
 				}, function (message) {
 					console.log(message);
+					$scope.invalidInput = true;
 				}
 			);
 		}

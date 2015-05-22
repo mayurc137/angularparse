@@ -1,9 +1,18 @@
 <div class="inputContainer">
+	<h2>Login Form</h2>
 	<form novalidate name="loginForm" ng-submit="loginForm.$valid && DataEntryLogin()">
-		<p>Username</p><span class="requiredLabel">*</span>
-		<input type = "text" ng-model = "user.username" required="required" />
-		<p>Password</p><span class="requiredLabel">*</span>
-		<input type = "text" ng-model = "user.password" required="required" /><br>
-		<input type = "submit" class = "formButton" value="Login" />
+		<input type = "text" name="username" class="inputBox" ng-model = "user.username" required="required" placeholder="Enter Username"/><br><br>
+		<input type = "password" name="password" class="inputBox" ng-model = "user.password" required="required" placeholder="Enter Password"/><br>
+		<p class="formError" ng-show="loginForm.$submitted && (loginForm.username.$error.required || loginForm.password.$error.required || invalidInput)">Invalid Username or Password</p>
+		<input type = "submit" class = "formButton loginFormBtn" value="Login" />
 	</form>
+</div>
+
+<div class = "alertContainer" ng-show = "popupVisible">
+	<div class = "alertBox">
+		<div class = "alertTitle">Login Succesfull!</div><br>
+		<a href="create/formFill"><input type = "button" value = "Create Store"  class = "formButton" /></a>
+		<a href="edit/formFill"><input type = "button" value = "Edit Store"  class = "formButton" /></a>
+		<img src="img/cross.png" class="cancelAlert" ng-click="popupVisible = false">
+	</div>
 </div>
