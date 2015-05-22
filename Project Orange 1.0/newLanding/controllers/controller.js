@@ -6,9 +6,11 @@ appControllers.controller('homeCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         ParseFactory.init();
 
         $rootScope.seo = {};
-        $rootScope.seo.pageTitle = "Klassy - Discover and engage with local stores and service providers";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.pageTitle = "Klassy | Discover and engage with local stores and service providers";
+        $rootScope.seo.description = "Discover and engage with lifestyle stores and service providers. View products, deals, coupons, chat with brands and more! Signup for Beta/List your Business!";
+        $rootScope.seo.keywords = "lifestyle,discover,engage,local,stores,services,products,search,coupons,deals,discounts,offers,clothes,accessories,footwear,beauty,home,decor,fashion,bed,bath,salon,spa,marketing,free,analytics,business`";
+        $rootScope.seo.robots = "index,follow";
+
 
         $scope.currentUser = ParseFactory.getCurrentUser();
 
@@ -208,8 +210,9 @@ appControllers.controller('businessCtrl', ['$q', '$scope', 'ParseFactory', '$roo
 
         $rootScope.seo = {};
         $rootScope.seo.pageTitle = "Klassy for Businesses";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.description = "Listing on Klassy is completely free! Brand visibility, customer engagement and increased footfall! Get your products, services, deals, coupons, discounts shown online.";
+        $rootScope.seo.keywords = "klassy,business,free,marketing,online,stores,services,call,listing,platform,tool,analytics,engagement,brand,visibility,footfall,customer";
+        $rootScope.seo.robots = "index,follow";
 
         $scope.storeSignedUp = false;
 
@@ -247,9 +250,10 @@ appControllers.controller('betaCtrl', ['$q', '$scope', 'ParseFactory', '$rootSco
         ParseFactory.init();
 
         $rootScope.seo = {};
-        $rootScope.seo.pageTitle = "Klassy - Join the Beta";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.pageTitle = "Klassy | Join the Beta";
+        $rootScope.seo.description = "Signup for Beta via Facebook and get access to our local store product and service discovery platform. Get deals, coupons and offers. Chat with brands.";
+        $rootScope.seo.keywords = "klassy,beta,signup,facebook,discover,brands,engage,lifestyle,shopping,products,view,showcase";
+        $rootScope.seo.robots = "index,follow";
 
         $scope.currentUser = ParseFactory.getCurrentUser();
 
@@ -421,8 +425,9 @@ appControllers.controller('aboutCtrl', ['$q', '$scope', 'ParseFactory', '$rootSc
 
         $rootScope.seo = {};
         $rootScope.seo.pageTitle = "Klassy | About";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.description = "Klassy gives you the power to make smarter and more informed decisions about your local spending with our amazing featureset. The problem and our solution.";
+        $rootScope.seo.keywords = "chat,coupons,map,based,search,visibility,brand,engagement,product,showcase,quality,listing,collection,community,business,problem,solution";
+        $rootScope.seo.robots = "index,follow";
 
     }
 ]);
@@ -437,8 +442,10 @@ appControllers.controller('contactCtrl', ['$q', '$scope', 'ParseFactory', '$root
 
         $rootScope.seo = {};
         $rootScope.seo.pageTitle = "Klassy | Contact";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.description = "Want to get in touch with our team? We're only an email or call away. Here's our details.";
+        $rootScope.seo.keywords = "contact,phone,email,location,klassy,hq,headquarters,office,pune,maharashtra,india,in,area,touch,details,call,9819954448";
+        $rootScope.seo.robots = "index,follow";
+
 
     }
 ]);
@@ -450,8 +457,8 @@ appControllers.controller('faqCtrl', ['$q', '$scope', 'ParseFactory', '$rootScop
 
         $rootScope.seo = {};
         $rootScope.seo.pageTitle = "Klassy | FAQ";
-        $rootScope.seo.description = "Gallery of the page";
-        $rootScope.seo.keywords = "keyword1,keyword2";
+        $rootScope.seo.description = "FAQs about Klassy mobile and web platform";
+        $rootScope.seo.keywords = "FAQ,klassy,frequently,asked,questions,how,where,what,when,why,should,can,list,business,find,search,query";
 
     }
 ]);
