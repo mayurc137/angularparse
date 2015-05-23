@@ -32,7 +32,7 @@
 					</div><div class="storeInputContainer">
 						<input class="storeInput withoutLine" placeholder="Phone Number *" name="phoneNumber" type = "phone" required="required" ng-model="store.phone" pattern="[0-9]{10,11}">
 					</div>
-					<div class="callBack"><input type="submit" class="callBackBtnWhite" value="Call me Back"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
+					<div class="callBack"><input type="submit" class="callBackBtnWhite" value="Call me Back" analytics-on="click" analytics-event="Business Request"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
 				</form>
 			</div>
 			<div class="storeComplete" ng-show="storeSignedUp">
