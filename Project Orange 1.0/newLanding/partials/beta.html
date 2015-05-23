@@ -19,7 +19,7 @@
 		<div class="sectionHeader white">Sign up for our beta program</div>
 		<div class="sectionSubHeader lightWhite">Get early access to our offerings by signing in with your Facebook account.</div>
 		<div class="userSignInline withoutLine" ng-hide="userSignedUp">
-				<span class="signUpFacebook facebookColor" ng-click="handleLogin()" nalytics-on="click" analytics-event="User SignUp" analytics-category="Commands">Join using Facebook</span>
+				<span class="signUpFacebook facebookColor" ng-click="handleLogin()" analytics-on="click" analytics-event="User SignUp" analytics-category="Registration">Join using Facebook</span>
 				<div class="extraLarge"></div>
 		</div>
 		<div class="userSignInlineComplete withoutLine" ng-show="userSignedUp">
@@ -28,7 +28,7 @@
 			<div class="extra"></div>
 			<span class="userSignInlineSubMessage white">Meanwhile let your Friends know about Klassy</span><br/>
 			<div class="extraLarge"></div>
-			<span class="shareFacebook" ng-click="shareToFb()" analytics-on="click" analytics-event="Share Fb">Share</span><a class="twitter-share-button" analytics-on="click" analytics-event="Share Twitter" href="https://twitter.com/share" data-related="twitterdev" data-text="Klassy - Discover and engage with local stores and service providers. Check It Out:" data-url="http://klassy.in" data-hashtags="klassy" data-size="large" data-count="none">Tweet</a>
+			<span class="shareFacebook" ng-click="shareToFb()" analytics-on="click" analytics-event="Share Fb" analytics-category="Social">Share</span><a class="twitter-share-button" analytics-on="click" analytics-event="Share Twitter" analytics-category="Social" href="https://twitter.com/share" data-related="twitterdev" data-text="Klassy - Discover and engage with local stores and service providers. Check It Out:" data-url="http://klassy.in" data-hashtags="klassy" data-size="large" data-count="none">Tweet</a>
 		</div>
 	</div>
 </div>
@@ -108,11 +108,11 @@
 <footer>
 	<div class="wrapper">
 		<div class="footerContainer social">
-			<a href="https://www.facebook.com/getklassy" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
-			<a href="https://twitter.com/getKlassy" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
-			<a href="https://www.linkedin.com/company/klassy" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
-			<a href="https://www.crunchbase.com/organization/klassy" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
-			<a href="https://angel.co/klassy" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
+			<a href="https://www.facebook.com/getklassy" analytics-on="click" analytics-event="Facebook Link" analytics-category="Social" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
+			<a href="https://twitter.com/getKlassy" analytics-on="click" analytics-event="Twitter Link" analytics-category="Social" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
+			<a href="https://www.linkedin.com/company/klassy" analytics-on="click" analytics-event="LinkedIn Link" analytics-category="Social" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
+			<a href="https://www.crunchbase.com/organization/klassy" analytics-on="click" analytics-event="CrunchBase Link" analytics-category="Social" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
+			<a href="https://angel.co/klassy" analytics-on="click" analytics-event="AngelList Link" analytics-category="Social" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
 		</div>
 		<div class="lineBreak"><br/></div>
 		<div class="footerContainer links">

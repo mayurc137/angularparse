@@ -126,7 +126,7 @@
 	<div class="extraLarge"></div>
 	<span class="userSignInlineMessage">Sign Up for Beta Now to get Early Access</span><br/>
 	<div class="extraLarge"></div>
-	<span class="signUpFacebook" analytics-on="click" analytics-event="User SignUp" analytics-category="Commands" ng-click="handleLogin()">Sign Up With Facebook</span>
+	<span class="signUpFacebook" analytics-on="click" analytics-event="User SignUp" analytics-category="Registration" ng-click="handleLogin()">Sign Up With Facebook</span>
 </div>
 <div class="userSignInlineComplete" ng-show="userSignedUp">
 	<div class="extraLarge"></div>
@@ -134,7 +134,7 @@
 	<div class="extra"></div>
 	<span class="userSignInlineSubMessage">Meanwhile let your Friends know about Klassy</span><br/>
 	<div class="extraLarge"></div>
-	<span class="shareFacebook" analytics-on="click" analytics-event="Share Fb" ng-click="shareToFb()">Share</span><a class="twitter-share-button" analytics-on="click" analytics-event="Share Twitter" href="https://twitter.com/share" data-related="twitterdev" data-text="Klassy - Discover and engage with local stores and service providers. Check It Out:" data-url="http://klassy.in" data-hashtags="klassy" data-size="large" data-count="none">Tweet</a>
+	<span class="shareFacebook" analytics-on="click" analytics-event="Share Fb" analytics-category="Social" ng-click="shareToFb()">Share</span><a class="twitter-share-button" analytics-on="click" analytics-event="Share Twitter" analytics-category="Social" href="https://twitter.com/share" data-related="twitterdev" data-text="Klassy - Discover and engage with local stores and service providers. Check It Out:" data-url="http://klassy.in" data-hashtags="klassy" data-size="large" data-count="none">Tweet</a>
 </div>
 </div><div class="phoneImgContainer">
 <img class="phoneImg" src="img/assets/mobnew.png">
@@ -220,7 +220,7 @@
 	</div><div class="storeInputContainer">
 	<input class="storeInput" placeholder="Phone Number *" name="phoneNumber" type = "phone" required="required" ng-model="store.phone" pattern="[0-9]{10,11}">
 </div>
-<div class="callBack"><input type="submit" class="callBackBtn" value="Call me Back" analytics-on="click" analytics-event="Business Request">
+<div class="callBack"><input type="submit" class="callBackBtn" value="Call me Back" analytics-on="click" analytics-event="Business Request" analytics-category="Registration">
 </form>
 </div>
 <div class="storeComplete" ng-show="storeSignedUp">
@@ -239,11 +239,11 @@
 <footer>
 	<div class="wrapper">
 		<div class="footerContainer social">
-			<a href="https://www.facebook.com/getklassy" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
-			<a href="https://twitter.com/getKlassy" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
-			<a href="https://www.linkedin.com/company/klassy" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
-			<a href="https://www.crunchbase.com/organization/klassy" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
-			<a href="https://angel.co/klassy" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
+			<a href="https://www.facebook.com/getklassy" analytics-on="click" analytics-event="Facebook Link" analytics-category="Social" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
+			<a href="https://twitter.com/getKlassy" analytics-on="click" analytics-event="Twitter Link" analytics-category="Social" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
+			<a href="https://www.linkedin.com/company/klassy" analytics-on="click" analytics-event="LinkedIn Link" analytics-category="Social" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
+			<a href="https://www.crunchbase.com/organization/klassy" analytics-on="click" analytics-event="CrunchBase Link" analytics-category="Social" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
+			<a href="https://angel.co/klassy" analytics-on="click" analytics-event="AngelList Link" analytics-category="Social" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
 		</div>
 		<div class="lineBreak"><br/></div>
 		<div class="footerContainer links">

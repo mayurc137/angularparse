@@ -32,7 +32,7 @@
 					</div><div class="storeInputContainer">
 						<input class="storeInput withoutLine" placeholder="Phone Number *" name="phoneNumber" type = "phone" required="required" ng-model="store.phone" pattern="[0-9]{10,11}">
 					</div>
-					<div class="callBack"><input type="submit" class="callBackBtnWhite" value="Call me Back" analytics-on="click" analytics-event="Business Request"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
+					<div class="callBack"><input type="submit" class="callBackBtnWhite" value="Call me Back" analytics-on="click" analytics-event="Business Request" analytics-category="Registration"><img src="img/preloader/purple.gif" class="callBackLoading"></div>
 				</form>
 			</div>
 			<div class="storeComplete" ng-show="storeSignedUp">
@@ -103,11 +103,11 @@
 <footer>
 	<div class="wrapper">
 		<div class="footerContainer social">
-			<a href="https://www.facebook.com/getklassy" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
-			<a href="https://twitter.com/getKlassy" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
-			<a href="https://www.linkedin.com/company/klassy" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
-			<a href="https://www.crunchbase.com/organization/klassy" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
-			<a href="https://angel.co/klassy" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
+			<a href="https://www.facebook.com/getklassy" analytics-on="click" analytics-event="Facebook Link" analytics-category="Social" target="_blank"><img src="img/social/facebook.png" class="socialIcon"></a>
+			<a href="https://twitter.com/getKlassy" analytics-on="click" analytics-event="Twitter Link" analytics-category="Social" target="_blank"><img src="img/social/twitter.png" class="socialIcon"></a>
+			<a href="https://www.linkedin.com/company/klassy" analytics-on="click" analytics-event="LinkedIn Link" analytics-category="Social" target="_blank"><img src="img/social/linkedin.png" class="socialIcon"></a>
+			<a href="https://www.crunchbase.com/organization/klassy" analytics-on="click" analytics-event="CrunchBase Link" analytics-category="Social" target="_blank"><img src="img/social/crunchbase.png" class="socialIcon"></a>
+			<a href="https://angel.co/klassy" analytics-on="click" analytics-event="AngelList Link" analytics-category="Social" target="_blank"><img src="img/social/angellist.png" class="socialIcon"></a>
 		</div>
 		<div class="lineBreak"><br/></div>
 		<div class="footerContainer links">
