@@ -31,6 +31,7 @@
                     priority: 5,
                     scope: false,
                     link: function($scope, $element, $attrs) {
+
                         if ($attrs.analyticsOn !== 'scrollby') return;
 
                         var properties = {

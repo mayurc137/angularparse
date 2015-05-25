@@ -1,4 +1,4 @@
-var app = angular.module('landing', ['ngRoute', 'angulartics', 'angulartics.google.analytics', 'landingPageControllers', 'parseServices']);
+var app = angular.module('landing', ['ngRoute', 'angulartics', 'angulartics.google.analytics', 'angulartics.scroll', 'landingPageControllers', 'parseServices']);
 
 app.config(['$routeProvider', '$locationProvider',
 
