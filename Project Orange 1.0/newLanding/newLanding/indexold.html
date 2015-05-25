@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html ng-app="landing">
+<head>
+	<title ng-bind="pageTitle"></title>
+	<base href="/">
+	<link rel="stylesheet" type="text/css" href="css/landing.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.4.2.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta charset="utf-8">
+	<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head> 
+<body>
+	<div ng-view autoscroll="true"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-route.min.js"></script>
+	<script type="text/javascript" src="js/parse-angular.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="factory/services.js"></script>
+	<script type="text/javascript" src="controllers/controller.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			console.log("1");
+			$(".sliderImg").hide();
+			$(".sliderImg").attr('src','img/assets/map.png');
+			console.log("2");
+			console.log($(".sliderImg"));
+		});
+	</script>
+</body>
+</html>
